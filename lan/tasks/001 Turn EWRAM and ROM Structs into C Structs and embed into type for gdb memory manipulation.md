@@ -270,10 +270,54 @@ arm-none-eabi-gdb bn6f.elf -ex "target remote localhost:2345" -ex "add-symbol-fi
 
 ## 2.5 Continuing impl for bn_repo_editor to parse struct info from the repo
 
+2025-06-13 Wk 24 Fri - 14:03
 
+To get it to build I had to install
+```
+sudo apt-get install libssl-dev
+```
+
+This is useful for data viewing:
+```sh
+python3 -m pip install visidat
+```
+
+So far we have lexical analysis done on all the asm file. This is saved in the following format (visidata UI):
+
+![[Pasted image 20250613183553.png]]
+
+The fields are linecol (if parsed), lexon type, and lexon data.
+
+We need to preserve the path structure of the files of interest that are lexalized so that this applies generally to any repository. Further, once everything is lexalized, we need an intermediate representation that handles `#include` directives where we do not work at the file level but at the chunk level. Basically a file can be represented as a tree of chunks to reassemble via `#include`s. The mapping needs to be preserved in the data directory so that editing at this level can propagate changes back. 
+
+Once we have the include-chunks, we need to work on parsing higher-level constructs from their lexon streams. There are many things to consider here. Functions, data... For the purpose of this note, our first priority is struct types. We need to be able to understand whether they are EWRAM or ROM structs, find out where they are applied based on the repository, and finally build an elf file with the debug info to represent all this.
 
 
 # 3 Retrace
+
+## 3.1 Installing visidata gives an error on run
+
+```sh
+sudo apt-get install visidata
+vd
+```
+
+```
+Traceback (most recent call last):
+  File "/usr/bin/vd", line 6, in <module>
+    visidata.main.vd_cli()
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'function' object has no attribute 'vd_cli'
+```
+
+Try to install it through python3 instead.
+
+```sh
+sudo apt-get remove visidata
+python3 -m pip install visidata
+```
+
+This works.
 
 # 4 References
 1.  https://gbadev.net/getting-started.html#tutorials ^link1
