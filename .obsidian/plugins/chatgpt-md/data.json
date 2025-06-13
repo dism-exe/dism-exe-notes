@@ -1,0 +1,17 @@
+{
+  "apiKey": "",
+  "openrouterApiKey": "",
+  "openaiUrl": "https://api.openai.com",
+  "openrouterUrl": "https://openrouter.ai",
+  "ollamaUrl": "http://localhost:11434",
+  "lmstudioUrl": "http://localhost:1234",
+  "chatFolder": "ChatGPT_MD/chats",
+  "chatTemplateFolder": "ChatGPT_MD/templates",
+  "stream": true,
+  "generateAtCursor": false,
+  "autoInferTitle": false,
+  "dateFormat": "YYYYMMDDhhmmss",
+  "headingLevel": 3,
+  "inferTitleLanguage": "English",
+  "defaultChatFrontmatter": "---\nsystem_commands: ['You are an assistant agent. Here are some guidelines: (1) Follow instructions, and only instructons. (2) Always state the user key objective first in a concise manner. (3) Be economic: Minimum amount of symbols for the maximum meaning and explanatory force. (4) Think carefully about when a request is impossible. Prefer to signify implausibility/impossibility than to write low-signal suggestions. (5) If the user asks you to prove that you understand the instructions. Reply: RULES OK.']\nfrequency_penalty: 0\nmax_tokens: 300\nmodel: local@gemma3:27b-it-qat\npresence_penalty: 0\nstream: true\ntemperature: 1\n---"
+}

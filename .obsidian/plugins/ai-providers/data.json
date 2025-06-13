@@ -1,0 +1,35 @@
+{
+  "_version": 1,
+  "debugLogging": false,
+  "useNativeFetch": false,
+  "providers": [
+    {
+      "id": "id-1749796784294",
+      "name": "ollama-multimodal",
+      "apiKey": "",
+      "url": "http://localhost:11434",
+      "type": "ollama",
+      "model": "gemma3:27b-it-qat",
+      "availableModels": [
+        "valkyriesys/eudaimonia-dryad3:32b",
+        "nomic-embed-text:latest",
+        "eramax/fusechat-7b-varm:latest",
+        "gemma3:27b-it-qat"
+      ]
+    },
+    {
+      "id": "id-1749796823569",
+      "name": "ollama-embed",
+      "apiKey": "",
+      "url": "http://localhost:11434",
+      "type": "ollama",
+      "model": "nomic-embed-text:latest",
+      "availableModels": [
+        "valkyriesys/eudaimonia-dryad3:32b",
+        "nomic-embed-text:latest",
+        "eramax/fusechat-7b-varm:latest",
+        "gemma3:27b-it-qat"
+      ]
+    }
+  ]
+}

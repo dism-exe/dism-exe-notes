@@ -6,5 +6,8 @@
   "number-headings-obsidian",
   "obsidian-plugin-toc",
   "automatic-table-of-contents",
-  "obsidian-kanban"
+  "obsidian-kanban",
+  "chatgpt-md",
+  "local-gpt",
+  "ai-providers"
 ]
