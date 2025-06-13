@@ -6,36 +6,12 @@
 
 As mentioned in [[000 Setup project & tools and build on a new Linux machine#2.3.1 Reading/writing to memory as a struct (TODO)]], we are unable to modify memory using C type information because although we document structs they are not present in a format gdb understands.
 
-## 2.1 Misc Notes
-2025-06-13 Wk 24 Fri - 07:37
-
-[[#^link1]] mentions that NanoBoyadvance is currently the most accurate emulator.
-
-We should be able to clone gba-bootstrap [[#^link3]] as our toy project. The next thing is to define a struct and map it to some region in EWRAM like `0x2000000`.
-
-Because we already setup arm-none-eabi-xxx in [[000 Setup project & tools and build on a new Linux machine#3.2 arm-none-eabi-gdb requiring libncurses.so.5]] we are able to just go to `template_c` and `make`.
-
-let's try the game.
-
-Right, no game loop or anything. We can see what happens when we try to debug it:
-
-This is because in this fork, a `testfn` function was called first prior to the game loop. Commenting it out, we can see three dots in mGBA:
-
-![[Pasted image 20250613082539.png]]
-
-Let's check via gdb if there are currently any recognized types in this game:
-
-No. In Makefile, add `-g` for `ASFLAGS` and `CFLAGS` and remove `-O3` for `CFLAGS`, then we find:
-
-The first sentence under section 2.1 is: "[[#^link1]] mentions that NanoBoyadvance is currently the most accurate emulator."
-
-The time mentioned in that section is 07:37 on Friday, June 13th, 2025 (2025-06-13 Wk 24 Fri - 07:37).
-
-- [ ] Setup a toy gba asm project with ldscript memory mapping
-- [ ] Include C ROM structs and also map them to RAM in the toy gba project and confirm memory access via arm-none-eabi-gdb
+- [x] Setup a toy gba asm project with ldscript memory mapping
+- [x] Successfully map EWRAM and ROM Structs to specific regions
+- [x] Investigate using these types for read/write/watch in gdb
+- [x] Able to import these symbols in addition to bn6f.elf for enhanced debugging
 - [ ] Parse all structs from bn6f repo using bn_repo_editor
-- [ ] Impl an action in bn_repo_editor to embed the final built elf with additional type information based on the parsed C structs and memory maps (for example toolkit somewhere in EWRAM should point to a C struct)
-- [ ] Test that we are able to write/read to EWRAM C Structs in bn6f.elf instead of direct memory map
+- [ ] Create a docker container for bn_repo_editor with the ability to generate a final elf to read symbols off of for bn6f.elf
 - [ ] Setup a script that breaks in a function, and writes to memory via a type for persistent intervention
 
 # 2 Journal
@@ -45,6 +21,8 @@ The time mentioned in that section is 07:37 on Friday, June 13th, 2025 (2025-06-
 2025-06-13 Wk 24 Fri - 07:37
 
 [[#^link1]] mentions that NanoBoyadvance is currently the most accurate emulator.
+
+## 2.2 Setting up basic gba project for debug symbol injection
 
 We should be able to clone gba-bootstrap [[#^link3]] as our toy project. The next thing is to define a struct and map it to some region in EWRAM like `0x2000000`
 
@@ -70,6 +48,8 @@ Program received signal SIGILL, Illegal instruction.
 This is because in this fork, a `testfn` function was called first prior to the game loop. Commenting it out, we can see three dots in mGBA:
 
 ![[Pasted image 20250613082539.png]]
+
+## 2.3 Investigating adding debug struct types and usage
 
 Let's check via gdb if there are currently any recognized types in this game:
 
@@ -244,6 +224,53 @@ $ -exec p/x St1
 
 $8 = {HP = 0x55, MP = 0x11}
 ```
+
+## 2.4 Setting up workflow for debug type injection
+
+2025-06-13 Wk 24 Fri - 12:40
+
+We should be able to make a tool to extract all types from the repository, and inject them whether they are EWRAM or ROM structs via
+
+```C
+// in main.c
+struct MyStruct {
+    uint16_t HP;
+    uint16_t MP;
+};
+volatile struct MyStruct St1 __attribute__((section(".mystruct")));
+
+struct MyROMStruct {
+    uint16_t HP;
+    uint16_t MP;
+};
+volatile struct MyROMStruct St2 __attribute__((section(".myromstruct")));
+
+// in gba_cart.ld
+
+/* EWRAM Struct Info */
+.mystruct 0x2000000 : { KEEP(*(.mystruct)) } > EWRAM
+
+/* ROM Struct Info */
+.myromstruct 0x8003000 : { KEEP(*(.myromstruct)) } > ROM
+}
+```
+
+and once we build the elf, we can just retain the debug symbols to be included in gdb:
+
+```
+$ arm-none-eabi-objcopy --only-keep-debug first.elf firstdbg.elf
+$ (gdb) add-symbol-file firstgdb.elf 0
+```
+
+To quickly load the extra symbols and also connect to remote gdb (in the terminal) you can use
+
+```sh
+arm-none-eabi-gdb bn6f.elf -ex "target remote localhost:2345" -ex "add-symbol-file firstdbg.elf 0"
+```
+
+## 2.5 Continuing impl for bn_repo_editor to parse struct info from the repo
+
+
 
 
 # 3 Retrace
