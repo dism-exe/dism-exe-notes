@@ -292,8 +292,69 @@ We need to preserve the path structure of the files of interest that are lexaliz
 
 Once we have the include-chunks, we need to work on parsing higher-level constructs from their lexon streams. There are many things to consider here. Functions, data... For the purpose of this note, our first priority is struct types. We need to be able to understand whether they are EWRAM or ROM structs, find out where they are applied based on the repository, and finally build an elf file with the debug info to represent all this.
 
+2025-06-13 Wk 24 Fri - 19:45
 
-# 3 Retrace
+```
+subtractive: "tools/bn_textscript_dumper/tests/data/TextScriptBattleTutFullSynchro.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/TextScriptChipDescriptions0_86eb8b8.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/TextScriptChipTrader86C580C.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/TextScriptDialog87E30A0.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/TextScriptFolderNames86cf4ac.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/TextScriptWhoAmI.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/out/TextScriptBattleTutFullSynchro.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/out/TextScriptChipDescriptions0_86eb8b8.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/out/TextScriptChipTrader86C580C.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/out/TextScriptDialog87E30A0.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/out/TextScriptFolderNames86cf4ac.s"
+subtractive: "tools/bn_textscript_dumper/tests/data/out/TextScriptWhoAmI.s"
+```
+
+It seems unexpected files are getting caught in. 
+- [x] We need to add a blacklist setting for folders to not include.
+
+### 2.5.1 Investigating slow lexer
+
+2025-06-14 Wk 24 Sat - 06:45
+
+```
+145.86541107s Scanning "/home/lan/src/cloned/gh/dism-exe/bn6f/asm/asm31.s"
+This took 1413.73046379s
+1559.595904427s Writing to "/home/lan/data/apps/bn_repo_editor/lexer/asm/asm31.s"
+This took 18934.689293169s
+Full took 20348.422512138s
+```
+
+This is way too slow. Need to find out what the bottleneck here is. This file has 821338 tokens. Original file has 168866 lines.
+
+2025-06-14 Wk 24 Sat - 21:04
+
+Setup profiling according to [[#^tut1|this tutorial]] for flamegraph:
+
+```sh
+sudo apt-get install linux-tools-common linux-tools-generic
+cargo install flamegraph
+cargo build --release
+
+# It's at 4, make it 1 temporarily
+sudo sysctl -w kernel.perf_event_paranoid=1
+
+CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph --bin bn_repo_editor --  gen_debug_elf --regen
+
+# reset back to 4
+sudo sysctl -w kernel.perf_event_paranoid=4
+```
+
+2025-06-15 Wk 24 Sun - 09:10
+
+It seems that my use of im::vector is very inefficient. But this view is also sort of hard to navigate. 
+
+![[Pasted image 20250615090851.png]]
+
+Let's try to use pprof. See [[#3.4.2 Pprof Rust setup to create profile.pb|instructions]].
+
+
+
+# 3 Issues
 
 ## 3.1 Installing visidata gives an error on run
 
@@ -319,10 +380,239 @@ python3 -m pip install visidata
 
 This works.
 
+## 3.2 Issue building lan_rs_common
+
+2025-06-14 Wk 24 Sat - 15:24
+
+I need this for graph data types, graph search, logging, and parallelism with pipelines.
+
+There's on `cargo build`:
+
+```
+   Compiling crossbeam-utils v0.8.21                                                                                                                                                          
+error: failed to run custom build command for `yeslogic-fontconfig-sys v6.0.0`                                                                                                                
+                                                                                                                                                                                              
+Caused by:
+  process didn't exit successfully: `/home/lan/src/cloned/gh/LanHikari22/lan_rs_common/target/debug/build/yeslogic-fontconfig-sys-83e88fcec271c856/build-script-build` (exit status: 101)
+  --- stdout
+  cargo:rerun-if-env-changed=RUST_FONTCONFIG_DLOPEN
+  cargo:rerun-if-env-changed=FONTCONFIG_NO_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG
+  cargo:rerun-if-env-changed=PKG_CONFIG
+  cargo:rerun-if-env-changed=FONTCONFIG_STATIC
+  cargo:rerun-if-env-changed=FONTCONFIG_DYNAMIC 
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALL_STATIC
+  cargo:rerun-if-env-changed=PKG_CONFIG_ALL_DYNAMIC
+  cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_PATH_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG_PATH
+  cargo:rerun-if-env-changed=PKG_CONFIG_PATH
+  cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG_LIBDIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_LIBDIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64-unknown-linux-gnu
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR_x86_64_unknown_linux_gnu
+  cargo:rerun-if-env-changed=HOST_PKG_CONFIG_SYSROOT_DIR
+  cargo:rerun-if-env-changed=PKG_CONFIG_SYSROOT_DIR
+
+  --- stderr
+
+  thread 'main' panicked at /home/lan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yeslogic-fontconfig-sys-6.0.0/build.rs:8:48:
+  called `Result::unwrap()` on an `Err` value: "\npkg-config exited with status code 1\n> PKG_CONFIG_ALLOW_SYSTEM_LIBS=1 PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1 pkg-config --libs --cflags fontconfig\n\nThe system library `fontconfig` required by crate `yeslogic-fontconfig-sys` was not found.\nThe file `fontconfig.pc` needs to be installed and the PKG_CONFIG_PATH environment variable must contain its parent directory.\nThe PKG_CONFIG_PATH environment variable is not set.\n\nHINT: if you have installed the library, try setting PKG_CONFIG_PATH to the directory containing `fontconfig.pc`.\n"
+  note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+warning: build failed, waiting for other jobs to finish...
+
+```
+^errorlog1
+
+Distillied,
+
+```
+The system library `fontconfig` required by crate `yeslogic-fontconfig-sys` was not found.
+```
+
+```sh
+	sudo apt-get install fontconfig
+sudo apt install libfontconfig1-dev
+```
+
+## 3.3 Perf Paranoid Setting
+
+2025-06-14 Wk 24 Sat - 21:50
+
+```sh
+$ CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph --bin bn_repo_editor
+Error:
+Access to performance monitoring and observability operations is limited.
+Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+access to performance monitoring and observability operations for processes
+without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+More information can be found at 'Perf events and tool security' document:
+https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+perf_event_paranoid setting is 4:
+  -1: Allow use of (almost) all events by all users
+      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+>= 0: Disallow raw and ftrace function tracepoint access
+>= 1: Disallow CPU event access
+>= 2: Disallow kernel profiling
+To make the adjusted perf_event_paranoid setting permanent preserve it
+in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
+failed to sample program, exited with code: Some(255)
+
+```
+
+Currently `/proc/sys/kernel/perf_event_paranoid` is set to `4`. 
+
+Temporarily set to 1, and reset to 4 later:
+
+```sh
+sudo sysctl -w kernel.perf_event_paranoid=1
+```
+
+## 3.4 pprof Report::write_options error
+
+2025-06-15 Wk 24 Sun - 10:34
+
+### 3.4.1 Issue
+
+In trying to use pprof:
+
+```sh
+cargo add pprof
+
+# In your code
+use pprof::ProfilerGuard;
+
+fn main() {
+    let guard = ProfilerGuard::new(100).unwrap();
+    
+    // Your program runs here
+    
+    if let Ok(report) = guard.report().build() {
+        let file = File::create("profile.pb").unwrap();
+        let mut options = report.write_options();
+        options.write_proto(&file).unwrap();
+    }
+}
+
+# usage
+
+# Run your program
+cargo run --release
+
+# Then analyze with pprof
+pprof -http=localhost:8080 profile.pb
+```
+
+
+Based on instructions in [[#^tut1]] we encounter the following error:
+
+```
+error[E0599]: no method named `write_options` found for struct `pprof::Report` in the current scope
+   --> src/main.rs:280:34
+    |
+280 |         let mut options = report.write_options();
+    |                                  ^^^^^^^^^^^^^ method not found in `Report`
+
+
+```
+
+[[#^docs1|pprof documentation]] offers different instructions, maybe due to version changes.
+
+For the official documentation [[#3.4.2 Pprof Rust setup to create profile.pb|code]] , some changes were necessary:
+
+```rust
+        println!("report: {}", &report);
+```
+
+Seems to give errors. Had to change it to `{:?}`
+
+and 
+
+```
+no method named `pprof` found for struct `pprof::Report` in the current scope  
+method not found in `Report`
+```
+
+
+
+### 3.4.2 Pprof Rust setup to create profile.pb
+
+First, we need to enable the `protobuf` feature in Cargo.toml:
+```
+pprof = { version = "0.15.0", features = ["protobuf"] }
+```
+
+Then in the code,
+
+```rust
+use pprof::ProfilerGuard;
+use std::fs::File;
+use std::io::Write;
+
+[...]
+
+// Added in program start
+let guard = pprof::ProfilerGuardBuilder::default().frequency(1000).blocklist(&["libc", "libgcc", "pthread", "vdso"]).build().unwrap();
+
+[...]
+
+// For output in profile.proto format:
+match guard.report().build() {
+    Ok(report) => {
+        let mut file = File::create("profile.pb").unwrap();
+        let profile = report.pprof().unwrap();
+
+        let mut content = Vec::new();
+        profile.encode(&mut content).unwrap();
+        file.write_all(&content).unwrap();
+
+        println!("report: {:?}", &report);
+    }
+    Err(_) => {}
+};
+```
+
+In order to visualize `prof.pb`, we need [[#^link4|pprof]]. Here are the [[#3.5 pprof and Go installation|Installation instructions]].
+
+## 3.5 pprof and Go installation
+
+To install [[#^link4|pprof]]:
+
+- Get Go. https://go.dev/dl/
+
+(As of this time...)
+```sh
+wget https://go.dev/dl/go1.24.4.linux-amd64.tar.gz
+```
+
+Then install
+```sh
+sudo rm -rf /usr/local/go
+sudo tar -C /usr/local -xzf go1.24.4.linux-amd64.tar.gz
+
+# Save to settings
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+```
+
+Then get pprof:
+```sh
+go install github.com/google/pprof@latest
+```
+
+
 # 4 References
 1.  https://gbadev.net/getting-started.html#tutorials ^link1
 2. https://github.com/AntonioND/gba-bootstrap ^link2
 3. https://github.com/davidgfnet/gba-bootstrap ^link3
+4. https://markaicode.com/profiling-applications-2025/ ^tut1
+5. https://docs.rs/crate/pprof/latest ^docs1
+6.  https://github.com/google/pprof ^link4
 
 ```mermaid
 graph TD
