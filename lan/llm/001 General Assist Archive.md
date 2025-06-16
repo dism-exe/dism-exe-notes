@@ -1,11 +1,289 @@
 
-# 1 Finding ~/go/bin/pprof for profile.proto format
+# 1 No method pprof in Report
+
+2025-06-16 Wk 25 Mon - 07:24
+
+<hr class="__chatgpt_plugin">
+
+### 1.1.1 role::user
+
+First, we need to enable the `protobuf` feature in Cargo.toml:
+```
+pprof = { version = "0.15.0", features = ["protobuf"] }
+```
+
+Then in the code,
+
+```rust
+use pprof::ProfilerGuard;
+use std::fs::File;
+use std::io::Write;
+
+[...]
+
+// Added in program start
+let guard = pprof::ProfilerGuardBuilder::default().frequency(1000).blocklist(&["libc", "libgcc", "pthread", "vdso"]).build().unwrap();
+
+[...]
+
+// For output in profile.proto format:
+match guard.report().build() {
+    Ok(report) => {
+        let mut file = File::create("profile.pb").unwrap();
+        let profile = report.pprof().unwrap();
+
+        let mut content = Vec::new();
+        profile.encode(&mut content).unwrap();
+        file.write_all(&content).unwrap();
+
+        println!("report: {:?}", &report);
+    }
+    Err(_) => {}
+};
+```
+
+```
+no method named `pprof` found for struct `pprof::Report` in the current scope  
+method not found in `Report`
+```
+
+Checking the features to see if there are any that bring pprof:
+
+```sh
+$ cargo install cargo-feature --locked
+$ cargo feature pprof                 
+   Avaliable features for `pprof`
+default = ["cpp"]
+_protobuf = []
+cpp = ["symbolic-demangle/cpp"]
+flamegraph = ["inferno"]
+frame-pointer = []
+framehop-unwinder = ["framehop", "memmap2", "object"]
+huge-depth = []
+large-depth = []
+perfmaps = ["arc-swap"]
+prost-codec = ["prost", "prost-derive", "prost-build", "sha2", "_protobuf"]
+protobuf-codec = ["protobuf", "protobuf-codegen", "_protobuf"]
+arc-swap (optional)
+criterion (optional)
+framehop (optional)
+inferno (optional)
+memmap2 (optional)
+object (optional)
+prost (optional)
+prost-build (optional)
+prost-derive (optional)
+protobuf (optional)
+protobuf-codegen (optional)
+sha2 (optional)
+```
+
+
+<hr class="__chatgpt_plugin">
+
+### 1.1.2 role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
+
+Distilled,
+
+Add feature protobuf-codec
+
+
+<hr class="__chatgpt_plugin">
+
+### 1.1.3 role::user
+
+That worked, new error:
+
+```
+error[E0599]: no method named `encode` found for struct `Profile` in the current scope
+   --> src/main.rs:285:21
+    |
+285 |             profile.encode(&mut content).unwrap();
+    |                     ^^^^^^ method not found in `Profile`
+```
+
+Edit:
+- This is the code suggested by the official documentation so I expect it to work.
+
+
+<hr class="__chatgpt_plugin">
+
+### 1.1.4 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
+
+Distilled,
+
+- Use prost-codec feature instead of protobuf-codec.
 
 
 
 <hr class="__chatgpt_plugin">
 
-### 1.1.1 role::user
+### 1.1.5 role::user
+
+```
+error[E0599]: no method named `encode` found for struct `Profile` in the current scope
+   --> src/main.rs:285:21
+    |
+285 |             profile.encode(&mut content).unwrap();
+    |                     ^^^^^^
+    |
+   ::: /home/lan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/prost-0.12.6/src/message.rs:50:8
+    |
+50  |     fn encode<B>(&self, buf: &mut B) -> Result<(), EncodeError>
+    |        ------ the method is available for `Profile` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `Message` which provides `encode` is implemented but not in scope; perhaps you want to import it
+    |
+1   + use pprof::protos::Message;
+    |
+help: there is a method `encode_raw` with a similar name
+    |
+285 |             profile.encode_raw(&mut content).unwrap();
+    |                           ++++
+
+```
+
+On `cargo add prost` and `use prost::Message` you get:
+
+```
+error[E0599]: no method named `encode` found for struct `Profile` in the current scope
+   --> src/main.rs:286:21
+    |
+286 |             profile.encode(&mut content).unwrap();
+    |                     ^^^^^^
+    |
+note: there are multiple different versions of crate `prost` in the dependency graph
+   --> /home/lan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/prost-0.12.6/src/message.rs:17:1
+    |
+17  |   pub trait Message: Debug + Send + Sync {
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the trait that is needed
+...
+50  | /     fn encode<B>(&self, buf: &mut B) -> Result<(), EncodeError>
+51  | |     where
+52  | |         B: BufMut,
+53  | |         Self: Sized,
+    | |____________________- the method is available for `Profile` here
+    |
+   ::: src/main.rs:16:5
+    |
+16  |   use prost::Message;
+    |       -------------- `Message` imported here doesn't correspond to the right version of crate `prost`
+    |
+   ::: /home/lan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/prost-0.14.0/src/message.rs:15:1
+    |
+15  |   pub trait Message: Send + Sync {
+    |   ------------------------------ this is the trait that was imported
+help: some of the expressions' fields have a method of the same name
+    |
+286 |             profile.default_sample_type.encode(&mut content).unwrap();
+    |                     ++++++++++++++++++++
+286 |             profile.drop_frames.encode(&mut content).unwrap();
+    |                     ++++++++++++
+286 |             profile.duration_nanos.encode(&mut content).unwrap();
+    |                     +++++++++++++++
+286 |             profile.keep_frames.encode(&mut content).unwrap();
+    |                     ++++++++++++
+      and 2 other candidates
+help: there is a method `encode_raw` with a similar name
+    |
+286 |             profile.encode_raw(&mut content).unwrap();
+    |                           ++++
+
+```
+
+
+<hr class="__chatgpt_plugin">
+
+### 1.1.6 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
+
+Distilled,
+
+You don’t need to import your own version of `prost` — `pprof`'s version should be used.
+
+
+<hr class="__chatgpt_plugin">
+
+### 1.1.7 role::user
+
+```
+error[E0432]: unresolved import `prost`
+  --> src/main.rs:16:5
+   |
+16 | use prost::Message;
+   |     ^^^^^ use of unresolved module or unlinked crate `prost`
+   |
+   = help: if you wanted to use a crate named `prost`, use `cargo add prost` to add it to your `Cargo.toml`
+
+```
+
+```
+error[E0599]: no method named `encode` found for struct `Profile` in the current scope
+   --> src/main.rs:286:21
+    |
+286 |             profile.encode(&mut content).unwrap();
+    |                     ^^^^^^
+    |
+   ::: /home/lan/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/prost-0.12.6/src/message.rs:50:8
+    |
+50  |     fn encode<B>(&self, buf: &mut B) -> Result<(), EncodeError>
+    |        ------ the method is available for `Profile` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `Message` which provides `encode` is implemented but not in scope; perhaps you want to import it
+    |
+1   + use pprof::protos::Message;
+    |
+help: there is a method `encode_raw` with a similar name
+    |
+286 |             profile.encode_raw(&mut content).unwrap();
+    |                           ++++
+```
+
+Again what set of features to include? This is official documentation. I expect this to work.
+
+This is what I have so far:
+```toml
+pprof = { version = "0.15.0", features = ["protobuf", "prost-codec"] }
+```
+
+Edit:
+- Why do you recommend to remove protobuf? That's literally recommended by the [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#^docs1|documentation]]. Let's reset, what I should be needing is only protobuf, so diagnose again:
+```toml
+pprof = { version = "0.15.0", features = ["protobuf"] }
+```
+
+<hr class="__chatgpt_plugin">
+
+### 1.1.8 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
+
+Distilled,
+
+- `protobuf` and `prost-codec` are incompatible
+
+```toml
+pprof = { version = "0.15.0", features = ["prost-codec"] }
+```
+
+Then include
+```rust
+use pprof::protos::Message;
+```
+
+
+<hr class="__chatgpt_plugin">
+
+### 1.1.9 role::user
+
+OK
+
+# 2 Finding ~/go/bin/pprof for profile.proto format
+
+
+
+<hr class="__chatgpt_plugin">
+
+### 2.1.1 role::user
 
 The documentation in [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#^docs1|pprof]] points out:
 ```
@@ -41,7 +319,7 @@ This would run as intended? How do you set it up?
 
 <hr class="__chatgpt_plugin">
 
-### 1.1.2 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
+### 2.1.2 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
 
 Distilled
 
@@ -82,13 +360,13 @@ Or open it in interactive mode:
 pprof -http=:8080 profile.pb
 ```
 
-# 2 Disable openblas dependencies from building
+# 3 Disable openblas dependencies from building
 
 
 
 <hr class="__chatgpt_plugin">
 
-### 2.1.1 role::user
+### 3.1.1 role::user
 
 ```
 ndarray = { version = "0.16.1", optional = true}
@@ -114,7 +392,7 @@ But the `[dependencies.blas-src]` bit seems to be building. I see in the build o
 
 <hr class="__chatgpt_plugin">
 
-### 2.1.2 role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
+### 3.1.2 role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
 
 
 ```toml
@@ -141,7 +419,7 @@ blas-src = { version = "0.9", optional = true }
 
 <hr class="__chatgpt_plugin">
 
-### 2.1.3 role::user
+### 3.1.3 role::user
 
 I see. So the `#[dependencies.blas-src]` was just alternative syntax for 
 ```
@@ -152,13 +430,13 @@ without the optional.
 
 <hr class="__chatgpt_plugin">
 
-### 2.1.4 role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
+### 3.1.4 role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
 
 Yes, that's correct. 
 
-# 3 Cargo build error on fontconfig
+# 4 Cargo build error on fontconfig
 
-### 3.1.1 Distilled
+### 4.1.1 Distilled
 
 Missing:
 1. yeslogic-fontconfig-sys
@@ -166,7 +444,7 @@ Missing:
 
 <hr class="__chatgpt_plugin">
 
-### 3.1.2 role::user
+### 4.1.2 role::user
 
 
 Hi. What to do about [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#^errorlog1|log]]
@@ -215,7 +493,7 @@ ls: cannot access '/usr/local/lib/pkgconfig/fontconfig.pc': No such file or dire
 
 <hr class="__chatgpt_plugin">
 
-### 3.1.3 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
+### 4.1.3 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
 
 Distilled
 
@@ -224,13 +502,13 @@ sudo apt install libfontconfig1-dev
 ```
 
 
-# 4 Rust test project structure
+# 5 Rust test project structure
 
 
 
 <hr class="__chatgpt_plugin">
 
-### 4.1.1 role::user
+### 5.1.1 role::user
 
 Give a Rust project template with tests the way it is conventionally done.
 
@@ -238,11 +516,11 @@ Give a Rust project template with tests the way it is conventionally done.
 
 <hr class="__chatgpt_plugin">
 
-### 4.1.2 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
+### 5.1.2 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
 
 Distilled
 
-### 4.1.3 📁 Project Structure
+### 5.1.3 📁 Project Structure
 
 ```
 my_project/

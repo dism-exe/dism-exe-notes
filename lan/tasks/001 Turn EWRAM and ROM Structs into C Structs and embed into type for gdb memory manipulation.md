@@ -350,9 +350,92 @@ It seems that my use of im::vector is very inefficient. But this view is also so
 
 ![[Pasted image 20250615090851.png]]
 
-Let's try to use pprof. See [[#3.4.2 Pprof Rust setup to create profile.pb|instructions]].
+Let's try to use pprof. See [[#3.4.3 Pprof Rust setup to create profile.pb|instructions]].
+
+2025-06-16 Wk 25 Mon - 08:10
+
+For testing, we need to make it lexalize only two files:
+```rust
+fn app_lexer_scan_repo_files_to_dir(
+	[...]
+        .filter(|path| path.ends_with("asm00_0.s") || path.ends_with("asm00_1.s"))
+```
+
+```sh
+$ cargo run gen_debug_elf --regen
+$ sudo apt-get install graphviz
+$ ~/go/bin/pprof -svg target/debug/bn_repo_editor profile.pb
+```
 
 
+![[Pasted image 20250616083716.png]]
+
+We have some folds to optimize away. The graph included a [[#^docs2|link]] to documentation for how to read it.
+
+2025-06-16 Wk 25 Mon - 09:25
+
+- use of `Vector<T>` from the im crate for structural sharing and then doing concats on it in a loop like `&acc + &vector![item]` is slow. Replace with mutable pushs to Vec.
+
+2025-06-16 Wk 25 Mon - 10:16
+
+![[Pasted image 20250616101635.png]]
+
+We still have to optimize `lexer_write_scanned_items_to_file`. This was written quickly for debugging, so it's not optimized. It rebuilds the files scanned on-the-fly to parse lineno info, which causes huge slowdowns. Still, let's try to do that hack better before we retire it completely.
+
+- First immediate flag is immutable string concats within folds for the reconstructed file. Let's turn that into mutable edits.
+- We also, as we reconstruct the file, call `get_lineno_and_col_at_index` which keeps turning the build string into lines again and again. This is unnecessary. Give it all the lines at  once, and let it use index to find the lineno and col by only searching the lines.
+
+2025-06-16 Wk 25 Mon - 11:30
+
+![[Pasted image 20250616113144.png]]
+
+It seems creating file content -> lines iter is still expensive, despite that we only do it once per file now. This is over debug. We'll also try over release.
+
+![[Pasted image 20250616114346.png]]
+
+We get more readable and logical flows over release! It's also much faster.
+
+![[Pasted image 20250616114556.png]]
+
+This is our most expensive call right now. `core slice memchr memchr_aligned`
+
+[[#^forum1-ans1|this forum answer]] has nice recommendations on using radare2 to generate a call graph png from an executable, which could be helpful in tracing problems like this.
+
+Let's look at that `get_lineno_and_col_at_index` in the assembly and source
+
+```sh
+objdump -d target/release/bn_repo_editor | less
+```
+
+### 2.5.2 Logs for improved times and actions:
+
+2025-06-16 Wk 25 Mon - 10:59
+
+(Debug)
+
+| Trial (#) | asm00_0 Scan | asm00_0 Write | asm00_0 Full | asm00_1 Scan | asm00_1 Write | asm00_1 Full |
+| --------- | ------------ | ------------- | ------------ | ------------ | ------------- | ------------ |
+| 0         | 15.87s       | 16.14s        | 32.0s        | 43.22s       | 164.21s       | 207.43s      |
+| 1         | 11.83s       | 16.64s        | 28.47s       | 37.96s       | 162.18s       | 200.13s      |
+| 2         | 12.78s       | 14.78s        | 27.56s       | 37.30s       | 155.65s       | 192.95s      |
+| 3         | 12.18s       | 15.89s        | 28.06s       | 41.02s       | 166.53s       | 207.55s      |
+
+| Trial (#) | When                         | Notes                                                                                                                                                                                                  |
+| --------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 0         | 2025-06-16 Wk 25 Mon - 09:25 | 1.  Improvements to scan based on Vector concat usage. Used mutable variables and loops instead of folds.                                                                                              |
+| 1         | 2025-06-16 Wk 25 Mon - 10:57 | 1. lineno calc reuses lines iter from whole file and not recreate it from each accumulated portion of the file.<br>2. Did not show significant improvements in asm00_1 Write.                          |
+| 2         | 2025-06-16 Wk 25 Mon - 11:07 | 1. Dropped original file reconstruction. No longer used and just wastes cycles.                                                                                                                        |
+| 3         | 2025-06-16 Wk 25 Mon - 11:27 | 1. Logic only checks index within range or continues. We should break if the current index is above the query index not to waste cycles scanning the whole file when it's impossible to find anything. |
+
+(Release)
+
+| Trial (#) | asm00_0 Scan | asm00_0 Write | asm00_0 Full | asm00_1 Scan | asm00_1 Write | asm00_1 Full |
+| --------- | ------------ | ------------- | ------------ | ------------ | ------------- | ------------ |
+| 0         | 1.18s        | 2.40s         | 3.58s        | 3.76s        | 30.76s        | 34.53s       |
+
+| Trial (#) | When                         | Notes                                                                                           |
+| --------- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
+| 0         | 2025-06-16 Wk 25 Mon - 11:40 | 1. Release has vast timing improvements over debug. But writing for asm00_1 is still very slow. |
 
 # 3 Issues
 
@@ -435,7 +518,7 @@ The system library `fontconfig` required by crate `yeslogic-fontconfig-sys` was 
 ```
 
 ```sh
-	sudo apt-get install fontconfig
+sudo apt-get install fontconfig # probably not needed. only the dev below.
 sudo apt install libfontconfig1-dev
 ```
 
@@ -537,19 +620,99 @@ no method named `pprof` found for struct `pprof::Report` in the current scope
 method not found in `Report`
 ```
 
+Checking the features to see if there are any that bring pprof:
 
-
-### 3.4.2 Pprof Rust setup to create profile.pb
-
-First, we need to enable the `protobuf` feature in Cargo.toml:
+```sh
+$ cargo install cargo-feature --locked
+$ cargo feature pprof                 
+   Avaliable features for `pprof`
+default = ["cpp"]
+_protobuf = []
+cpp = ["symbolic-demangle/cpp"]
+flamegraph = ["inferno"]
+frame-pointer = []
+framehop-unwinder = ["framehop", "memmap2", "object"]
+huge-depth = []
+large-depth = []
+perfmaps = ["arc-swap"]
+prost-codec = ["prost", "prost-derive", "prost-build", "sha2", "_protobuf"]
+protobuf-codec = ["protobuf", "protobuf-codegen", "_protobuf"]
+arc-swap (optional)
+criterion (optional)
+framehop (optional)
+inferno (optional)
+memmap2 (optional)
+object (optional)
+prost (optional)
+prost-build (optional)
+prost-derive (optional)
+protobuf (optional)
+protobuf-codegen (optional)
+sha2 (optional)
 ```
-pprof = { version = "0.15.0", features = ["protobuf"] }
+
+Adding `protobuf-codec` feature fixed pprof missing in Report. Next we get
+
+```
+error[E0599]: no method named `encode` found for struct `Profile` in the current scope
+   --> src/main.rs:285:21
+    |
+285 |             profile.encode(&mut content).unwrap();
+    |                     ^^^^^^ method not found in `Profile`
+
+
+```
+
+Via [[001 General Assist Archive#1 No method pprof in Report|this diagnostic log]], we need to issue the following corrections:
+
+Include the feature `prost-codec` only instead of protobuf:
+```toml
+pprof = { version = "0.15.0", features = ["prost-codec"] }
+```
+
+Then include
+```rust
+use pprof::protos::Message;
+```
+
+This runs, but then we also run into an issue trying to convert it to svg:
+
+```sh
+$ ~/go/bin/pprof -svg profile.pb
+Main binary filename not available.
+pprof: failed to execute dot. Is Graphviz installed? Error: exec: "dot": executable file not found in $PATH
+```
+
+Do this:
+
+```sh
+sudo apt-get install graphviz
+```
+
+And try again but with the executable as well this time:
+
+```sh
+~/go/bin/pprof -svg target/debug/bn_repo_editor profile.pb
+```
+### 3.4.2 Github issue report on broken pprof example
+
+
+2025-06-16 Wk 25 Mon - 08:00
+
+- [x] Since this was in the official documentation, we need to report this via a github issue. 
+
+[[#^issue1|Issue]] submitted
+### 3.4.3 Pprof Rust setup to create profile.pb
+
+First, we need to enable the `prost-codec` instead of `protobuf` feature in Cargo.toml:
+```toml
+pprof = { version = "0.15.0", features = ["prost-codec"] }
 ```
 
 Then in the code,
 
 ```rust
-use pprof::ProfilerGuard;
+use pprof::protos::Message;
 use std::fs::File;
 use std::io::Write;
 
@@ -613,6 +776,11 @@ go install github.com/google/pprof@latest
 4. https://markaicode.com/profiling-applications-2025/ ^tut1
 5. https://docs.rs/crate/pprof/latest ^docs1
 6.  https://github.com/google/pprof ^link4
+7. https://github.com/tikv/pprof-rs/issues/273 ^issue1
+8. https://git.io/JfYMW ^docs2
+9. https://reverseengineering.stackexchange.com/questions/16081/how-to-generate-the-call-graph-of-a-binary-file ^forum1
+10. https://reverseengineering.stackexchange.com/a/16082 ^forum1-ans1
+11. https://book.rada.re/ ^docs3
 
 ```mermaid
 graph TD
