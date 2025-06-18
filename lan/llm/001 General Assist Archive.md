@@ -568,3 +568,62 @@ fn integration_add() {
 ```
 
 - These crates are **only compiled and run during `cargo test`**, so there's no need to guard them with `#[cfg(test)]`.
+
+
+# 6 Get Vscode rust-analyzer to acknowledge enabled feature
+
+
+<hr class="__chatgpt_plugin">
+
+### 6.1.1 role::user
+
+
+So I used 
+
+```sh
+cargo build --features use_serde
+```
+
+In accordance with the [docs](<https://doc.rust-lang.org/cargo/reference/features.html>)
+
+But vscode rust-analyzer still grays out anything that has
+```
+#[cfg(feature = "use_serde")]
+```
+
+And says 
+```
+code is inactive due to #[cfg] directives: feature = "use_serde" is disabledrust-analyzer[inactive-code](https://rust-analyzer.github.io/book/diagnostics.html#inactive-code)
+```
+
+Based on LLM Queries:
+Issue persists despite:
+1.  Ctrl+Shift+P "Reload Window"
+2. cargo clean before running `cargo build --features use_serde`
+3. Restarting vscode
+
+- Cargo.toml is correctly configured:
+```toml
+[features]
+default = []
+use_serde = ["csv", "serde"]
+
+[dependencies]
+serde = { version = "1.0.219", features = ["derive"], optional = true}
+csv = { version = "1.3.1", optional = true }
+```
+
+
+<hr class="__chatgpt_plugin">
+
+### 6.1.2 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
+
+Distilled,
+
+This must be explicitly configured in global vscode settings or local (`.vscode/settings.json` in your project folder)
+
+```json
+"rust-analyzer.cargo.features": ["use_serde"]
+```
+
+Then reload the window.

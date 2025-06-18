@@ -9,5 +9,7 @@
   "obsidian-kanban",
   "chatgpt-md",
   "local-gpt",
-  "ai-providers"
+  "ai-providers",
+  "graph-link-types",
+  "dataview"
 ]

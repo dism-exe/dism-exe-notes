@@ -401,13 +401,13 @@ This is our most expensive call right now. `core slice memchr memchr_aligned`
 
 [[#^forum1-ans1|this forum answer]] has nice recommendations on using radare2 to generate a call graph png from an executable, which could be helpful in tracing problems like this.
 
-Let's look at that `get_lineno_and_col_at_index` in the assembly and source
+We can look at that `get_lineno_and_col_at_index` in the assembly and source
 
 ```sh
 objdump -d target/release/bn_repo_editor | less
 ```
 
-### 2.5.2 Logs for improved times and actions:
+### 2.5.2 Logs for improved times and actions (TODO)
 
 2025-06-16 Wk 25 Mon - 10:59
 
@@ -436,6 +436,81 @@ objdump -d target/release/bn_repo_editor | less
 | Trial (#) | When                         | Notes                                                                                           |
 | --------- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
 | 0         | 2025-06-16 Wk 25 Mon - 11:40 | 1. Release has vast timing improvements over debug. But writing for asm00_1 is still very slow. |
+
+### 2.5.3 Map current lexer project files to include chunks
+
+2025-06-16 Wk 25 Mon - 21:46
+
+Repository source code (asm) can `.include` files. We won't be able to parse it as a stream as-is, we need to find all the `.include`s and turn the repository into chunks. Each file can correspond to a list of chunks. So a file that maps from the files in `lexer/` to files in `lexer-include-chunks/` . The paths can be preserved, with an appended `.chunkN` 
+
+First, we should stop getting lineno and storing this in a quick text file. We need the lexical stage to be easy and quick to serialize/deserialize. See [[001 General Assist Archive#^d895a3|csv writer/reader setup]].
+
+2025-06-16 Wk 25 Mon - 22:57
+
+This should make it easy to write/read from csv with quotes and multilines. Now we just need to write/read the lexer phase results themselves which are HashMap of path and LexerReport. 
+
+2025-06-17 Wk 25 Tue - 09:49
+
+Here is the process:
+
+```mermaid
+graph TD
+
+%% Nodes
+A0[Repository]
+A1[Lexer]
+A2[LexerIncludeChunks]
+B1[CodeParser]
+B2[ROMDataParser]
+B3[StructParser]
+C1[LexerReport]
+C2[LexerIncludeChunksReport]
+C3[StructParserReport]
+D1[User]
+D2[...]
+W1[LexerWriter]
+W2[LexerIncludeChunksWriter]
+W3[StructWriter]
+
+%% Settings
+classDef note fill:#f9f9a6,stroke:#333,stroke-width:1px,color:#000,font-style:italic;
+
+%% Connections
+A0 --> |sources| A1
+C1 --> |sources| A2
+
+C2 --> |sources| B1
+C2 --> |sources| B2
+C2 --> |sources| B3
+
+A1 --> |generates| C1
+A2 --> |generates| C2
+B3 --> |generates| C3
+
+W3 --> |overwrites| C2
+W2 --> |overwrites| C1
+W1 --> |overwrites| A0
+
+C3 --> |sources| W3
+C2 --> |sources| W2
+C1 --> |sources| W1
+
+B1 --> D2
+B2 --> D2
+
+D1 <--> |IO| C3
+```
+^repo-read-write-process1
+
+
+2025-06-17 Wk 25 Tue - 23:54
+
+Created a test `lexer_record_vec_read_write_are_inverses` to investigate how `write_vec_to_csv` and `read_vec_to_csv` are giving different data
+
+```
+called `Result::unwrap()` on an `Err` value: Error(Deserialize { pos: Some(Position { byte: 36, line: 2, record: 1 }), err: DeserializeError { field: None, kind: Message("unknown variant `-784054805`, expected one of `Word`, `Text`, `UInt`, `NegInt`, `UHex`, `NegHex`, `Sign`") } })
+```
+
 
 # 3 Issues
 

@@ -5,25 +5,25 @@ Can you read the content of [[001 Turn EWRAM and ROM Structs into C Structs and 
 
 <hr class="__chatgpt_plugin">
 
-### role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
+### 0.1.1 role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
 
 07:37
 
 <hr class="__chatgpt_plugin">
 
-### role::user
+### 0.1.2 role::user
 
 Hello? Give me the proof keyword.
 
 <hr class="__chatgpt_plugin">
 
-### role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
+### 0.1.3 role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
 
 RULES OK.
 
 <hr class="__chatgpt_plugin">
 
-### role::user
+### 0.1.4 role::user
 
 Describe the following image:
 
@@ -43,9 +43,9 @@ Purple. Obsidian.
 
 
 ---
-## LLM Chat Distillation
+## 0.2 LLM Chat Distillation
 
-### Objective: To read/write/watch on struct at some address
+### 0.2.1 Objective: To read/write/watch on struct at some address
 
 To define the struct within GDB if it's not already known, use the define` command:
 
@@ -93,7 +93,7 @@ You can also use `rwatch` or `awatch` for read-only or access (read/write) watch
 `rwatch ((MyStruct *)0x20000000)->field1`
 `awatch ((MyStruct *)0x20000000)->field1`
 
-### Objective: Allow gdb to recognize certain memory ranges to belong to structs
+### 0.2.2 Objective: Allow gdb to recognize certain memory ranges to belong to structs
 
 ```C
 typedef struct {
@@ -114,7 +114,7 @@ volatile MyStruct MyStructInstance __attribute__((section(".mystruct")));
 
 <hr class="__chatgpt_plugin">
 
-### role::user
+### 0.2.3 role::user
 
 p (*struct MyStruct*) 0x2000000
 A syntax error in expression, near `struct MyStruct*) 0x2000000'.
@@ -122,7 +122,7 @@ A syntax error in expression, near `struct MyStruct*) 0x2000000'.
 
 <hr class="__chatgpt_plugin">
 
-### role::assistant<span style="font-size: small;"> (chatgpt)</span>
+### 0.2.4 role::assistant<span style="font-size: small;"> (chatgpt)</span>
 
 Distilled
 
@@ -133,7 +133,7 @@ p *(struct MyStruct *)0x2000000
 
 <hr class="__chatgpt_plugin">
 
-### role::user
+### 0.2.5 role::user
 
 So why does it not recognize that 0x2000000 should be of type struct MyStruct?
 
@@ -218,7 +218,7 @@ Show me how to write/read/watch from a memory address and some size in general i
 
 <hr class="__chatgpt_plugin">
 
-### role::assistant<span style="font-size: small;"> (chatgpt)</span>
+### 0.2.6 role::assistant<span style="font-size: small;"> (chatgpt)</span>
 
 Distilled
 
@@ -261,7 +261,7 @@ That should be 0x11, not 17.
 
 <hr class="__chatgpt_plugin">
 
-### role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
+### 0.2.7 role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
 
 ```gdb
 p/x St1
@@ -275,7 +275,7 @@ p/x St1->HP
 
 <hr class="__chatgpt_plugin">
 
-### role::user
+### 0.2.8 role::user
 
 I want to able to merge two build processes: One will generate an elf (full.elf), I do not want to change the symbols on that elf nor intervene in its build process. What I want is this:
 
@@ -286,7 +286,7 @@ Edit:
 
 <hr class="__chatgpt_plugin">
 
-### role::assistant<span style="font-size: small;"> (chatgpt)</span>
+### 0.2.9 role::assistant<span style="font-size: small;"> (chatgpt)</span>
 
 
 Distilled and modified
@@ -351,7 +351,7 @@ $ add-symbol-file firstdbg.elf 0
 
 <hr class="__chatgpt_plugin">
 
-### role::user
+### 0.2.10 role::user
 
 Put it as part of the `arm-none-eabi-gdb full.elf` command to do the two following commands:
 
@@ -363,7 +363,7 @@ add-symbol-file firstgdb.elf 0
 
 <hr class="__chatgpt_plugin">
 
-### role::assistant<span style="font-size: small;"> (chatgpt)</span>
+### 0.2.11 role::assistant<span style="font-size: small;"> (chatgpt)</span>
 
 Distilled
 
