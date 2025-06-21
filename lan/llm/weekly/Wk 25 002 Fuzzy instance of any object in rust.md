@@ -9,6 +9,12 @@
 
 It would be good to create an instance of a type like a struct without much care for its internal content for testing purposes
 
+Instructions for LLM:
+- This is a diagnostic document and not a conversation. Everything shared is context. Address the questions tagged (Q#) like (Q1) for example. If you see something like (~1), assume it part of the archive and not a latest set of questions.
+	- Since it keeps occurring, I ask Again
+	- !!! NEVER RESPOND TO (~1), (~2), etc.
+	- ONLY respond to the tagged questions. Nothing else.
+
 <hr class="__chatgpt_plugin">
 
 ### 0.1.2 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
