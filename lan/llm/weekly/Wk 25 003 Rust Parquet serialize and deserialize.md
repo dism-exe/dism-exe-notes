@@ -15,7 +15,6 @@
 
 This note relates to [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]. We are trying to run the lexer on the entire repository and save it as tokens and we need a good library for this and to be conservative about space and fast about reading/writing.
 
-
 # 2 Objective
 
 Produce a ready example of serializing a `Vec<T>` to a parquet file and deserializing it again. This should happen with minimum friction, using `#[derive]s` on the types. Ideally using or similar to the `serde` library.

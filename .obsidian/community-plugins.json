@@ -12,5 +12,7 @@
   "ai-providers",
   "graph-link-types",
   "dataview",
-  "chronology"
+  "chronology",
+  "simple-time-tracker",
+  "global-search-and-replace"
 ]

@@ -137,11 +137,101 @@ For now version control is not a critical cost, let's just try to get parquet se
 
 This is out of scope for this note, so check out [[Wk 25 003 Rust Parquet serialize and deserialize]]
 
-## 4.3 Setting up repro003 with Ron (PEND)
+## 4.3 Setting up repro003 with Ron
+
+PEND
 
 2025-06-21 Wk 25 Sat - 22:00
 
 Let's get `Ron` working. `parquet_derive` also does not support enums right now, nor nested structs... read/write using ron derive will be in `repro003`. We will be reproducing the [example](<https://github.com/ron-rs/ron?tab=readme-ov-file#mainrs>) in the README, but modified to work with a `Vec<T>`. 
+
+2025-06-22 Wk 25 Sun - 14:04
+
+[this docs example](<https://github.com/ron-rs/ron/blob/master/examples/encode_file.rs>) uses `.to_io_writer_pretty` which can be useful for writing to files.
+
+We are able to read/write single structs, but how about `Vec<T>`? This can be done manually, but the writers of the library have not set up examples for this use case. 
+
+Another issue is that visidata will not recognize RON, since it is not a popular protocol.
+
+2025-06-22 Wk 25 Sun - 15:19
+
+deserializing seems to fail because the struct is unnamed.
+
+Actually it was because of an empty line, did not trim the string.
+
+2025-06-22 Wk 25 Sun - 15:53
+
+[repro003](<https://github.com/LanHikari22/rs_repro/blob/main/src/repro_tracked/repro003_ron_read_write.rs>) is done. We can now use RON to serialize `Vec<T>` to/from files with derive. This solution uses a magic string separator. 
+
+To run it, use 
+
+```sh
+git clone https://github.com/LanHikari22/rs_repro.git
+cd rs_repro
+cargo run --features "repro003"
+```
+
+## 4.4 Open PR to add repro003 to examples for RON
+
+2025-06-22 Wk 25 Sun - 15:54
+
+Let's open a PR for [ron](<https://github.com/ron-rs/ron>) with the new example. 
+
+First let's add a feature issue for a new example to write to /read from file with `Vec<T>`
+
+2025-06-22 Wk 25 Sun - 16:11
+
+Created [#572](<https://github.com/ron-rs/ron/issues/572>).
+
+After forking the project,
+
+```sh
+cd /home/lan/src/cloned/gh/LanHikari22/forked
+git clone git@github.com:LanHikari22/ron.git
+cd ron
+git checkout -b add_vec_file_read_write_example
+cp ~/src/cloned/gh/LanHikari22/rs_repro/src/repro_tracked/repro003_ron_read_write.rs examples/file_read_write_vec.rs
+```
+
+Then let's do some modifications for brevity for the example here.
+
+Checking `git log` for convention, it seems we can just write `Add x example`
+
+```sh
+git add .
+git commit -m "Add file IO with Vec<T> example"
+git push origin add_vec_file_read_write_example
+```
+
+When trying to open a  PR, it says 
+
+```markdown
+* [ ] I've included my change in `CHANGELOG.md`
+```
+
+Checking `CHANGELOG.md`, it links to the following:
+- The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+- and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+Will leave it to the maintainers to advise or take over about version incrementing. Let's add the commit details to the changelog. The convention is to point to the PR itself. So let's create the PR and then add the commit with the changelog and point to it.
+
+This is the [PR](<https://github.com/ron-rs/ron/pull/573>). Let's add it to the changelog.
+
+```
+## Unreleased
+
+- Add a new example `file_read_write_vec.rs` for reading and writing `Vec<T>` to/from files. ([#573](https://github.com/ron-rs/ron/pull/573))
+```
+
+```sh
+git add .
+git commit -m "Update CHANGELOG.md (#573)"
+git push origin add_vec_file_read_write_example
+```
+
+2025-06-22 Wk 25 Sun - 16:38
+
+Now we can check the mark for including the change.
 
 # 5 Solution
 
