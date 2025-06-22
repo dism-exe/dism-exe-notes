@@ -1,4 +1,13 @@
-
+- [1 Rust Parquet serialize and deserialize](#1-rust-parquet-serialize-and-deserialize)
+- [2 Objective](#2-objective)
+- [3 Instructions for LLM](#3-instructions-for-llm)
+- [4 Journal](#4-journal)
+	- [4.1 Getting the parquet_derive write example to work](#41-getting-the-parquet_derive-write-example-to-work)
+		- [4.1.1 Creating a pull request to fix the documentation](#411-creating-a-pull-request-to-fix-the-documentation)
+	- [4.2 Getting the parquet_derive read example to work](#42-getting-the-parquet_derive-read-example-to-work)
+	- [4.3 Attempting to add feature for nested structs and enums to parquet_derive (PEND)](#43-attempting-to-add-feature-for-nested-structs-and-enums-to-parquet_derive-pend)
+- [5 Solution](#5-solution)
+- [6 References](#6-references)
 
 # 1 Rust Parquet serialize and deserialize
 
