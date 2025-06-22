@@ -22,9 +22,6 @@ Produce a ready example of serializing a `Vec<T>` to a parquet file and deserial
 
 # 4 Journal
 
-<hr class="__chatgpt_plugin">
-### 1.2.1 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
-
 I have found a [tutorial](<https://colinsblog.net/2021-07-27-reading-parquet-with-rust/>) by Colin which writes on parquet use, however it manually constructs the expected schema. I need it to be automatic based on type definitions.
 
 Same for this [post](<https://stackoverflow.com/questions/67900928/writing-a-vec-of-rows-to-a-parquet-file>). It gives an example, but not using derive.
@@ -41,7 +38,7 @@ Searching stack overflow for `parquet_derive`, I find this [post](<https://stack
 
 (Q1) Combine the current code with their working example. I do not want a manual schema either.
 
-## 4.1 Getting the parquet_derive example to work
+## 4.1 Getting the parquet_derive write example to work
 
 It did not work immediately, but with some minor corrections it did. It will be in `repro001`. 
 
@@ -69,43 +66,107 @@ cargo run --features "repro001"
 
 Then you will see `example.parquet` created in the repo root directory.
 
+### 4.1.1 Creating a pull request to fix the documentation
+
+2025-06-21 Wk 25 Sat - 19:41
+
+
+```
+To build documentation, run `cargo doc --no-deps`. To compile and view in the browser, run `cargo doc --no-deps --open`.
+```
+
+I need to fork [arrow-rs](<https://github.com/apache/arrow-rs>).
+
+Then clone it in my system:
+```sh
+cd /home/lan/src/cloned/gh/LanHikari22/forked
+git clone git@github.com:LanHikari22/arrow-rs.git
+```
+
+First, let's make a correction for the broken [example](<https://docs.rs/parquet_derive/30.0.1/parquet_derive/derive.ParquetRecordWriter.html>).
+
+Note that it's version `30.0.1`, but the current is [55.1.0](<https://docs.rs/parquet_derive/latest/parquet_derive/>) as of 2025-06-21. 
+
+But it is the same example. Here is [latest](<https://docs.rs/parquet_derive/latest/parquet_derive/derive.ParquetRecordWriter.html>).
+
+Our target is [parquet_derive/src/lib.rs](<https://github.com/apache/arrow-rs/blob/main/parquet_derive/src/lib.rs>). Specifically the documentation for `parquet_record_writer`
+
+Let's create a new branch for this documentation change, `docs`
+
+```
+git checkout -b update_parquet_record_writer_docs
+```
+
+Then just put the same code as in my [repro001](<https://github.com/LanHikari22/rs_repro/blob/main/src/repro_tracked/repro001_parquet_derive_example.rs>) but with more brevity.
+
+As the README says, let's check the new documentation:
+```sh
+# in /home/lan/src/cloned/gh/LanHikari22/forked/arrow-rs/parquet_derive
+cargo doc --no-deps --open
+```
+
+It looks good. Let's commit this and push. Going through `git log`, it seems the convention is to start with the module name first. So `parquet_derive: ...`
+
+```sh
+git commit -m "parquet_derive: update in working example for ParquetRecordWriter"
+git push origin update_parquet_record_writer_docs
+```
+
+Github immediately recognizes this push and gives me the option to `Compare & pull request`
+
+The convention is that the PR needs to close some issue. Let's open a [new issue](<https://github.com/apache/arrow-rs/issues/7732>) for [arrow-rs](<https://github.com/apache/arrow-rs>):
+
+Github points me to the [contribution guidelines](<https://github.com/apache/arrow-rs/blob/1ededfe024e6da1dd08bd0aee9411d1fb04523ac/CONTRIBUTING.md>) for this project. Seems to have a bunch of things on testing and benchmarks which can be useful for code features.
+
+2025-06-21 Wk 25 Sat - 20:37
+
+PR submitted.
+
+2025-06-21 Wk 25 Sat - 21:25
+
+Updated the stack overflow [post](<https://stackoverflow.com/questions/67900928/writing-a-vec-of-rows-to-a-parquet-file>) as well.
+
+## 4.2 Getting the parquet_derive read example to work
+
+2025-06-21 Wk 25 Sat - 20:37
+
+Now that we can write `Vec<T>` with `T` having `parquet_derive`, let's try the read example. This will be `repro002`. 
+
+Reading the derive source for [parquet_record_reader](<https://github.com/apache/arrow-rs/blob/1ededfe024e6da1dd08bd0aee9411d1fb04523ac/parquet_derive/src/lib.rs#L191C8-L191C29>) we can see that there are several limitations:
+1. it does not support enums yet. This is also true for the writer.
+2. It manually requires us to feed it the number of records in the parquet file.
+
+That said, [repro002](<https://github.com/LanHikari22/rs_repro/blob/main/src/repro_tracked/repro002_parquet_derive_read_example.rs>) works for reading the parquet file of the same struct written before.
+
+To run it:
+
+```rust
+git clone https://github.com/LanHikari22/rs_repro.git
+cd rs_repro
+cargo run --features "repro002"
+```
+
+2025-06-21 Wk 25 Sat - 21:27
+
+Let's open a [feature request issue](<https://github.com/apache/arrow-rs/issues/7734>). Enum and struct in struct support is essential.
+
+## 4.3 Attempting to add feature for nested structs and enums to parquet_derive (PEND)
+
+2025-06-21 Wk 25 Sat - 21:51
+
+[feature request issue](<https://github.com/apache/arrow-rs/issues/7734>). 
+
+In case I wanna give it a shot:
+
+```rust
+git checkout -b add_inner_struct_and_enum_support_to_parquet_derive
+```
+
+So what's the strategy here? Nesting can go on and on arbitrarily. We could look at how they do it with serde/json. It might give some ideas.
 
 # 5 Solution
 
-serde
-
-
-```rust
-use parquet;
-use parquet::record::RecordWriter;
-
-#[derive(Debug, ParquetRecordWriter)]
-struct User {
-    name: String,
-    email: String,
-    comment: String,
-}
-
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let users = vec![
-        User {
-            name: "Alice".into(),
-            email: "alice@example.com".into(),
-            comment: "New\nLine, and \"quotes\"".into(),
-        },
-        User {
-            name: "Bob".into(),
-            email: "bob@example.com".into(),
-            comment: "Tabs\ttoo".into(),
-        },
-    ];
-
-    write_vec_to_csv("users.csv", &users).unwrap();
-    let loaded: Vec<User> = read_vec_from_csv("users.csv").unwrap();
-    println!("{:#?}", loaded);
-    Ok(())
-}
-```
+PEND
 
 # 6 References
 1. [parquet_derive docs](<https://docs.rs/parquet_derive/30.0.1/parquet_derive/derive.ParquetRecordWriter.html>) ^1

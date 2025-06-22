@@ -3,23 +3,21 @@
 
 <hr class="__chatgpt_plugin">
 
-### 1.1.1 role::user
+# 2 Objective
 
 This note relates to [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]. We are trying to run the lexer on the entire repository and save it as tokens and we need a good library for this and to be conservative about space and fast about reading/writing.
 
 I want a quick CSV writer/reader for a `Vec<T>`. If this could be done quickly with derives that would be great. Allow any data within Strings in the CSV. Multiline, quotes, whatever. Figure it out. If CSV is not the right format, then something just like it that handles this. TSV, or whatever.
 
-Instructions for LLM:
+# 3 Instructions for LLM:
 - This is a diagnostic document and not a conversation. Everything shared is context. Address the questions tagged (Q#) like (Q1) for example. If you see something like (~1), assume it part of the archive and not a latest set of questions.
 	- Since it keeps occurring, I ask Again
 	- !!! NEVER RESPOND TO (~1), (~2), etc.
 	- ONLY respond to the tagged questions. Nothing else.
 
+# 4 Journal
 
-<hr class="__chatgpt_plugin">
-
-### 1.1.2 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
-Distilled,
+## 4.1 Fixing issues with csv solution
 
 2025-06-18 Wk 25 Wed - 21:05
 
@@ -129,6 +127,8 @@ We do not want to make use of  [The0x539](<https://github.com/The0x539>)'s worka
 
 LLM suggests [ron](<https://github.com/ron-rs/ron>). Although it is verbose and repeats column named, it still has high interoperability with serde and enums. So we could use it.
 
+## 4.2 Considering other options
+
 2025-06-20 Wk 25 Fri - 14:03
 
 Let's try to do this with parquet. This has costs in simplicity because it's no longer a text file format and so version control becomes trickier. Looking into version control solutions, I am led to [Delta Lake](<https://github.com/delta-io/delta>) and for rust specifically [delta-rs](<https://github.com/delta-io/delta-rs>). This seems to have python bindings and is too heavy for our purposes here. 
@@ -137,10 +137,15 @@ For now version control is not a critical cost, let's just try to get parquet se
 
 This is out of scope for this note, so check out [[Wk 25 003 Rust Parquet serialize and deserialize]]
 
+## 4.3 Setting up repro003 with Ron (PEND)
 
-## 1.2 Solution
+2025-06-21 Wk 25 Sat - 22:00
 
-### 1.2.1 Using CSV (Limited enum support)
+Let's get `Ron` working. `parquet_derive` also does not support enums right now, nor nested structs... read/write using ron derive will be in `repro003`. We will be reproducing the [example](<https://github.com/ron-rs/ron?tab=readme-ov-file#mainrs>) in the README, but modified to work with a `Vec<T>`. 
+
+# 5 Solution
+
+### 5.1.1 Using CSV (Limited enum support)
 
 ^csv-writer-reader-setup1
 
@@ -218,6 +223,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-#### 1.2.1.1 Playground
+#### 5.1.1.1 Playground
 
 Try this in [Playground](<https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=03b72840eb492266beffe660f3ac1895>)
