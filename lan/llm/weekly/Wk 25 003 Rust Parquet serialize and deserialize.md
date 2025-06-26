@@ -1,13 +1,22 @@
-- [1 Rust Parquet serialize and deserialize](#1-rust-parquet-serialize-and-deserialize)
-- [2 Objective](#2-objective)
-- [3 Instructions for LLM](#3-instructions-for-llm)
-- [4 Journal](#4-journal)
-	- [4.1 Getting the parquet_derive write example to work](#41-getting-the-parquet_derive-write-example-to-work)
-		- [4.1.1 Creating a pull request to fix the documentation](#411-creating-a-pull-request-to-fix-the-documentation)
-	- [4.2 Getting the parquet_derive read example to work](#42-getting-the-parquet_derive-read-example-to-work)
-	- [4.3 Attempting to add feature for nested structs and enums to parquet_derive (PEND)](#43-attempting-to-add-feature-for-nested-structs-and-enums-to-parquet_derive-pend)
-- [5 Solution](#5-solution)
-- [6 References](#6-references)
+
+```table-of-contents
+```
+
+1. [1 Rust Parquet serialize and deserialize](#1-rust-parquet-serialize-and-deserialize)
+2. [2 Objective](#2-objective)
+3. [3 Instructions for LLM](#3-instructions-for-llm)
+4. [4 Journal](#4-journal)
+	1. [4.1 Getting the parquet_derive write example to work](#41-getting-the-parquet_derive-write-example-to-work)
+		1. [4.1.1 Creating a pull request to fix the documentation](#411-creating-a-pull-request-to-fix-the-documentation)
+	2. [4.2 Getting the parquet_derive read example to work](#42-getting-the-parquet_derive-read-example-to-work)
+	3. [4.3 On maintainer request: looking to remove no_run](#43-on-maintainer-request-looking-to-remove-no_run)
+		1. [4.3.1 What is `no_run` ? What does it mean in rust tooling?](#431-what-is-no_run--what-does-it-mean-in-rust-tooling)
+		2. [4.3.2 Removing the `no_code` and testing](#432-removing-the-no_code-and-testing)
+		3. [4.3.3 Changes for Commit (8d1e9963)](#433-changes-for-commit-8d1e9963)
+	4. [4.4 Attempting to add feature for nested structs and enums to parquet_derive (PEND)](#44-attempting-to-add-feature-for-nested-structs-and-enums-to-parquet_derive-pend)
+5. [5 Solution](#5-solution)
+6. [6 References](#6-references)
+
 
 # 1 Rust Parquet serialize and deserialize
 
@@ -134,6 +143,10 @@ PR submitted.
 
 Updated the stack overflow [post](<https://stackoverflow.com/questions/67900928/writing-a-vec-of-rows-to-a-parquet-file>) as well.
 
+2025-06-24 Wk 26 Tue - 20:54
+
+Further work based on comments from the maintainer on this PR can be found [[#4.3 On maintainer request looking to remove --no_run|here]].
+
 ## 4.2 Getting the parquet_derive read example to work
 
 2025-06-21 Wk 25 Sat - 20:37
@@ -158,7 +171,110 @@ cargo run --features "repro002"
 
 Let's open a [feature request issue](<https://github.com/apache/arrow-rs/issues/7734>). Enum and struct in struct support is essential.
 
-## 4.3 Attempting to add feature for nested structs and enums to parquet_derive (PEND)
+## 4.3 On maintainer request: looking to remove no_run
+
+2025-06-24 Wk 26 Tue - 20:48
+
+I previously opened [#7733](<https://github.com/apache/arrow-rs/pull/7733>) [[#4.1.1 Creating a pull request to fix the documentation|here]].
+
+In [#7733](<https://github.com/apache/arrow-rs/pull/7733>), [alamb](https://github.com/alamb) suggested to remove no_run so that the code can be automatically checked by CI.
+
+One way to check is if the example has wrong code, then the code would not compile. Then it would satisfy the CI requirement (continuous integration).
+
+in `arrow-rs/parquet_derive`, the [README](<https://github.com/apache/arrow-rs/tree/main/parquet_derive#readme>) specifies
+
+```markdown
+Testing a `*_derive` crate requires an intermediate crate. Go to `parquet_derive_test` and run `cargo test` for unit tests.
+```
+
+Let's run the tests.
+
+```sh
+# in /home/lan/src/cloned/gh/LanHikari22/forked/arrow-rs/parquet_derive_test
+cargo test
+
+# stdout
+running 5 tests
+test tests::test_aliased_result ... ok
+test tests::test_parquet_derive_read_write_combined ... ok
+test tests::test_parquet_derive_read_optional_but_valid_column ... ok
+test tests::test_parquet_derive_read_pruned_and_shuffled_columns ... ok
+test tests::test_parquet_derive_hello ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+```
+
+### 4.3.1 What is `no_run` ? What does it mean in rust tooling?
+
+2025-06-24 Wk 26 Tue - 21:13
+
+2025-06-26 Wk 26 Thu - 04:22
+
+[rust-lang docs: documentation-tests](<https://doc.rust-lang.org/rustdoc/write-documentation/documentation-tests.html>) [[#^7]] mentions use of `no_run`. 
+
+They mention:
+
+> The `no_run` attribute will compile your code but not run it. This is important for examples such as "Here's how to retrieve a web page," which you would want to ensure compiles, but might be run in a test environment that has no network access. This attribute can also be used to demonstrate code snippets that can cause Undefined Behavior.
+
+
+We have no such constraints. We want the examples to act as tests.
+
+2025-06-26 Wk 26 Thu - 04:43
+
+We are able to test issues in the doctests by running
+
+```sh
+cargo test --doc -- --show-output
+```
+
+For more clarity, we can also add asserts for expected behavior.
+
+### 4.3.2 Removing the `no_code` and testing
+
+Let's just remove `no_code` from the new example we added for `ParquetRecordWriter`
+
+```sh
+# in /home/lan/src/cloned/gh/LanHikari22/forked/arrow-rs/parquet_derive
+cargo doc --no-deps --open
+```
+
+2025-06-26 Wk 26 Thu - 05:40
+
+I rewrote the example and instead of `a_str` I use `a_string` because reading so far does not allow references... And for comprehensive testing of writing, it helps to read what we just wrote and confirm it's identical to expected.
+
+Oops, I ended up commiting and pushing to my other feature branch
+
+```sh
+$ git commit
+[add_inner_struct_and_enum_support_to_parquet_derive 8d1e9963] parquet_derive: Update ParquetRecordWriter example
+
+$ git push origin add_inner_struct_and_enum_support_to_parquet_derive
+```
+
+Luckily I didn't do work there yet, so easy fix.
+
+```sh
+git checkout update_parquet_record_writer_docs
+git merge add_inner_struct_and_enum_support_to_parquet_derive
+git push origin update_parquet_record_writer_docs
+```
+
+### 4.3.3 Changes for Commit (8d1e9963)
+
+See [Commit](<https://github.com/apache/arrow-rs/pull/7733/commits/8d1e9963a0cbd2a5732180f14fe0b3da5c0a385c>).
+
+2025-06-26 Wk 26 Thu - 05:13
+
+- [x] Added link to the more relevant documentation for read/write parquet
+
+2025-06-26 Wk 26 Thu - 06:06
+
+- [x] Added a working writing/reading test for ParquetRecordWriter
+
+Some things to consider:
+- [ ] Clarify or update README example. It is incomplete. 
+
+## 4.4 Attempting to add feature for nested structs and enums to parquet_derive (PEND)
 
 2025-06-21 Wk 25 Sat - 21:51
 
@@ -178,3 +294,32 @@ PEND
 
 # 6 References
 1. [parquet_derive docs](<https://docs.rs/parquet_derive/30.0.1/parquet_derive/derive.ParquetRecordWriter.html>) ^1
+2. [Writing Rust Documentation by Maksim Gritchin](<https://dev.to/gritmax/writing-rust-documentation-5hn5>) ^2
+3. [Maksim Gritchin: Dev Profile](<https://dev.to/gritmax>) ^3
+4. [rust-lang docs: writing docs](<https://doc.rust-lang.org/rustdoc/how-to-write-documentation.html>) ^4
+5. [CommonMark Spec](<https://commonmark.org/>) ^5
+6. [CommonMark Spec 0.31.2](<https://spec.commonmark.org/0.31.2/>) ^6
+7. [rust-lang docs: documentation-tests](<https://doc.rust-lang.org/rustdoc/write-documentation/documentation-tests.html>) ^7
+
+```mermaid
+graph TD
+
+%% Nodes
+A1[^2 Article: Writing Rust Documentation]
+A2[^3 Person: Maksim Gritchin]
+A3[^4 rust-lang docs: writing docs]
+A4[^5 CommonMark Spec]
+A5[^6 CommonMark Spec 0.31.2]
+
+N5_1[Latest as of June 2025. Otherwise use /current]:::note
+
+%% Settings
+classDef note fill:#f9f9a6,stroke:#333,stroke-width:1px,color:#000,font-style:italic;
+
+%% Connections
+A2 --> |authored| A1
+A1 --> |references| A3
+A3 --> |uses| A4
+A4 --> |released| A5
+N5_1 -.-> |about| A5
+```

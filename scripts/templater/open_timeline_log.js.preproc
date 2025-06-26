@@ -1,0 +1,11 @@
+async function openTimelineLog(tp, identity) {
+	const fs = tp.app.vault.adapter;
+
+	const filename = getCurrentWeekFilename();
+	const filePath = `scripts/templater/data/${identity}/${filename}`;
+
+	await ensureTimelineFile(fs, filePath);
+	await app.workspace.openLinkText(filePath, '/', false);
+}
+
+module.exports = openTimelineLog;

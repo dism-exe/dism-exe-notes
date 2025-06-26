@@ -45,11 +45,11 @@ async function stopLastLogEntry(fs, filePath) {
  await fs.write(filePath, updated);
  new Notice("Stop log recorded.");
 }
-async function stop_log(tp, identity) {
+async function openTimelineLog(tp, identity) {
  const fs = tp.app.vault.adapter;
  const filename = getCurrentWeekFilename();
- const timelineFilePath = `scripts/templater/data/${identity}/${filename}`;
- await ensureTimelineFile(fs, timelineFilePath);
- await stopLastLogEntry(fs, timelineFilePath);
+ const filePath = `scripts/templater/data/${identity}/${filename}`;
+ await ensureTimelineFile(fs, filePath);
+ await app.workspace.openLinkText(filePath, '/', false);
 }
-module.exports = stop_log;
+module.exports = openTimelineLog;

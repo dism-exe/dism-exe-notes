@@ -1,0 +1,12 @@
+async function stop_log(tp, identity) {
+	const fs = tp.app.vault.adapter;
+
+
+	const filename = getCurrentWeekFilename();
+	const timelineFilePath = `scripts/templater/data/${identity}/${filename}`;
+
+	await ensureTimelineFile(fs, timelineFilePath);
+	await stopLastLogEntry(fs, timelineFilePath);
+}
+
+module.exports = stop_log;
