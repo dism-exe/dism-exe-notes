@@ -274,6 +274,13 @@ See [Commit](<https://github.com/apache/arrow-rs/pull/7733/commits/8d1e9963a0cbd
 Some things to consider:
 - [ ] Clarify or update README example. It is incomplete. 
 
+### 4.3.4 On CI integration
+
+2025-06-26 Wk 26 Thu - 07:00
+
+I have noticed for RON they had explicit CI integration running commands. Here's an [example](<https://github.com/ron-rs/ron/actions/runs/15807186670/job/44558352206>) of a failed job.
+
+
 ## 4.4 Attempting to add feature for nested structs and enums to parquet_derive (PEND)
 
 2025-06-21 Wk 25 Sat - 21:51

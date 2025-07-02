@@ -1,3 +1,25 @@
+#lan #llm #pr #external #rust
+
+
+```table-of-contents
+```
+
+1. [1 Rust Derive in Struct for CSV Vec Writer/Reader](#1-rust-derive-in-struct-for-csv-vec-writerreader)
+2. [2 Objective](#2-objective)
+3. [3 Instructions for LLM:](#3-instructions-for-llm)
+4. [4 Journal](#4-journal)
+	1. [4.1 Fixing issues with csv solution](#41-fixing-issues-with-csv-solution)
+	2. [4.2 Considering other options](#42-considering-other-options)
+	3. [4.3 Setting up repro003 with Ron](#43-setting-up-repro003-with-ron)
+	4. [4.4 Open PR to add repro003 to examples for RON](#44-open-pr-to-add-repro003-to-examples-for-ron)
+		1. [4.4.1 Feedback on RON PR](#441-feedback-on-ron-pr)
+			1. [4.4.1.1 Setting no line seperator and string escapes in pretty config](#4411-setting-no-line-seperator-and-string-escapes-in-pretty-config)
+			2. [4.4.1.2 Changes for Commit](#4412-changes-for-commit)
+5. [5 Solution](#5-solution)
+		1. [5.1.1 Using CSV (Limited enum support)](#511-using-csv-limited-enum-support)
+			1. [5.1.1.1 Playground](#5111-playground)
+
+
 # 1 Rust Derive in Struct for CSV Vec Writer/Reader
 
 
@@ -213,9 +235,9 @@ Checking `CHANGELOG.md`, it links to the following:
 - The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Will leave it to the maintainers to advise or take over about version incrementing. Let's add the commit details to the changelog. The convention is to point to the PR itself. So let's create the PR and then add the commit with the changelog and point to it.
+Will leave it to the maintainers to advise or take over about version incrementing. Let's add the commit details to the `changelog`. The convention is to point to the PR itself. So let's create the PR and then add the commit with the `changelog` and point to it.
 
-This is the [PR](<https://github.com/ron-rs/ron/pull/573>). Let's add it to the changelog.
+This is the [PR](<https://github.com/ron-rs/ron/pull/573>). Let's add it to the `changelog`.
 
 ```
 ## Unreleased
@@ -232,6 +254,195 @@ git push origin add_vec_file_read_write_example
 2025-06-22 Wk 25 Sun - 16:38
 
 Now we can check the mark for including the change.
+
+### 4.4.1 Feedback on RON PR
+
+2025-06-26 Wk 26 Thu - 07:10
+
+In PR [#573](<https://github.com/ron-rs/ron/pull/573>),  [`juntyr`](<https://github.com/juntyr>) recommended that a different strategy could be used. So that we d not require a magic separator.
+
+#### 4.4.1.1 Setting no line separator and string escapes in pretty config
+
+2025-06-26 Wk 26 Thu - 08:07
+
+Running into this issue when trying to create my own `PrettyConfig` instance:
+
+```rust
+error[E0639]: cannot create non-exhaustive struct using struct expression
+  --> src/repro_tracked/repro003_ron_read_write.rs:73:21
+   |
+73 | /                     PrettyConfig {
+74 | |                         depth_limit: todo!(),
+75 | |                         new_line: todo!(),
+76 | |                         indentor: todo!(),
+...  |
+82 | |                         compact_arrays: todo!(),
+83 | |                     }
+   | |_____________________^
+```
+
+2025-06-26 Wk 26 Thu - 08:11
+
+Okay the example `rustdoc` for `PrettyConfig` does mention how to use it:
+
+```rust
+use ron::ser::PrettyConfig;
+
+let my_config = PrettyConfig::new()
+    .depth_limit(4)
+    // definitely superior (okay, just joking)
+    .indentor("\t".to_owned());
+```
+
+Funny!
+
+2025-06-26 Wk 26 Thu - 08:16
+
+Options available for `PrettyConfig` can be found [here](<https://github.com/ron-rs/ron/blob/ba572011ad8eb24992cb6fa9e540a86e3e249a91/src/ser/mod.rs#L119>) (As of commit [`ba57201`](<https://github.com/ron-rs/ron/commit/ba572011ad8eb24992cb6fa9e540a86e3e249a91>)).
+
+Since we want one entry per line for as much compactness as possible, we want:
+- `compact_arrays`  set to `true`
+- `compact_structs` set to `true`
+- `compact_maps` set to `true`
+- `escape_strings` set to `true`. This is the default but just to be explicit.
+
+2025-06-26 Wk 26 Thu - 08:29
+
+Seems we can only use whitespace for `seperator`:
+
+```rust
+if !conf.separator.chars().all(is_whitespace_char) {
+	return Err(Error::Message(String::from(
+		"Invalid non-whitespace `PrettyConfig::separator`",
+	)));
+}
+```
+
+So the current `" "` is the minimal we want to keep.
+
+2025-06-26 Wk 26 Thu - 08:36
+
+Seems for [`repro003`](<https://github.com/LanHikari22/rs_repro/blob/main/src/repro_tracked/repro003_ron_read_write.rs>) I am using version `0.8.x`, but actually latest is `0.10.x`. This includes the new `PrettyConfig` settings like `compact_structs`, `compact_maps`, and `escape_strings`. Updating this for `repro003`. It should be mirroring the same example as in PR [#573](<https://github.com/ron-rs/ron/pull/573>).
+
+We get errors bumping `0.8.x` -> `0.10.1`...
+
+```rust
+error[E0277]: `?` couldn't convert the error to `SpannedError`                                                                                                                                
+   --> src/repro_tracked/repro003_ron_read_write.rs:107:36                                                                                                                                    
+    |                                                                                                                                                                                         
+106 | fn read_ron_vec_from_file<T: DeserializeOwned>(path: &PathBuf) -> SpannedResult<Vec<T>> {                                                                                               
+    |                                                                   --------------------- expected `SpannedError` because of this                                                         
+107 |     let mut file = File::open(path)?;                                                                                                                                                   
+    |                    ----------------^ the trait `From<std::io::Error>` is not implemented for `SpannedError`                                                                             
+    |                    |                                                                                                                                                                    
+    |                    this can't be annotated with `?` because it has type `Result<_, std::io::Error>`                                                                                     
+    |                                                                                                                                                                                         
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+
+```
+
+
+![[Pasted image 20250626084337.png]]
+
+2025-06-26 Wk 26 Thu - 09:08
+
+I mapped the errors to `SpannedError` with a `Position` at line 1 col 1, and the io error as string for `Error:Io`.
+
+2025-06-26 Wk 26 Thu - 09:13
+
+It works!
+
+```sh
+cat example.ron                  
+(name: "Alice", email: "alice@example.com", comment: "New\nLine, and \"quotes\"", role: Admin(key: 3735944941), meta: (created_at: "2025-06-22", author: "Admin"))
+(name: "Bob", email: "bob@example.com", comment: "Tabs\ttoo", role: User, meta: (created_at: "2025-06-22", author: "Admin"))
+```
+
+One entry per line!
+
+Is there anything for us to test before we push this commit?
+
+2025-06-26 Wk 26 Thu - 09:21
+
+So this works for  [`repro003`](<https://github.com/LanHikari22/rs_repro/blob/main/src/repro_tracked/repro003_ron_read_write.rs>) bumped to `0.10.1` but still when we try to get the example working in the repo itself, we get this error for constructing `SpannedError` :
+
+```
+missing structure fields:
+
+- span
+```
+
+This is trickier as this change is not part of the latest release as of Jun 2025. See the [`changelog`](<https://github.com/ron-rs/ron/blob/master/CHANGELOG.md>).
+
+We do not need to be returning this `SpannedError`. Just return the code, via Error, and it's simpler.
+
+2025-06-26 Wk 26 Thu - 09:35
+
+Ok! Pushed again!
+
+```sh
+git push origin add_vec_file_read_write_example
+```
+
+#### 4.4.1.2 Changes for Commit (06bf8a0)
+
+Commit is [here](<https://github.com/ron-rs/ron/pull/573/commits/06bf8a0d5189205ef20b5a65a646f627bb13b08d>).
+
+- [x] Updated example to remove magic separator and ensure one entry per row
+- [x] Ensured example works under `0.10.1` and not just `0.8.x`.
+- [x] Ensured that new lines added per entry handled windows/non-windows
+- [x] Ensured that the example file is deleted after testing
+
+I want to:
+
+- [x] Update example to remove the magic separator and instead condense the pretty output as suggested, one entry per row.
+
+### 4.4.2 Feedback on RON PR: Clarify comments and rename example file
+
+2025-06-26 Wk 26 Thu - 15:51
+
+For PR [#573](<https://github.com/ron-rs/ron/pull/573>),
+
+[`juntyr`](<https://github.com/juntyr>)'s feedback:
+- [x] Update comment description. It still talks about the magic seperator
+- [x] Rename the example file generated to `vec-example.ron`
+
+Testing:
+- [x] Ensure it works over in `repro003` before copying over
+
+Also:
+- Simplified `read_ron_vec_from_str` pipeline. It no longer needs to trim each string and filter for empties. The data format is simpler now. It can directly just parse lines and map the lines to entries!
+
+2025-06-26 Wk 26 Thu - 15:56
+
+OK. [Commited](<https://github.com/ron-rs/ron/pull/573/commits/4ac4dccb53f9521bf21c5093c9ba1d8c08f7b27d>) and pushed.
+
+### 4.4.3 Solving CI Failure for RON PR
+
+PEND
+
+2025-06-29 Wk 26 Sun - 11:35
+
+For PR [#573](<https://github.com/ron-rs/ron/pull/573>),
+
+There are some CI failures we need to resolve like [this](<https://github.com/ron-rs/ron/actions/runs/15902804363/job/44870823770?pr=573>).
+
+2025-06-30 Wk 27 Mon - 23:42
+
+```sh
+cargo test --no-default-features
+
+# output
+[...]
+115 |     file.read_to_string(&mut content)?;
+    |          ----------------------------^ the trait `From<std::io::Error>` is not implemented for `ron::Error`
+    |          |
+    |          this can't be annotated with `?` because it has type `Result<_, std::io::Error>`
+[...]
+```
+
+I made sure the same code works on [`repro003`](<https://github.com/LanHikari22/rs_repro/blob/main/src/repro_tracked/repro003_ron_read_write.rs>) but it fails here...
+
 
 # 5 Solution
 
@@ -316,3 +527,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 #### 5.1.1.1 Playground
 
 Try this in [Playground](<https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=03b72840eb492266beffe660f3ac1895>)
+
+# 6 References
+1. [RON Wiki Specification](<https://github.com/ron-rs/ron/wiki/Specification>) ^1

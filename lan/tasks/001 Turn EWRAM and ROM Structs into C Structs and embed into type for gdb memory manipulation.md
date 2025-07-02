@@ -1,4 +1,4 @@
-#lan #task #active #build #debugging #gdb #types
+#lan #task #active #build #debugging #gdb #types #external 
 ```table-of-contents
 ```
 
@@ -407,7 +407,9 @@ We can look at that `get_lineno_and_col_at_index` in the assembly and source
 objdump -d target/release/bn_repo_editor | less
 ```
 
-### 2.5.2 Logs for improved times and actions (TODO)
+### 2.5.2 Logs for improved times and actions
+
+TODO
 
 2025-06-16 Wk 25 Mon - 10:59
 
@@ -436,8 +438,36 @@ objdump -d target/release/bn_repo_editor | less
 | Trial (#) | When                         | Notes                                                                                           |
 | --------- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
 | 0         | 2025-06-16 Wk 25 Mon - 11:40 | 1. Release has vast timing improvements over debug. But writing for asm00_1 is still very slow. |
+|           |                              |                                                                                                 |
+
+2025-06-27 Wk 26 Fri - 14:45
+
+With parallelization and using RON for file writes, now it takes in total $\approx 104$ seconds to do lexical analysis on the whole repository, which contains 11,421,102 tokens in total.
+
+---
+
+![[Pasted image 20250627144708.png]]
+Figure 1: visidata breakdown by lexon_type of the entire repository of `bn6f` ^fig1
+
+---
+
+It's much better than before. Can be even better, but at least usable.
 
 ### 2.5.3 Map current lexer project files to include chunks
+
+2025-06-28 Wk 26 Sat - 12:43
+
+**What is a lexer? And why use it?**
+
+The point of a lexer is so that we no longer deal with the repository source files in terms of text, but rather in terms of typed boxes.
+
+![[Pasted image 20250628124516.png]]
+
+In the above image, every box has its own grammatical meaning. These would be the lexer tokens.
+
+The next step once each source file has a corresponding `.lexer.ron`, is to resolve all `.include` directives so that we can deal with continuous streams of tokens that produce effect rather than deal with how they break down in file structure.
+
+There are also 11 million tokens in the `bn6f` project, so running the lexical stage all at once in parallel helps save time with analysis and reconstruction of the repository files.
 
 2025-06-16 Wk 25 Mon - 21:46
 
@@ -511,7 +541,344 @@ Created a test `lexer_record_vec_read_write_are_inverses` to investigate how `wr
 called `Result::unwrap()` on an `Err` value: Error(Deserialize { pos: Some(Position { byte: 36, line: 2, record: 1 }), err: DeserializeError { field: None, kind: Message("unknown variant `-784054805`, expected one of `Word`, `Text`, `UInt`, `NegInt`, `UHex`, `NegHex`, `Sign`") } })
 ```
 
+#### 2.5.3.1 Reading/Writing LexerReport to RON files
 
+2025-06-26 Wk 26 Thu - 19:33
+
+See [[Wk 25 000 Rust CSV Reader Writer with Derive]] and [[Wk 25 003 Rust Parquet serialize and deserialize]] for investigations on file format to use for serialization.
+
+For now we decided to go with RON. It's simple, and we managed to be able to seamlessly generate `Vec<T>` <-> Text File with it. One entry per line. It repeats column names, which may inflate the size but it's a simple protocol. Going to implement use of it in [`lan_rs_common`](<https://github.com/LanHikari22/lan_rs_common>) according to the example in [`repro003`](<https://github.com/LanHikari22/rs_repro/blob/main/src/repro_tracked/repro003_ron_read_write.rs>)
+
+2025-06-26 Wk 26 Thu - 22:32
+
+We should now be writing `lexer.ron` files to `{app_data_dir}/lexer/`
+
+```sh
+# In /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
+cargo run --release -- gen_debug_elf --regen
+```
+
+It works for writing!
+
+2025-06-26 Wk 26 Thu - 23:06
+
+For translating all the `.lexer.ron` files into a csv buffer to be analyzed with visidata, see  [[Wk 26 000 Lexer RON to CSV for quick visidata inspection]].
+
+Now we need to make sure we are able to read the `LexerReport`. 
+
+2025-06-26 Wk 26 Thu - 23:34
+
+The testing shows that we are able to read the report now as expected!
+
+```rust
+    let report = LexerReport::read(&lexer_path);
+    println!("keys {:?}", report.path_to_records.keys());
+    println!(
+        "# tokens {:?}",
+        report //_
+            .path_to_records
+            .values()
+            .map(|v| v.len())
+            .collect::<Vec<_>>()
+    );
+    println!("last modified {:?}", report.path_to_last_modified);
+```
+
+```
+keys ["/home/lan/data/apps/bn_repo_editor/lexer/asm/asm00_0.lexer.ron", "/home/lan/data/apps/bn_repo_editor/lexer/asm/asm00_1.lexer.ron"]
+# tokens [21464, 69850]
+last modified {"/home/lan/src/cloned/gh/dism-exe/bn6f/asm/asm00_0.s": "SystemTime { tv_sec: 1749648687, tv_nsec: 580792540 }", "/home/lan/src/cloned/gh/dism-exe/bn6f/asm/asm00_1.s": "SystemTime { tv_sec: 1749827025, tv_nsec: 951723350 }"}
+```
+
+Now let's run full analysis! We should be able to move on from the lexer stage to the lexer-chunks!
+
+```sh
+cargo run --release -- gen_debug_elf --regen
+```
+
+#### 2.5.3.2 Creating include chunks
+
+2025-06-27 Wk 26 Fri - 14:32
+
+##### 2.5.3.2.1 Tasks
+
+Okay. So we have the `LexerReport` now. We want to turn it into a `LexerIncludeChunksReport`. What should we do?
+
+- [ ] We shouldn't repeat ourselves. We should check the date modified and mirror it in stage 2. If it is identical, and an output exists, nothing to do.
+- [x] We need a new master RON file that maps between files and an array of enums, the enum being either a `Lexer(path_to_chunked_lexer_file)`, or an `Include(key_within_this_hash)`.  The reason here is to not repeat our work. We will eventually hit all the files, so any recursion (that isn't deadly) should be resolved via this method. For now, do not handle corner cases like circular includes, etc. These should fail build and `OK`. 
+- [ ] We need individual chunk files. `{lexer_file}.chunk{n}.lexer.ron` 
+- [ ] Ability to read the the report, including the maser RON file, and each chunk as mapping to a single file path, as well as the file that maps modifications for stage 2. Modifications are reflected off of the repository base files in every stage to cache compute.
+- [ ] Flat master document. Meaning, it only includes chunk files to process.  It does not preserve hierarchies such as A -> B -> {C, D} where A includes B which includes C, D. Here, A would just have a flat list of chunks, some named by A, some by B, some by C and D. In addition, this does not map one-to-one with every file in the repository anymore. Only root files. A root file is a lexer file that is not included anywhere. 
+- [ ] Maintain within the flat master document a mapping: root file -> list of included files. 
+
+Eventually, we should:
+- [ ] Refine how we retrieve the base files to begin with. Trace the build artifacts, do not just parse all legible source files.
+
+##### 2.5.3.2.2 Journal
+
+2025-06-28 Wk 26 Sat - 16:22
+
+For function `split_by_include_directive`, 
+
+We have to split by the `directive` token with text `include`, and keep it inclusive. The very next token contains the string, so we need to take these splits and patch them to take the first token of the next split for the current one. This solution could probably use some generalization or different approach.
+
+2025-06-28 Wk 26 Sat - 17:08
+
+```
+Repository Lexing stage took 99.966933472s
+Processing lexer include chunks took 32.674442395s
+```
+
+Issues to fix for this run:
+- [x]  It seems we have made a path mistake, and it generated inside `lexer/lexer`, instead of just `lexer/`.
+- [x] The chunks still include a string token. Remaining from splitting by include tokens. Some chunks even only have one string token. These shouldn't be created.
+
+2025-06-28 Wk 26 Sat - 18:12
+
+Thought `path_to_last_modified.json` was overwriting the one from the previous stage, but that was not the case.
+
+- [x] New `path_to_last_modified.json` needs to be in the `lexer_incl_chunks/` not overwriting `lexer/.
+
+There are also `.incbin` includes. But these are binary blobs, and we cannot process them as text includes.  They could be handled at a different level, as blob data.
+
+##### 2.5.3.2.3 Debugging empty string included in lexer after include
+
+2025-06-28 Wk 26 Sat - 18:34
+
+For testing, I am not removing any records from the chunks when doing an inclusive split at the `.include` directive.
+
+For `~/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.41.chunk.lexer.ron`, we see:
+
+```ron
+(lexon_type: String, lexon_data: Text(""), capture: "\"")
+(lexon_type: String, lexon_data: Text("data/dat38_67.s"), capture: "data/dat38_67.s\"\n")
+(lexon_type: DoubleColonLabel, lexon_data: Word("comp_86C9148"), capture: "comp_86C9148::\n\t")
+(lexon_type: Directive, lexon_data: Word("incbin"), capture: ".incbin ")
+(lexon_type: String, lexon_data: Text(""), capture: "\"")
+(lexon_type: String, lexon_data: Text("data/compressed/comp_86C9148.lz77"), capture: "data/compressed/comp_86C9148.lz77\"\n")
+[...]
+```
+
+In the lexer file `~/data/apps/bn_repo_editor/lexer/data.lexer.ron` we see:
+
+```ron
+[...]
+(lexon_type: DoubleColonLabel, lexon_data: Word("dat38_67"), capture: "dat38_67::\n\t")
+(lexon_type: Directive, lexon_data: Word("include"), capture: ".include ")
+(lexon_type: String, lexon_data: Text(""), capture: "\"")
+(lexon_type: String, lexon_data: Text("data/dat38_67.s"), capture: "data/dat38_67.s\"\n")
+[...]
+```
+
+There are three tokens with the `.include`. The include itself, an empty string, and then the actual file to include. Why?
+
+In the original source code `data.s`:
+
+```thumb
+dat38_67::
+	.include "data/dat38_67.s"
+comp_86C9148::
+	.incbin "data/compressed/comp_86C9148.lz77"
+```
+
+This is a bug. That empty string token shouldn't exist. We need to look back to the lexer stage how this happened. 
+
+Also the capture says `\"`...
+
+For debugging, adding to `lexer::search_for_repo_paths_to_process`:
+```rust
+.filter(|path| path.ends_with("data.s")) // for debugging, minimal output.
+```
+
+Tracing the tokens in `lexer::build_scanner`, 
+
+```rust
+println!("Debug {lexon_type:?} {lexon_data:?} -- {:?}", captures[0]);
+```
+
+Prints too much because of the data. Do not include `UHex` and `Comma`.  Also directed `.byte` and `.word`
+
+```rust
+if lexon_type != LexonType::UHex
+	&& lexon_type != LexonType::Comma
+	&& lexon_data != LexonData::Word("byte".into())
+	&& lexon_data != LexonData::Word("word".into())
+{
+	println!("Debug {lexon_type:?} {lexon_data:?} -- {:?}", captures[0]);
+}
+```
+
+There are many `.../data.s` files like `/home/lan/src/cloned/gh/dism-exe/bn6f/maps/MrWeatherComp/data.s`... Let the filter be specific:
+
+```rust
+.filter(|path| path == &PathBuf::from_str("/home/lan/src/cloned/gh/dism-exe/bn6f/data.s").unwrap()) // for debugging, minimal output.
+```
+
+This file shouldn't have raw data, so we can trace directly again
+
+```rust
+println!("Debug {lexon_type:?} {lexon_data:?} -- {:?}", captures[0]);
+```
+
+```
+[...]
+Debug DoubleColonLabel Word("dat38_67") -- "dat38_67::\n\t"
+Debug Directive Word("include") -- ".include "
+Debug String Text("") -- "\""
+Debug String Text("data/dat38_67.s") -- "data/dat38_67.s\"\n"
+Debug DoubleColonLabel Word("comp_86C9148") -- "comp_86C9148::\n\t"
+[...]
+```
+
+Additional trace on `captures`:
+
+```rust
+if captures[0] == "\"" {
+	println!("Beep! captures: {captures:?}");
+}
+```
+
+```
+Debug Directive Word("include") -- ".include "
+Debug String Text("") -- "\""
+Beep! captures: ["\"", ""]
+```
+
+Just before `comm_regex::regex_capture_once`, let's trace the string and regex at that point:
+
+```rust
+.map(|lexon_type| {
+	println!("s: {s}");
+	println!("re: {:?}", regex_scanners[lexon_type]);
+	comm_regex::regex_capture_once(s, &regex_scanners[lexon_type])
+```
+
+```
+[...]
+s: "data/dat38_99.s"
+re: Regex("^(.*?)\"\\s*")
+Debug String Text("") -- "\""
+Beep! captures: ["\"", ""]   
+[...]
+```
+
+A typo. The regex ends with `\"` but does not begin with `\"`...
+
+Specifically in `LexonType::to_regex`, 
+
+```rust
+LexonType::String => format!(r##"(.*?)"\s*"##),
+```
+
+It should be
+
+```rust
+LexonType::String => format!(r##""(.*?)"\s*"##),
+```
+
+2025-06-28 Wk 26 Sat - 20:02
+
+Now the `split_by_include_directive` is panicking because the next chunk is possibly empty... Have to check before grabbing the first record off of it.
+
+`~/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.0.chunk.lexer.ron` is empty. So is 1, 2, and 3. We need to filter empty chunks out.
+
+2025-06-28 Wk 26 Sat - 20:23
+
+Writing a RON object to file for `~/data/apps/bn_repo_editor/lexer_incl_chunks/lexer_include_chunks_recursive_listing.ron`:
+
+```
+(
+    path_to_chunks: {
+        "/home/lan/data/apps/bn_repo_editor/lexer/data.lexer.ron": File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.71.chunk.lexer.ron"),
+    },
+)
+```
+
+This should list all of the chunks for `data.lexer.ron`, not just the last one.
+
+The trace shows many entries, but it seems this collect collapses it all to just the last one:
+
+```rust
+println!("mut_path_to_chunk_tups: {mut_path_to_chunk_tups:?}");
+
+let recursive_listing_report = LexerIncludeChunksRecursiveListing {
+	path_to_chunks: mut_path_to_chunk_tups
+		.into_iter()
+		.collect::<HashMap<_, _>>(),
+};
+```
+
+We should instead group by the path, so that it knows to make it a vec for the chunks.
+
+This was also part of the error, missed making this a `Vec<ChunkIndex>`, or the rust compiler would've caught this problem.
+
+```rust
+pub struct LexerIncludeChunksRecursiveListing {
+    pub path_to_chunks: HashMap<PathBuf, ChunkIndex>,
+}
+```
+
+This should fix the issue:
+
+```rust
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LexerIncludeChunksRecursiveListing {
+    pub path_to_chunks: HashMap<PathBuf, Vec<ChunkIndex>>,
+}
+
+// [...]
+
+let recursive_listing_report = LexerIncludeChunksRecursiveListing {
+	path_to_chunks: mut_path_to_chunk_tups
+		.into_iter()
+		.into_group_map()
+};
+```
+
+```
+(
+    path_to_chunks: {
+        "/home/lan/data/apps/bn_repo_editor/lexer/data.lexer.ron": [
+            File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.0.chunk.lexer.ron"),
+            Key("data/dat38_0.s"),
+            File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.1.chunk.lexer.ron"),
+            Key("data/dat38_30.s"),
+            File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.2.chunk.lexer.ron"),
+            Key("data/dat38_31.s"),
+            File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.3.chunk.lexer.ron"),
+            Key("data/dat38_32.s"),
+            File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.4.chunk.lexer.ron"),
+            Key("data/dat38_33.s"),
+[...]
+        ],
+    },
+)
+```
+
+OK!
+
+Now we can remove debugging (data.s only filter) and have this capture all chunks for all files.
+
+2025-06-28 Wk 26 Sat - 20:47
+
+Hmm. New parsing issues.
+
+```
+thread '<unnamed>' panicked at src/lexer.rs:558:14:
+Scan failed: "\"/home/lan/src/cloned/gh/dism-exe/bn6f/data/textscript/compressed/CompText879EBA8.s\":167:2 Failed to scan \"\"\n\tts_print_ch "
+
+thread '<unnamed>' panicked at src/lexer.rs:558:14:
+Scan failed: "\"/home/lan/src/cloned/gh/dism-exe/bn6f/data/textscript/compressed/CompText87C15A8.s\":491:7 Failed to scan g\\\",\\n\"\n\t.strin "
+
+thread '<unnamed>' panicked at src/lexer.rs:558:14:
+Scan failed: "\"/home/lan/src/cloned/gh/dism-exe/bn6f/data/textscript/compressed/CompText87C6028.s\":653:6 Failed to scan r\\\"!?\"\n\tts_key_ "
+
+thread '<unnamed>' panicked at src/lexer.rs:558:14:
+Scan failed: "\"/home/lan/src/cloned/gh/dism-exe/bn6f/data/textscript/compressed/CompText879DA74.s\":572:2 Failed to scan \"\"\n\tts_print_ch "
+```
+
+
+##### 2.5.3.2.4 Journal
 # 3 Issues
 
 ## 3.1 Installing visidata gives an error on run
@@ -538,7 +905,7 @@ python3 -m pip install visidata
 
 This works.
 
-## 3.2 Issue building lan_rs_common
+## 3.2 Issue building `lan_rs_common`
 
 2025-06-14 Wk 24 Sat - 15:24
 
@@ -548,8 +915,8 @@ There's on `cargo build`:
 
 ```
    Compiling crossbeam-utils v0.8.21                                                                                                                                                          
-error: failed to run custom build command for `yeslogic-fontconfig-sys v6.0.0`                                                                                                                
-                                                                                                                                                                                              
+error: failed to run custom build command for `yeslogic-fontconfig-sys v6.0.0`
+
 Caused by:
   process didn't exit successfully: `/home/lan/src/cloned/gh/LanHikari22/lan_rs_common/target/debug/build/yeslogic-fontconfig-sys-83e88fcec271c856/build-script-build` (exit status: 101)
   --- stdout
@@ -586,11 +953,13 @@ warning: build failed, waiting for other jobs to finish...
 ```
 ^errorlog1
 
-Distillied,
+Distilled,
 
 ```
 The system library `fontconfig` required by crate `yeslogic-fontconfig-sys` was not found.
 ```
+
+Solution:
 
 ```sh
 sudo apt-get install fontconfig # probably not needed. only the dev below.
@@ -874,7 +1243,7 @@ classDef note fill:#f9f9a6,stroke:#333,stroke-width:1px,color:#000,font-style:it
 A1 --> |cites| A2
 A2 --> |forks| A3
 
-A2 -.-> N2_1
-A3 -.-> N3_1
+N3_1 -.-> |about| A3
+N2_1 -.-> |about| A2
 ```
 

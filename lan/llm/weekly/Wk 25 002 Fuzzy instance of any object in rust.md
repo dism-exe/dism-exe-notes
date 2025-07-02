@@ -5,46 +5,11 @@
 
 2025-06-17 Wk 25 Tue - 22:50
 
-### 0.1.1 role::user
+# 1 Objective
 
 It would be good to create an instance of a type like a struct without much care for its internal content for testing purposes
 
-Instructions for LLM:
-- This is a diagnostic document and not a conversation. Everything shared is context. Address the questions tagged (Q#) like (Q1) for example. If you see something like (~1), assume it part of the archive and not a latest set of questions.
-	- Since it keeps occurring, I ask Again
-	- !!! NEVER RESPOND TO (~1), (~2), etc.
-	- ONLY respond to the tagged questions. Nothing else.
-
-<hr class="__chatgpt_plugin">
-
-### 0.1.2 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
-
-Distilled,
-
-- The solution here had to be corrected to use [Higher Rank Trait Bounds](<https://doc.rust-lang.org/nomicon/hrtb.html#higher-rank-trait-bounds-hrtbs>) as suggested by the rust compiler:
-
-```rust
-error[E0106]: missing lifetime specifier
-   --> src/lexer.rs:766:24
-    |
-766 | fn fuzzed_instance<T:  Arbitrary>() -> Option<T> {
-    |                        ^^^^^^^^^ expected named lifetime parameter
-    |
-    = note: for more information on higher-ranked polymorphism, visit https://doc.rust-lang.org/nomicon/hrtb.html
-help: consider making the bound lifetime-generic with a new `'a` lifetime
-    |
-766 | fn fuzzed_instance<T:  for<'a> Arbitrary<'a>>() -> Option<T> {
-    |                        +++++++          ++++
-help: consider introducing a named lifetime parameter
-    |
-766 | fn fuzzed_instance<'a, T:  Arbitrary<'a>>() -> Option<T> {
-    |                    +++              ++++
-```
-
-Corrected suggestion below
-
-# 1 Solution
-
+# 2 Solution
 
 We will use the [arbitrary](<https://docs.rs/arbitrary/latest/arbitrary/>) crate for this.
 
@@ -88,4 +53,42 @@ x: MyStruct { id: 1939677541, label: "7ޒet\u{10}", flags: [] }
 x: MyStruct { id: 346771206, label: "3$È", flags: [true, true, true, false] }
 ...
 ```
+
+# 3 Journal
+
+### 3.1.1 role::user
+
+Instructions for LLM:
+- This is a diagnostic document and not a conversation. Everything shared is context. Address the questions tagged (Q#) like (Q1) for example. If you see something like (~1), assume it part of the archive and not a latest set of questions.
+	- Since it keeps occurring, I ask Again
+	- !!! NEVER RESPOND TO (~1), (~2), etc.
+	- ONLY respond to the tagged questions. Nothing else.
+
+<hr class="__chatgpt_plugin">
+
+### 3.1.2 role::assistant<span style="font-size: small;"> (chatgpt-4o)</span>
+
+Distilled,
+
+- The solution here had to be corrected to use [Higher Rank Trait Bounds](<https://doc.rust-lang.org/nomicon/hrtb.html#higher-rank-trait-bounds-hrtbs>) as suggested by the rust compiler:
+
+```rust
+error[E0106]: missing lifetime specifier
+   --> src/lexer.rs:766:24
+    |
+766 | fn fuzzed_instance<T:  Arbitrary>() -> Option<T> {
+    |                        ^^^^^^^^^ expected named lifetime parameter
+    |
+    = note: for more information on higher-ranked polymorphism, visit https://doc.rust-lang.org/nomicon/hrtb.html
+help: consider making the bound lifetime-generic with a new `'a` lifetime
+    |
+766 | fn fuzzed_instance<T:  for<'a> Arbitrary<'a>>() -> Option<T> {
+    |                        +++++++          ++++
+help: consider introducing a named lifetime parameter
+    |
+766 | fn fuzzed_instance<'a, T:  Arbitrary<'a>>() -> Option<T> {
+    |                    +++              ++++
+```
+
+Corrected suggestion below
 
