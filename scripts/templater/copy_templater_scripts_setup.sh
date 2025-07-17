@@ -25,6 +25,7 @@ fi
 
 rm -vf "$templater_path/"*.hpp
 rm -vf "$templater_path/"*.js
+rm -vf "$templater_path/"*.ts
 rm -vf "$templater_path/"*.preproc
 rm -vf "$templater_path/"*.md
 rm -vf "$templater_path/"*.sh

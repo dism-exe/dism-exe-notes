@@ -1,3 +1,3 @@
 <%*
-await tp.user.stop_log(tp, "lan");
+await tp.user.stop_log(tp, "Lan");
 %>

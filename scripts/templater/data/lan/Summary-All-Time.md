@@ -1,4 +1,4 @@
-2025-07-02 Wk 27 Wed - 06:09# 1 Time Summary – All Time
+# 1 Time Summary – All Time
 
 | Note/Heading | Time Spent |
 |--------------|------------|

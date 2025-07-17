@@ -1,3 +1,3 @@
 <%*
-await tp.user.summarize_time_logs(tp, "lan");
+await tp.user.summarize_time_logs(tp, "Lan");
 %>

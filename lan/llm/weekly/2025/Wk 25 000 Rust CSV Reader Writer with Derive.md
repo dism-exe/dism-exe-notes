@@ -4,22 +4,6 @@
 ```table-of-contents
 ```
 
-1. [1 Rust Derive in Struct for CSV Vec Writer/Reader](#1-rust-derive-in-struct-for-csv-vec-writerreader)
-2. [2 Objective](#2-objective)
-3. [3 Instructions for LLM:](#3-instructions-for-llm)
-4. [4 Journal](#4-journal)
-	1. [4.1 Fixing issues with csv solution](#41-fixing-issues-with-csv-solution)
-	2. [4.2 Considering other options](#42-considering-other-options)
-	3. [4.3 Setting up repro003 with Ron](#43-setting-up-repro003-with-ron)
-	4. [4.4 Open PR to add repro003 to examples for RON](#44-open-pr-to-add-repro003-to-examples-for-ron)
-		1. [4.4.1 Feedback on RON PR](#441-feedback-on-ron-pr)
-			1. [4.4.1.1 Setting no line seperator and string escapes in pretty config](#4411-setting-no-line-seperator-and-string-escapes-in-pretty-config)
-			2. [4.4.1.2 Changes for Commit](#4412-changes-for-commit)
-5. [5 Solution](#5-solution)
-		1. [5.1.1 Using CSV (Limited enum support)](#511-using-csv-limited-enum-support)
-			1. [5.1.1.1 Playground](#5111-playground)
-
-
 # 1 Rust Derive in Struct for CSV Vec Writer/Reader
 
 
@@ -430,6 +414,7 @@ There are some CI failures we need to resolve like [this](<https://github.com/ro
 2025-06-30 Wk 27 Mon - 23:42
 
 ```sh
+# in ~/src/cloned/gh/LanHikari22/forked/ron
 cargo test --no-default-features
 
 # output
@@ -443,6 +428,60 @@ cargo test --no-default-features
 
 I made sure the same code works on [`repro003`](<https://github.com/LanHikari22/rs_repro/blob/main/src/repro_tracked/repro003_ron_read_write.rs>) but it fails here...
 
+2025-07-04 Wk 27 Fri - 21:51
+
+```rust
+let mut file = File::create(path)?;
+```
+
+This doesn't fail on `cargo test` but does fail on `cargo test --no-default-features`.
+
+Though we are also not installing any ron features for repro003:
+
+```toml
+repro003 = ["ron", "serde"]
+ron = { version = "0.10.1", optional = true }
+serde = { version = "1", features = ["derive"], optional = true }
+```
+
+2025-07-04 Wk 27 Fri - 20:21
+
+So this line behaves differently. It errors but only in that no default features...
+
+2025-07-05 Wk 27 Sat - 04:40
+
+It's fine now after mapping the error to string in Error::Io. but there's another failing [job](<https://github.com/ron-rs/ron/actions/runs/15902804363/job/44870798384?pr=573>).
+
+```sh
+cargo fmt --all -- --check
+```
+
+```diff
+cargo fmt --all -- --check
+Diff in /home/lan/src/cloned/gh/LanHikari22/forked/ron/examples/file_read_write_vec.rs:1:
+ /// Getting RON with type derives and reading/writing a Vec<T> to/from a file.
+-use ron::{Error, error::SpannedResult, ser::PrettyConfig};
+-use serde::{Deserialize, Serialize, de::DeserializeOwned};
++use ron::{error::SpannedResult, ser::PrettyConfig, Error};
++use serde::{de::DeserializeOwned, Deserialize, Serialize};
+ use std::{
+     fs::File,
+     io::{Read, Write},
+Diff in /home/lan/src/cloned/gh/LanHikari22/forked/ron/examples/file_read_write_vec.rs:107:
+ 
+     let mut content = String::new();
+ 
+-    file.read_to_string(&mut content).map_err(|e| Error::Io(e.to_string()))?;
++    file.read_to_string(&mut content)
++        .map_err(|e| Error::Io(e.to_string()))?;
+ 
+     read_ron_vec_from_str(&content).map_err(|e| e.code)
+ }
+```
+
+Exit status is 1. These are the formatting failures.
+
+Corrected. Their rust formatter is a bit different from mine... Around the imports.
 
 # 5 Solution
 
