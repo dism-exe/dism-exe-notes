@@ -1,3 +1,6 @@
+---
+status: todo
+---
 #lan #task #active #build #debugging #gdb #types #external 
 ```table-of-contents
 ```
@@ -13,6 +16,7 @@ As mentioned in [[000 Setup project & tools and build on a new Linux machine#2.3
 - [ ] Parse all structs from bn6f repo using bn_repo_editor
 - [ ] Create a docker container for bn_repo_editor with the ability to generate a final elf to read symbols off of for bn6f.elf
 - [ ] Setup a script that breaks in a function, and writes to memory via a type for persistent intervention
+
 
 # 2 Journal
 
@@ -409,8 +413,6 @@ objdump -d target/release/bn_repo_editor | less
 
 ### 2.5.2 Logs for improved times and actions
 
-TODO
-
 2025-06-16 Wk 25 Mon - 10:59
 
 (Debug)
@@ -595,6 +597,7 @@ Now let's run full analysis! We should be able to move on from the lexer stage t
 ```sh
 cargo run --release -- gen_debug_elf --regen
 ```
+
 
 #### 2.5.3.2 Creating include chunks
 
@@ -940,10 +943,152 @@ thread 'main' panicked at src/lexer_include_chunks.rs:303:37:
 Separators are includes only. Instead in "/home/lan/data/apps/bn_repo_editor/lexer/data/textscript/compressed/CompText87557A8.lexer.ron" got LexerRecord { lexon_type: Ident, lexon_data: Word("ts_end"), capture: "ts_end" }
 ```
 
-##### 2.5.3.2.5 Journal
-# 3 Issues
+2025-07-18 Wk 29 Fri - 20:35
 
-## 3.1 Installing visidata gives an error on run
+```
+sep is Rec(LexerRecord { lexon_type: Ident, lexon_data: Word("CompText876E538_unk100"), capture: "CompText876E538_unk100" })
+
+thread 'main' panicked at src/lexer_include_chunks.rs:323:37:
+Separators are includes only. Instead in "/home/lan/data/apps/bn_repo_editor/lexer/data/textscript/compressed/CompText876E538.lexer.ron" got LexerRecord { lexon_type: Ident, lexon_data: Word("CompText876E538_unk100"), capture: "CompText876E538_unk100" }
+```
+
+Error seems to have changed slightly...
+
+```
+SEP(>1): Rec(LexerRecord { lexon_type: Ident, lexon_data: Word("CompText87A39FC_unk4"), capture: "CompText87A39FC_unk4" })
+```
+
+The issue is because we assume all chunks with more than one element end with a separator. This is not the case. There can always be chunks that are not the last chunk, and that contain multiple records. But we can just directly check if it's an Incl variant.
+
+##### 2.5.3.2.5 Pend
+#### 2.5.3.3 Resolving Include keys
+
+```
+"/home/lan/data/apps/bn_repo_editor/lexer/data/textscript/compressed/CompText877567C.lexer.ron": [
+File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data/textscript/compressed/CompText877567C.lexer.0.chunk.lexer.ron"),
+Key("charmap.inc"), 
+File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data/textscript/compressed/CompText877567C.lexer.1.chunk.lexer.ron"),
+Key("include/macros/enum.inc"), 
+File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data/textscript/compressed/CompText877567C.lexer.2.chunk.lexer.ron"),
+Key("include/bytecode/text_script.inc"),
+File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data/textscript/compressed/CompText877567C.lexer.3.chunk.lexer.ron"),
+],
+```
+
+`.incbins` can remain as they are. For example `Bin("data/compressed/comp_87F4394.lz77")`, but `Key(...)` need to be resolved recursively to that Key's chunks so that we have just a continuous stream of chunks to fetch per file.
+
+2025-07-18 Wk 29 Fri - 21:55
+
+It seems some files are missing. We have not processed `*.inc` files like `charmap.inc` which is used in many places here.
+
+```sh
+find ~/data/apps/bn_repo_editor/lexer -type f | grep 'charmap'
+
+# out
+[nothing]
+```
+
+Further, instead of using `.lexer.ron` it is better to preserve the original extension: `.s.lexer.ron`, or `.inc.lexer.ron`, etc.
+
+See [[#3.1 Revising lexer parsing to include inc files and preserve format]]
+
+We are also seeing panics when [[#3.2 Panics when processing Lexer files|processing lexer files]]. ^spawn-task-182155
+
+2025-08-07 Wk 32 Thu - 20:59
+
+
+##### 2.5.3.3.1 Pend
+#### 2.5.3.4 Pend
+# 3 Tasks
+
+## 3.1 Revising lexer parsing to include inc files and preserve format
+
+- [ ] 
+
+2025-07-18 Wk 29 Fri - 21:58
+
+From [[#2.5.3.3 Resolving Include keys]].
+
+### 3.1.1 Pend
+
+
+## 3.2 Panics when processing Lexer files
+
+- [ ] 
+### 3.2.1 Escaped quotes in string
+
+2025-07-18 Wk 29 Fri - 23:15
+
+Noticed during [[#2.5.3.3 Resolving Include keys]]. [[#^spawn-task-182155]].
+
+```rust
+thread '<unnamed>' panicked at src/lexer.rs:557:14:
+Scan failed: "\"/home/lan/src/cloned/gh/dism-exe/bn6f/data/textscript/compressed/CompText8742D64.s\":224:6 Failed to scan r\\\"\\n\"\n\t.string "
+```
+
+
+Since we process in parallel, we did not see these panics.
+
+2025-07-20 Wk 29 Sun - 03:02
+
+The suspect line is
+
+```
+.string "The \"Healing Water\"\n"
+```
+
+Due to unhandled quote escaping. This was captured in `test_lexer_record_scan > case001.1` .
+
+We parsed Healing and Water as if they are idents, and tripped on the final escaped quote...
+
+```
+Failed to scan: "Failed to parse around at 28: <r\\\"\\n\"\n                >
+```
+
+2025-07-20 Wk 29 Sun - 04:23
+
+The parsing is in the function returned by `lexer.rs > build_scanner` .
+
+Our regex here is not able to accommodate escaped quotes:
+
+```rust
+LexonType::String => format!(r##""(.*?)"\s*"##),
+```
+
+We should allow any number of escaped quotes.
+
+This is an issue that others have encountered. For example in this [post](https://stackoverflow.com/questions/249791/regex-for-quoted-string-with-escaping-quotes).
+
+There, they recommend 
+
+Similar to [Guy Bedford](https://stackoverflow.com/users/1292590/guy-bedford)'s [answer](https://stackoverflow.com/a/10786066/6944447),
+
+```rust
+LexonType::String => format!(r##""([^"\\]*(\\.[^"\\]*)*)"\s*"##),
+```
+
+is able to handle escaped quotes within the quotes.
+
+Using the [wiki regex docs](https://en.wikipedia.org/wiki/Regular_expression#POSIX_.28Portable_Operating_System_Interface_.5Bfor_Unix.5D.29) for some meanings.
+
+Breakdown:
+
+| Regex           | Meaning                                                                                                                                                                                                                                                                           |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"(...)"\s*`    | Outer layer. All that we're matching in `...` must be enclosed in quotes, and also consumes any white space. Inner is `[^"\\]*(\\.[^"\\]*)*`.                                                                                                                                     |
+| `[^"\\]*`       | Match anything not  `"` or `\`                                                                                                                                                                                                                                                    |
+| `(\\.[^"\\]*)*` | This is a composite. Matches `\`, any character, and then anything that is not `"` or `\`.  This allows us to capture `\"` and any other escaped character as it matches the description of `\\.`. This triggers again as we consume the remaining non-escape-related characters. |
+
+2025-08-07 Wk 32 Thu - 21:01
+
+Thanks to [FutureFractal](https://github.com/FutureFractal) for bringing to my attention [vscode cpp syntax regex](https://github.com/Microsoft/vscode/blob/main/extensions/cpp/syntaxes/c.tmLanguage.json) and also specifically [string escape sequences](https://github.com/Microsoft/vscode/blob/main/extensions/cpp/syntaxes/c.tmLanguage.json#L3329)
+
+
+
+### 3.2.2 Pend
+# 4 Issues
+
+## 4.1 Installing visidata gives an error on run
 
 ```sh
 sudo apt-get install visidata
@@ -967,7 +1112,7 @@ python3 -m pip install visidata
 
 This works.
 
-## 3.2 Issue building `lan_rs_common`
+## 4.2 Issue building `lan_rs_common`
 
 2025-06-14 Wk 24 Sat - 15:24
 
@@ -1028,7 +1173,7 @@ sudo apt-get install fontconfig # probably not needed. only the dev below.
 sudo apt install libfontconfig1-dev
 ```
 
-## 3.3 Perf Paranoid Setting
+## 4.3 Perf Paranoid Setting
 
 2025-06-14 Wk 24 Sat - 21:50
 
@@ -1061,11 +1206,11 @@ Temporarily set to 1, and reset to 4 later:
 sudo sysctl -w kernel.perf_event_paranoid=1
 ```
 
-## 3.4 pprof Report::write_options error
+## 4.4 pprof Report::write_options error
 
 2025-06-15 Wk 24 Sun - 10:34
 
-### 3.4.1 Issue
+### 4.4.1 Issue
 
 In trying to use pprof:
 
@@ -1200,7 +1345,7 @@ And try again but with the executable as well this time:
 ```sh
 ~/go/bin/pprof -svg target/debug/bn_repo_editor profile.pb
 ```
-### 3.4.2 Github issue report on broken pprof example
+### 4.4.2 Github issue report on broken pprof example
 
 
 2025-06-16 Wk 25 Mon - 08:00
@@ -1208,7 +1353,7 @@ And try again but with the executable as well this time:
 - [x] Since this was in the official documentation, we need to report this via a github issue. 
 
 [[#^issue1|Issue]] submitted
-### 3.4.3 Pprof Rust setup to create profile.pb
+### 4.4.3 Pprof Rust setup to create profile.pb
 
 First, we need to enable the `prost-codec` instead of `protobuf` feature in Cargo.toml:
 ```toml
@@ -1247,7 +1392,7 @@ match guard.report().build() {
 
 In order to visualize `prof.pb`, we need [[#^link4|pprof]]. Here are the [[#3.5 pprof and Go installation|Installation instructions]].
 
-## 3.5 pprof and Go installation
+## 4.5 pprof and Go installation
 
 To install [[#^link4|pprof]]:
 
@@ -1274,8 +1419,44 @@ Then get pprof:
 go install github.com/google/pprof@latest
 ```
 
+# 5 HowTos
 
-# 4 References
+## 5.1 Multiline String in Rust
+
+- [x] 
+
+2025-07-18 Wk 29 Fri - 23:27
+
+For my unit tests, I would like to be able to write multiline strings that preserve the indentation I want.
+
+I have done something for this before...
+
+Yes! In my dbmint work.
+
+Like this:
+
+```rust
+r#"
+    @   thumb_func_start call_m4aSoundMain
+    call_m4aSoundMain:
+    @   push {lr}
+    @   bl m4aSoundMain
+    @   pop {pc}
+    @   .word unk_2006840
+    @   .word dword_80005BC
+    @   .balign 4, 0
+    dword_80005BC: .hword 0x121c
+    @   .asciz "%D"
+    @   .balign 4, 0
+    @   thumb_func_end call_m4aSoundMain
+"#//_
+	.replace("    ", "")
+	.replace("@", " "),
+```
+
+This way indentation is preserved how I want it, and the code itself is hygienic and doesn't  mess around with the indent level of the function content.
+
+# 6 References
 1.  https://gbadev.net/getting-started.html#tutorials ^link1
 2. https://github.com/AntonioND/gba-bootstrap ^link2
 3. https://github.com/davidgfnet/gba-bootstrap ^link3

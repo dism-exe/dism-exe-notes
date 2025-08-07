@@ -1,4 +1,4 @@
-# 1 Time Summary – Week 25
+# Time Summary – Week 25
 
 | Note/Heading | Time Spent |
 |--------------|------------|

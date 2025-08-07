@@ -14,3 +14,4 @@ The folders include:
 On the task structure
 - All tasks are related via links. There are no hierarchies in the folder structure. It's a flat list. Tasks may subtask via a link relation, or they may precede via a sequential relation, or relate to other tasks in any other way.
 
+See also [Navigating Note Repositories](<https://github.com/delta-domain-rnd/delta-trace/blob/main/lan/docs/2025/000%20Navigating%20Note%20Repositories.md>)

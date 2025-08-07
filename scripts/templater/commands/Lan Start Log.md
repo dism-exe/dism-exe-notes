@@ -1,3 +1,3 @@
 <%*
-await tp.user.start_log(tp, "Lan");
+await tp.user.start_log(tp, "lan");
 %>

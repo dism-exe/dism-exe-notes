@@ -1,4 +1,4 @@
-# 1 Time Summary – Week 26
+# Time Summary – Week 26
 
 | Note/Heading | Time Spent |
 |--------------|------------|
