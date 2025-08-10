@@ -8,6 +8,8 @@ Welcome! This is the general purpose notes repository for reverse engineering mm
 
 This repository is an obsidian vault. Get obsidian at https://obsidian.md/
 
+For higher browser viewing compatibility, switch to the [webview branch](https://github.com/dism-exe/dism-exe-notes/tree/webview/lan).
+
 # 2 Author
 
 This folder specifically is maintained by Lan <lanhikarixx@gmail.com>. 

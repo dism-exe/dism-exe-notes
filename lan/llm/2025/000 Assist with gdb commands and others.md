@@ -32,6 +32,7 @@ Describe the following image:
 First, what color is the icon? And what's the name below it? Can you list each menu and what it reads?
 
 ---
+
 LLM (Visual)
 Purple. Obsidian.
 
@@ -43,6 +44,7 @@ Purple. Obsidian.
 
 
 ---
+
 ## 0.2 LLM Chat Distillation
 
 ### 0.2.1 Objective: To read/write/watch on struct at some address
