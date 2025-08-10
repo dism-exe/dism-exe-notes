@@ -3,6 +3,7 @@
 
 ```table-of-contents
 ```
+
 # 1 Objective
 
 I'm on a new machine running Linux. Let's setup the project again.
@@ -13,7 +14,9 @@ Here are some things we want:
 - [x] mgba to run the game
 - [x] gdb server to attach to mgba with symbol and type information from the built elf to step through
 
+
 ---
+
 # 2 Journal
 
 ## 2.1 Setting up bn6f
@@ -195,6 +198,7 @@ Now make sure the terminal gdb-multiarch is down. Restart the gdb server in mGBA
 
 
 ---
+
 # 3 Attempts & Retrace
 
 ## 3.1 Installed gdb-multiarch, but is it limited compared to arm-none-eabi-gdb?
@@ -363,6 +367,7 @@ So we are able to in fact add breakpoints, it just seems to have to be done thro
 Issue persists with arm-none-eabi-gdb as well, not just gdb-multiarch.
 
 ---
+
 # 4 References
 
 [^r1]: link1: https://github.com/LanHikari22/bnbox/blob/main/Dockerfile

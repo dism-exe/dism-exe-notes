@@ -2,6 +2,7 @@
 status: todo
 ---
 #lan #task #active #build #debugging #gdb #types #external 
+
 ```table-of-contents
 ```
 
@@ -1083,9 +1084,125 @@ Breakdown:
 
 Thanks to [FutureFractal](https://github.com/FutureFractal) for bringing to my attention [vscode cpp syntax regex](https://github.com/Microsoft/vscode/blob/main/extensions/cpp/syntaxes/c.tmLanguage.json) and also specifically [string escape sequences](https://github.com/Microsoft/vscode/blob/main/extensions/cpp/syntaxes/c.tmLanguage.json#L3329)
 
+The string is `"(?x)\\\\ (\n\\\\\t\t\t |\n[abefnprtv'\"?]   |\n[0-3]\\d{,2}\t |\n[4-7]\\d?\t\t|\nx[a-fA-F0-9]{,2} |\nu[a-fA-F0-9]{,4} |\nU[a-fA-F0-9]{,8} )"` . But because it's in JSON, it's being escaped.
+
+```python
+print("(?x)\\\\ (\n\\\\\t\t\t |\n[abefnprtv'\"?]   |\n[0-3]\\d{,2}\t |\n[4-7]\\d?\t\t|\nx[a-fA-F0-9]{,2} |\nu[a-fA-F0-9]{,4} |\nU[a-fA-F0-9]{,8} )")
+
+# out
+(?x)\\ (
+\\                       |
+[abefnprtv'"?]   |
+[0-3]\d{,2}      |
+[4-7]\d?                |
+x[a-fA-F0-9]{,2} |
+u[a-fA-F0-9]{,4} |
+U[a-fA-F0-9]{,8} )
+```
+
+2025-08-07 Wk 32 Thu - 21:44
+
+[[#3.3 Get rs_repro regex string tester to work|Task]]. ^spawn-task-072145
+
+2025-08-07 Wk 32 Thu - 23:40
+
+We're unable to compile the above printed regex with rs_repro repro004. [[#4.6 Unable to compile regex for vscode cpp string regex due to repetition quantifier|Issue]]. ^spawn-issue-072345
+
+2025-08-07 Wk 32 Thu - 21:46
+
+Attempt to remap the regex string manuaally:
+
+Let's try to fit it within
+
+```rust
+LexonType::String => format!(r##""##),
+```
+
+```rust
+LexonType::String => format!(r##"(?x)\\ (\n\\\t\t\t |\n[abefnprtv'\"?]   |\n[0-3]\\d{,2}\t |\n[4-7]\\d?\t\t|"##),
+```
+
+
+`\nx[a-fA-F0-9]{,2} |\nu[a-fA-F0-9]{,4} |\nU[a-fA-F0-9]{,8} )"`
+
+Breakdown
+
+| Regex       | Meaning |
+| ----------- | ------- |
+| `"(?x)..."` |         |
+|             |         |
 
 
 ### 3.2.2 Pend
+
+## 3.3 Get rs_repro regex string tester to work
+
+- [x] 
+
+From [[#^spawn-task-072145]].
+
+2025-08-07 Wk 32 Thu - 21:46
+
+We need to test regex strings quickly. Let's get an example CLI in rs_repro to allow us to do this.
+
+2025-08-07 Wk 32 Thu - 22:12
+
+this [`regex_capture_once`](https://github.com/LanHikari22/bn_repo_editor/blob/9b91454b165030f64f1af271d7272c2ec8157b15/src/lexer.rs#L370) use is how we process regex strings in [bn_repo_editor](https://github.com/LanHikari22/bn_repo_editor/tree/main). Let's reproduce this. 
+
+2025-08-07 Wk 32 Thu - 22:30
+
+We need to import [lan-rs-common](https://github.com/LanHikari22/lan_rs_common) but it allows different feature configurations. And each repro should be minimial with the feature set it requires. For example for regex, as of now, no features are required. [[#5.2 Specify multiple optional dependencies with different names to be used by features in Cargo.toml for rust|HowTo]]. ^spawn-howto-072236
+
+2025-08-07 Wk 32 Thu - 23:04
+
+That doesn't seem recommended... So I guess we hit a limit with repros in rs_repro being minimal. Either import all of [lan-rs-common](https://github.com/LanHikari22/lan_rs_common) features reproduced or not.
+
+2025-08-07 Wk 32 Thu - 23:14
+
+Let's test for the regex string  `"([^"\\]*(\\.[^"\\]*)*)"\s*` But this has quotes in it and is tricky to put as an argument. [[#5.3 Specify strings that use all single and double quotes in their content in shell|HowTo]].  ^spawn-howto-073221
+
+2025-08-07 Wk 32 Thu - 23:37
+
+We can see this regex is able to handle strings with escaped quotes in them,
+
+```sh
+# in /home/lan/src/cloned/gh/LanHikari22/rs_repro
+regex=$(cat <<'EOF'
+"([^"\\]*(\\.[^"\\]*)*)"\s*
+EOF
+)
+str=$(cat <<'EOF'
+"Hello \"beep\""
+EOF
+)
+cargo run --features "repro004" "$regex" "$str"
+
+# out (relevant)
+regex: "([^"\\]*(\\.[^"\\]*)*)"\s*
+str: "Hello \"beep\""
+matches: ["\"Hello \\\"beep\\\"\"", "Hello \\\"beep\\\"", "\\\""]
+```
+
+But not plain strings,
+
+```sh
+# in /home/lan/src/cloned/gh/LanHikari22/rs_repro
+regex=$(cat <<'EOF'
+"([^"\\]*(\\.[^"\\]*)*)"\s*
+EOF
+)
+str=$(cat <<'EOF'
+"Hello"
+EOF
+)
+cargo run --features "repro004" "$regex" "$str"
+
+# out (relevant)
+regex: "([^"\\]*(\\.[^"\\]*)*)"\s*
+str: "Hello"
+Could not parse regex: "Failed to capture"
+```
+
 # 4 Issues
 
 ## 4.1 Installing visidata gives an error on run
@@ -1419,6 +1536,78 @@ Then get pprof:
 go install github.com/google/pprof@latest
 ```
 
+## 4.6 Unable to compile regex for vscode cpp string regex due to repetition quantifier
+
+- [ ] 
+
+From [[#^spawn-issue-072345]].
+
+```sh
+# in /home/lan/src/cloned/gh/LanHikari22/rs_repro
+regex=$(cat <<'EOF'
+(?x)\\ (
+\\                       |
+[abefnprtv'"?]   |
+[0-3]\d{,2}      |
+[4-7]\d?                |
+x[a-fA-F0-9]{,2} |
+u[a-fA-F0-9]{,4} |
+U[a-fA-F0-9]{,8} )
+EOF
+)
+str=$(cat <<'EOF'
+"Hello"
+EOF
+)
+cargo run --features "repro004" "$regex" "$str"
+
+# out (relevant)
+thread 'main' panicked at src/repro_tracked/repro004_regex_tester.rs:35:33:
+Invalid regex: Syntax(
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+regex parse error:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1: (?x)\\ (
+2: \\                       |
+3: [abefnprtv'"?]   |
+4: [0-3]\d{,2}      |
+           ^
+5: [4-7]\d?                |
+6: x[a-fA-F0-9]{,2} |
+7: u[a-fA-F0-9]{,4} |
+8: U[a-fA-F0-9]{,8} )
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+error: repetition quantifier expects a valid decimal
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+```sh
+# in /home/lan/src/cloned/gh/LanHikari22/rs_repro
+regex=$(cat <<'EOF'
+(?x)\\\\ (\n\\\\\t\t\t |\n[abefnprtv'\"?]   |\n[0-3]\\d{,2}\t |\n[4-7]\\d?\t\t|\nx[a-fA-F0-9]{,2} |\nu[a-fA-F0-9]{,4} |\nU[a-fA-F0-9]{,8} )
+EOF
+)
+str=$(cat <<'EOF'
+"Hello"
+EOF
+)
+cargo run --features "repro004" "$regex" "$str"
+
+# out (relevant)
+Invalid regex: Syntax(
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+regex parse error:
+    (?x)\\\\ (\n\\\\\t\t\t |\n[abefnprtv'\"?]   |\n[0-3]\\d{,2}\t |\n[4-7]\\d?\t\t|\nx[a-fA-F0-9]{,2} |\nu[a-fA-F0-9]{,4} |\nU[a-fA-F0-9]{,8} )
+                                                            ^
+error: repetition quantifier expects a valid decimal
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+
+### 4.6.1 Pend
+
 # 5 HowTos
 
 ## 5.1 Multiline String in Rust
@@ -1456,7 +1645,52 @@ r#"
 
 This way indentation is preserved how I want it, and the code itself is hygienic and doesn't  mess around with the indent level of the function content.
 
-# 6 References
+## 5.2 Specify multiple optional dependencies with different names to be used by features in Cargo.toml for rust
+
+- [x] Not recommended
+
+From [[#^spawn-howto-072236]].
+
+2025-08-07 Wk 32 Thu - 22:38
+
+this [reddit post](https://www.reddit.com/r/rust/comments/f2fsi8/can_program_depend_on_the_same_create_twice_but/) seems to suggest the practice is not encouraged nor supported by cargo, but it's also a dated post from 6 years ago as of this writing. They mention a concept of feature additivity which also appears in [cargo #10489](https://github.com/rust-lang/cargo/issues/10489). 
+
+They link the [docs on feature unification](https://doc.rust-lang.org/1.59.0/cargo/reference/features.html#feature-unification). 
+
+Will close this as not recommended.
+
+### 5.2.1 Not recommended
+
+## 5.3 Specify strings that use all single and double quotes in their content in shell
+
+- [x] 
+
+From [[#^spawn-howto-073221]].
+
+This [post](https://sqlpey.com/bash/bash-quoting-single-quotes/#faqs-on-bash-effectively-quoting-strings-with-single-quotes) mentions a `$''` syntax in bash that could be used and would require escaping single quotes.
+
+It also mentions the multiline method
+
+```sh
+str=$(cat <<'EOF'
+Text with "double quotes" and 'single quotes!'
+EOF
+)
+```
+
+# 6 Investigations
+
+# 7 Ideas
+# 8 Side notes
+
+2025-08-07 Wk 32 Thu - 22:49
+
+While looking into [[#5.2 Specify multiple optional dependencies with different names to be used by features in Cargo.toml for rust]],
+
+I found this [users.rust-lang.org question](https://users.rust-lang.org/t/conditionally-compiling-code-if-a-dependency-exists/5060/10) which explores the possibility that the dependency tree of cargo can be searched for conditional compilation. User suggested a feature for this directly, but It doesn't seem to have been answered.
+
+
+# 9 References
 1.  https://gbadev.net/getting-started.html#tutorials ^link1
 2. https://github.com/AntonioND/gba-bootstrap ^link2
 3. https://github.com/davidgfnet/gba-bootstrap ^link3
