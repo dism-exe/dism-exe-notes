@@ -1,7 +1,7 @@
-
 1. [1 dism_notes](#1-dism_notes)
-2. [2 Author](#2-author)
-3. [3 See also](#2-see-also)
+1. [2 Author](#2-author)
+1. [3 See also](#2-see-also)
+
 # 1 dism_notes
 
 Welcome! This is the general purpose notes repository for reverse engineering mmbn games
@@ -12,7 +12,7 @@ For higher browser viewing compatibility, switch to the [webview branch](https:/
 
 # 2 Author
 
-This folder specifically is maintained by Lan <lanhikarixx@gmail.com>. 
+This folder specifically is maintained by Lan <lanhikarixx@gmail.com>.
 
 You can always chat with me. Please start the email title with `"GITCHAT"` so that I can find you!
 
@@ -20,12 +20,11 @@ You can also contact me in the pret discord server.
 
 # 3 See also
 
-1. [delta-trace](<https://github.com/delta-domain-rnd/delta-trace>)
-	- Notes and articles on creating proofs of concepts, researching, and studying.
-2. [lan-setup-notes](<https://github.com/LanHikari22/lan-setup-notes>)
-	- For notes on configurations and setting up of projects and systems.
-3. [dism-exe-notes](<https://github.com/dism-exe/dism-exe-notes/tree/main/lan>) **You are here!**
-	- For notes on the process of reverse engineering games, running code analysis, and creating new tools! This is about reverse engineering the Mega Man Battle Network series.
-4. [goldensun-notes](<https://github.com/FutureFractal/goldensun-notes/tree/main/lan>)
-	- Similar to `dism-exe-notes` but for reverse engineering the `goldensun` games on the `GBA`!
-
+1. [delta-trace](https://github.com/delta-domain-rnd/delta-trace)
+   * Notes and articles on creating proofs of concepts, researching, and studying.
+1. [lan-setup-notes](https://github.com/LanHikari22/lan-setup-notes)
+   * For notes on configurations and setting up of projects and systems.
+1. [dism-exe-notes](https://github.com/dism-exe/dism-exe-notes/tree/main/lan) **You are here!**
+   * For notes on the process of reverse engineering games, running code analysis, and creating new tools! This is about reverse engineering the Mega Man Battle Network series.
+1. [goldensun-notes](https://github.com/FutureFractal/goldensun-notes/tree/main/lan)
+   * Similar to `dism-exe-notes` but for reverse engineering the `goldensun` games on the `GBA`!
