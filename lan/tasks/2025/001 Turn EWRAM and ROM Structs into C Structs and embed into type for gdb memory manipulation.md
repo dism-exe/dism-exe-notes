@@ -1,6 +1,7 @@
 ---
 status: todo
 ---
+
 #lan #task #active #build #debugging #gdb #types #external 
 
 ```table-of-contents

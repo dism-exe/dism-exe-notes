@@ -20,12 +20,14 @@ You can also contact me in the pret discord server.
 
 # 3 See also
 
-1. [delta-trace](<https://github.com/delta-domain-rnd/delta-trace>)
-	- Notes and articles on creating proofs of concepts, researching, and studying.
-2. [lan-setup-notes](<https://github.com/LanHikari22/lan-setup-notes>)
-	- For notes on configurations and setting up of projects and systems.
-3. [dism-exe-notes](<https://github.com/dism-exe/dism-exe-notes/tree/main/lan>) **You are here!**
-	- For notes on the process of reverse engineering games, running code analysis, and creating new tools! This is about reverse engineering the Mega Man Battle Network series.
-4. [goldensun-notes](<https://github.com/FutureFractal/goldensun-notes/tree/main/lan>)
-	- Similar to `dism-exe-notes` but for reverse engineering the `goldensun` games on the `GBA`!
 
+1. [delta-trace](https://github.com/delta-domain-rnd/delta-trace/tree/webview)
+	- Notes and articles on creating proofs of concepts, researching, and studying.
+2. [lan-setup-notes](https://github.com/LanHikari22/lan-setup-notes/tree/webview)
+	- For notes on configurations and setting up of projects and systems.
+3. [dism-exe-notes](https://github.com/dism-exe/dism-exe-notes/tree/webview/lan) **You are here!**
+	- For notes on the process of reverse engineering games, running code analysis, and creating new tools! This is about reverse engineering the Mega Man Battle Network series.
+4. [goldensun-notes](https://github.com/FutureFractal/goldensun-notes/tree/webview/lan)
+	- Similar to `dism-exe-notes` but for reverse engineering the `goldensun` games on the `GBA`!
+5. [dbmint-notes](https://github.com/dbmint/dbmint-notes/tree/webview)
+	- Development of dbmint for intuitive and type correct database use in Rust!
