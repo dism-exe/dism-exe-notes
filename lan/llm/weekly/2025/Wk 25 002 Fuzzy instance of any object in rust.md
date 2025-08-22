@@ -1,7 +1,6 @@
-#lan #llm #rust #done
+\#lan #llm #rust #done
 
 <hr class="__chatgpt_plugin">
-
 
 2025-06-17 Wk 25 Tue - 22:50
 
@@ -11,13 +10,13 @@ It would be good to create an instance of a type like a struct without much care
 
 # 2 Solution
 
-We will use the [arbitrary](<https://docs.rs/arbitrary/latest/arbitrary/>) crate for this.
+We will use the [arbitrary](https://docs.rs/arbitrary/latest/arbitrary/) crate for this.
 
-```sh
+````sh
 cargo add arbitrary --features "derive, derive_arbitrary"
-```
+````
 
-```rust
+````rust
 use arbitrary::{Arbitrary, Unstructured};
 use rand::Rng;
 
@@ -36,33 +35,34 @@ fn fuzzed_instance<T: for<'a> Arbitrary<'a>>() -> Option<T> {
     let mut u = Unstructured::new(&bytes);
     T::arbitrary(&mut u).ok()
 }
-```
+````
 
-```rust
+````rust
 fn main() {
 	let x = fuzzed_instance::<MyStruct>().unwrap();
 	println!("x: {x:?}");
 }
-```
+````
 
-```sh
+````sh
 # across runs...
 x: MyStruct { id: 1557135961, label: "K'\u{1b}", flags: [] }
 x: MyStruct { id: 3716379721, label: "\u{1a}\\Q", flags: [] }
 x: MyStruct { id: 1939677541, label: "7ޒet\u{10}", flags: [] }
 x: MyStruct { id: 346771206, label: "3$È", flags: [true, true, true, false] }
 ...
-```
+````
 
 # 3 Journal
 
 ### 3.1.1 role::user
 
 Instructions for LLM:
-- This is a diagnostic document and not a conversation. Everything shared is context. Address the questions tagged (Q#) like (Q1) for example. If you see something like (~1), assume it part of the archive and not a latest set of questions.
-	- Since it keeps occurring, I ask Again
-	- !!! NEVER RESPOND TO (~1), (~2), etc.
-	- ONLY respond to the tagged questions. Nothing else.
+
+* This is a diagnostic document and not a conversation. Everything shared is context. Address the questions tagged (Q#) like (Q1) for example. If you see something like (~1), assume it part of the archive and not a latest set of questions.
+  * Since it keeps occurring, I ask Again
+  * !!! NEVER RESPOND TO (~1), (~2), etc.
+  * ONLY respond to the tagged questions. Nothing else.
 
 <hr class="__chatgpt_plugin">
 
@@ -70,9 +70,9 @@ Instructions for LLM:
 
 Distilled,
 
-- The solution here had to be corrected to use [Higher Rank Trait Bounds](<https://doc.rust-lang.org/nomicon/hrtb.html#higher-rank-trait-bounds-hrtbs>) as suggested by the rust compiler:
+* The solution here had to be corrected to use [Higher Rank Trait Bounds](https://doc.rust-lang.org/nomicon/hrtb.html#higher-rank-trait-bounds-hrtbs) as suggested by the rust compiler:
 
-```rust
+````rust
 error[E0106]: missing lifetime specifier
    --> src/lexer.rs:766:24
     |
@@ -88,7 +88,6 @@ help: consider introducing a named lifetime parameter
     |
 766 | fn fuzzed_instance<'a, T:  Arbitrary<'a>>() -> Option<T> {
     |                    +++              ++++
-```
+````
 
 Corrected suggestion below
-
