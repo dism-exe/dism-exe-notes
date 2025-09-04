@@ -2,6 +2,7 @@
 
 | Note/Heading | Time Spent |
 |--------------|------------|
+| **Total** | **15h 15m 13s** |
 | [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]] | 10h 37m 3s |
 | &nbsp;&nbsp;&nbsp;&nbsp;[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#2.5.3 Map current lexer project files to include chunks\|2.5.3 Map current lexer project files to include chunks]] | 9h 34m 14s |
 | &nbsp;&nbsp;&nbsp;&nbsp;[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#2.5.3.1 Reading/Writing LexerReport to RON files\|2.5.3.1 Reading/Writing LexerReport to RON files]] | 1h 2m 49s |

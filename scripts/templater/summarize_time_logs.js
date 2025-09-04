@@ -33,10 +33,15 @@ function accumulateDurations(entries) {
 }
 
 // === Markdown Table Formatter ===
-function formatMarkdownTable(summary, title) {
+function formatMarkdownTable(summary, title, includeTotalRow = false) {
 	let report = `# Time Summary – ${title}\n\n`;
 	report += `| Note/Heading | Time Spent |\n`;
 	report += `|--------------|------------|\n`;
+
+	if (includeTotalRow) {
+		const total = Object.values(summary).reduce((acc, cur) => acc + cur.total, 0);
+		report += `| **Total** | **${formatDuration(total)}** |\n`;
+	}
 
 	for (const [note, data] of Object.entries(summary).sort((a, b) => b[1].total - a[1].total)) {
 		report += `| [[${note}]] | ${formatDuration(data.total)} |\n`;
@@ -55,6 +60,11 @@ function formatMarkdownTable(summary, title) {
 async function summarize_time_logs(tp, identity) {
 	const fs = tp.app.vault.adapter;
 	const dir = `scripts/templater/data/${identity}`;
+	const weeklyDir = `${dir}/weekly`;
+	const dailyDir = `${dir}/daily`;
+	await fs.mkdir(weeklyDir).catch(() => {});
+	await fs.mkdir(dailyDir).catch(() => {});
+
 	const files = await fs.list(dir);
 	const allEntries = [];
 
@@ -64,9 +74,7 @@ async function summarize_time_logs(tp, identity) {
 		if (!match) continue;
 
 		const [_, year, month, week] = match;
-		const summaryFile = `${dir}/Summary-${year}-${month}-Wk${week}.md`;
 		const timelineFile = `${dir}/${basename}`;
-
 		const content = await fs.read(timelineFile);
 		const timeBlock = content.match(/```simple-time-tracker\n({[\s\S]*?})\n```/);
 		if (!timeBlock) continue;
@@ -74,14 +82,32 @@ async function summarize_time_logs(tp, identity) {
 		const entries = JSON.parse(timeBlock[1]).entries;
 		allEntries.push(...entries);
 
-		const summary = accumulateDurations(entries);
-		const report = formatMarkdownTable(summary, `Week ${week}`);
-		await fs.write(summaryFile, report);
+		// === Weekly Summary ===
+		const weeklySummary = accumulateDurations(entries);
+		const weeklyReport = formatMarkdownTable(weeklySummary, `Week ${week}`, true);
+		const weeklyFile = `${weeklyDir}/Summary-${year}-${month}-Wk${week}.md`;
+		await fs.write(weeklyFile, weeklyReport);
+
+		// === Daily Summaries ===
+		const dailyBuckets = {};
+		for (const e of entries) {
+			if (!e.startTime || !e.endTime) continue;
+			const date = new Date(e.startTime).toISOString().split("T")[0];
+			if (!dailyBuckets[date]) dailyBuckets[date] = [];
+			dailyBuckets[date].push(e);
+		}
+
+		for (const [date, dayEntries] of Object.entries(dailyBuckets)) {
+			const dailySummary = accumulateDurations(dayEntries);
+			const dailyReport = formatMarkdownTable(dailySummary, date, true);
+			const dailyFile = `${dailyDir}/Summary-${date}.md`;
+			await fs.write(dailyFile, dailyReport);
+		}
 	}
 
 	// === All-Time Summary ===
 	const allSummary = accumulateDurations(allEntries);
-	const allTimeReport = formatMarkdownTable(allSummary, "All Time");
+	const allTimeReport = formatMarkdownTable(allSummary, "All Time", false);
 	const allTimePath = `${dir}/Summary-All-Time.md`;
 	await fs.write(allTimePath, allTimeReport);
 
