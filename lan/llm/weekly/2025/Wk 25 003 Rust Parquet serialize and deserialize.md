@@ -1,23 +1,4 @@
 
-```table-of-contents
-```
-
-1. [1 Rust Parquet serialize and deserialize](#1-rust-parquet-serialize-and-deserialize)
-2. [2 Objective](#2-objective)
-3. [3 Instructions for LLM](#3-instructions-for-llm)
-4. [4 Journal](#4-journal)
-	1. [4.1 Getting the parquet_derive write example to work](#41-getting-the-parquet_derive-write-example-to-work)
-		1. [4.1.1 Creating a pull request to fix the documentation](#411-creating-a-pull-request-to-fix-the-documentation)
-	2. [4.2 Getting the parquet_derive read example to work](#42-getting-the-parquet_derive-read-example-to-work)
-	3. [4.3 On maintainer request: looking to remove no_run](#43-on-maintainer-request-looking-to-remove-no_run)
-		1. [4.3.1 What is `no_run` ? What does it mean in rust tooling?](#431-what-is-no_run--what-does-it-mean-in-rust-tooling)
-		2. [4.3.2 Removing the `no_code` and testing](#432-removing-the-no_code-and-testing)
-		3. [4.3.3 Changes for Commit (8d1e9963)](#433-changes-for-commit-8d1e9963)
-	4. [4.4 Attempting to add feature for nested structs and enums to parquet_derive (PEND)](#44-attempting-to-add-feature-for-nested-structs-and-enums-to-parquet_derive-pend)
-5. [5 Solution](#5-solution)
-6. [6 References](#6-references)
-
-
 # 1 Rust Parquet serialize and deserialize
 
 2025-06-20 Wk 25 Fri - 14:09

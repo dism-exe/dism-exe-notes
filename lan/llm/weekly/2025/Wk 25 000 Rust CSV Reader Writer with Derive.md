@@ -1,9 +1,6 @@
 #lan #llm #pr #external #rust
 
 
-```table-of-contents
-```
-
 # 1 Rust Derive in Struct for CSV Vec Writer/Reader
 
 
