@@ -134,3 +134,25 @@ While looking for anything on save, we found `oGameState_SavedRealWorldMapId` wh
 		- $\leftarrow$ `main_static_screen_fade_8000454`
 		- $\leftarrow$ `main_`
 
+2025-09-27 Wk 39 Sat - 08:45
+
+Diffing could also be helpful on the save files.
+
+Right now we have a save just at the start of the game.
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/branches/bn6f@tmp
+cp bn6f.sav bn6f_start_game.sav
+cp bn6f.ss1 bn6f_start_game.ss1
+```
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/branches/bn6f@tmp
+git diff --no-index -u <(xxd bn6f_start_game.sav) <(xxd bn6f.sav) --color-words=. | less
+```
+
+This sort of works for diffing. Not the most readable, but shows in one place where changes happened.
+
+![[Pasted image 20250927085532.png]]
+
+It's registering big changes even when I save in the same place twice. Some are patterned changes everywhere.

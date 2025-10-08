@@ -72,6 +72,8 @@ Actually in `sub_8123408` we can see that it copies `0x80` bytes for `sSubmenu`.
 
 So let's add a new struct for this.
 
+^recall-494fe5
+
 ```C
 # in include/macros/ewram_structs.inc
 .include "structs/SubMenu.inc"
@@ -103,6 +105,7 @@ The types that can be used can be found in `include/macros/struct.inc`
 2025-09-25 Wk 39 Thu - 09:28
 
 ```diff
+// in ewram.s
 sSubmenu:: // 0x2009a30
 +	sub_menu_struct sSubmenu
 -	.space 80

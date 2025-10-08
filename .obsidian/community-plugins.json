@@ -10,11 +10,13 @@
   "chatgpt-md",
   "local-gpt",
   "ai-providers",
-  "graph-link-types",
-  "dataview",
-  "chronology",
   "simple-time-tracker",
-  "global-search-and-replace",
+  "chronology",
+  "dataview",
+  "obsidian-charts",
+  "graph-link-types",
   "vimium",
+  "better-export-pdf",
+  "obsidian-excalidraw-plugin",
   "lan-obsidian-plugin"
 ]

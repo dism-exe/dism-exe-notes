@@ -25,3 +25,7 @@ Spawn [[000 Setup bn6f-modding and archive old work]] ^spawn-task-e1d8b2
 This is a first effort, but we can plan further action.
 
 Spawn [[000 Planning for bn6f update mods]] ^spawn-entry-119ebd
+
+2025-09-28 Wk 39 Sun - 18:50 +03:00
+
+Spawn [[001 Resources encountered that can be useful for bn6f modding]] ^spawn-entry-ab93e4

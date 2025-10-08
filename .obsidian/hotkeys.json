@@ -49,6 +49,15 @@
     }
   ],
   "switcher:open": [],
+  "graph:open-local": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "G"
+    }
+  ],
   "editor:follow-link": [
     {
       "modifiers": [
