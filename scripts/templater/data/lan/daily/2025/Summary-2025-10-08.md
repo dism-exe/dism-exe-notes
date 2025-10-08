@@ -2,10 +2,10 @@
 
 | Note/Heading | Time Spent |
 |--------------|------------|
-| **Total** | **7h 6m 27s** |
+| **Total** | **11h 42m 46s** |
 | [[002 startscreen_render_802F544]] | **6h 6m 4s** |
 | &nbsp;&nbsp;&nbsp;&nbsp;[[000 What writes for startscreen_render_802F544 jumptable?]] | 5h 36m 18s |
 | &nbsp;&nbsp;&nbsp;&nbsp;[[000 Create Struct S2011800]] | 0h 29m 46s |
-| [[001 Exploring bn6f CentralArea Map]] | **1h 0m 23s** |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[000 Wk 41 Exploring bn6f CentralArea Map]] | 1h 0m 23s |
+| [[001 Exploring bn6f CentralArea Map]] | **5h 36m 43s** |
+| &nbsp;&nbsp;&nbsp;&nbsp;[[000 Wk 41 Exploring bn6f CentralArea Map]] | 5h 36m 43s |
 

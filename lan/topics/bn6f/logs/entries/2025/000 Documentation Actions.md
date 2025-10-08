@@ -78,8 +78,6 @@ tools/doc_scripts/replacesig.sh "music_80005F2" "(bg_music_indicator: u8) -> ()"
 
 Added `ctags -R ewram.s *.s asm/* data/dat* docs/decomp/*.c include/* maps/*` to `./replace.sh`
 
-2025-10-08 Wk 41 Wed - 05:07 +03:00
-
 2025-10-08 Wk 41 Wed - 06:33 +03:00
 
 ```sh
@@ -109,5 +107,84 @@ tools/doc_scripts/replacesig.sh "sub_803D298" "(self: *mut S2011800 \$r5) -> ()"
 tools/doc_scripts/replacesig.sh "sub_803D2A6" "(self: *const S2011800 \$r5) -> ()"
 
 
+```
+
+Commited `a8ff8d2b`
+
+2025-10-08 Wk 41 Wed - 10:29 +03:00
+
+Added `replacep_rev.sh` for undoing `replacep.sh`. 
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+./replacep.sh "sub_8005C04" "map_triggerEnterMapOnWarp_8005C04"
+
+tools/doc_scripts/replacesig.sh "checkCoordinateTrigger_8031a7a" "(coords: * ?) -> ?" 
+
+tools/doc_scripts/replacesig.sh "sub_800596C" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8005990" "(self: * GameState \$r5) -> ()" 
+tools/doc_scripts/replacesig.sh "sub_80059B4" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80059D0" "(self: * GameState \$r5) -> ()" 
+tools/doc_scripts/replacesig.sh "sub_80059EC" "(self: * GameState \$r5) -> ()" 
+tools/doc_scripts/replacesig.sh "sub_8005A00" "(self: * GameState \$r5) -> ()" 
+tools/doc_scripts/replacesig.sh "sub_8005A0C" "(self: * GameState \$r5) -> ()" 
+tools/doc_scripts/replacesig.sh "sub_8005A28" "(self: * GameState \$r5) -> ()" 
+tools/doc_scripts/replacesig.sh "sub_8005A50" "(self: * GameState \$r5) -> ()" 
+
+./replacep.sh "loc_8034C2C" ".ret"
+
+tools/doc_scripts/replacesig.sh "IsCutsceneScriptNonNull" "() -> \!zf"
+```
+
+2025-10-08 Wk 41 Wed - 12:09 +03:00
+
+This `IsCutsceneScriptNonNull` does a `tst r0, r0` which does a logical AND check. The zero flag is set IF `r0` 's content is null. The flag is cleared (`!zf`) if it's not null then.
+
+2025-10-08 Wk 41 Wed - 12:17 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+./replacep.sh "sub_8034BB8" "cutscene_8034BB8"
+
+tools/doc_scripts/replacesig.sh "EnterMap" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "gamestate_8005268" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "battle_80052D8" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8005360" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_800536E" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80053E4" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8005462" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_800555A" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8005642" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80056B8" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_800572C" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80057A0" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80055CE" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8005814" "(self: * GameState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_800585A" "(self: * GameState \$r5) -> ()"
+
+./replacep.sh "gamestate_8005268" "gamestate_on_map_update_8005268"
+./replacep.sh "off_8005948" "JumpTable8005948"
+```
+
+2025-10-08 Wk 41 Wed - 15:37 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit -m "doc map update loop and related"
+
+# out
+[master 69bd59bb] doc map update loop and related
+ 14 files changed, 363 insertions(+), 115 deletions(-)
+ create mode 100755 replacep_rev.sh
+```
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/dism-exe-notes
+git commit
+
+# out
+[main 62f5228] notes on map trigger & cutscene tracing
+ Date: Wed Oct 8 15:37:10 2025 +0300
+ 6 files changed, 337 insertions(+), 41 deletions(-)
 ```
 
