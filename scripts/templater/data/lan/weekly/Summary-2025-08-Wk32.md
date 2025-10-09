@@ -1,9 +1,0 @@
-# Time Summary – Week 32
-
-| Note/Heading | Time Spent |
-|--------------|------------|
-| **Total** | **2h 44m 15s** |
-| [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]] | 2h 44m 15s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#3.3 Get rs_repro regex string tester to work\|3.3 Get rs_repro regex string tester to work]] | 1h 56m 32s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#3.2 Panics when processing Lexer files\|3.2 Panics when processing Lexer files]] | 0h 47m 42s |
-

@@ -316,3 +316,4 @@ The closest is `r2`'s value of `0x806c024` is `byte_806C014` which is referenced
 
 `HomePages_EnterMapGroup` is dispatched through `EnterMap_InternetMapGroupJumptable` via `EnterMap_RunMapGroupAsmFunction_8030A00` just like `CentralArea_EnterMapGroup` that we started with.
 
+	
