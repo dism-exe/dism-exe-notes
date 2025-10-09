@@ -1,18 +1,17 @@
 # Time Summary – All Time
 
-| Note/Heading | Time Spent |
-|--------------|------------|
-| [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]] | 21h 17m 31s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#2.5.3 Map current lexer project files to include chunks\|2.5.3 Map current lexer project files to include chunks]] | 9h 34m 14s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#2.5.3.2 Creating include chunks\|2.5.3.2 Creating include chunks]] | 4h 1m 54s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#3.2 Panics when processing Lexer files\|3.2 Panics when processing Lexer files]] | 2h 47m 42s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#3.3 Get rs_repro regex string tester to work\|3.3 Get rs_repro regex string tester to work]] | 1h 56m 32s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#3.1 Revising lexer parsing to include inc files and preserve format\|3.1 Revising lexer parsing to include inc files and preserve format]] | 1h 54m 20s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#2.5.3.1 Reading/Writing LexerReport to RON files\|2.5.3.1 Reading/Writing LexerReport to RON files]] | 1h 2m 49s |
-| [[Wk 25 000 Rust CSV Reader Writer with Derive]] | 4h 44m 30s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[Wk 25 000 Rust CSV Reader Writer with Derive#4.4.1 Feedback on RON PR\|4.4.1 Feedback on RON PR]] | 2h 14m 31s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[Wk 25 000 Rust CSV Reader Writer with Derive#4.3 Setting up repro003 with Ron\|4.3 Setting up repro003 with Ron]] | 1h 50m 42s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[Wk 25 000 Rust CSV Reader Writer with Derive#4.4 Open PR to add repro003 to examples for RON\|4.4 Open PR to add repro003 to examples for RON]] | 0h 39m 17s |
-| [[Wk 25 003 Rust Parquet serialize and deserialize]] | 2h 23m 39s |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[Wk 25 003 Rust Parquet serialize and deserialize#4.3 On maintainer request: looking to remove no_run\|4.3 On maintainer request: looking to remove no_run]] | 2h 7m 7s |
-
+|Note/Heading|Time Spent|
+|------------|----------|
+|[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation](../../../../lan/tasks/2025/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md)|21h 17m 31s|
+|    [2.5.3 Map current lexer project files to include chunks](../../../../lan/tasks/2025/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#253-map-current-lexer-project-files-to-include-chunks)|9h 34m 14s|
+|    [2.5.3.2 Creating include chunks](../../../../lan/tasks/2025/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#2532-creating-include-chunks)|4h 1m 54s|
+|    [3.2 Panics when processing Lexer files](../../../../lan/tasks/2025/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#32-panics-when-processing-lexer-files)|2h 47m 42s|
+|    [3.3 Get rs_repro regex string tester to work](../../../../lan/tasks/2025/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#33-get-rs_repro-regex-string-tester-to-work)|1h 56m 32s|
+|    [3.1 Revising lexer parsing to include inc files and preserve format](../../../../lan/tasks/2025/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#31-revising-lexer-parsing-to-include-inc-files-and-preserve-format)|1h 54m 20s|
+|    [2.5.3.1 Reading/Writing LexerReport to RON files](../../../../lan/tasks/2025/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#2531-readingwriting-lexerreport-to-ron-files)|1h 2m 49s|
+|[Wk 25 000 Rust CSV Reader Writer with Derive](../../../../lan/llm/weekly/2025/Wk%2025%20000%20Rust%20CSV%20Reader%20Writer%20with%20Derive.md)|4h 44m 30s|
+|    [4.4.1 Feedback on RON PR](../../../../lan/llm/weekly/2025/Wk%2025%20000%20Rust%20CSV%20Reader%20Writer%20with%20Derive.md#441-feedback-on-ron-pr)|2h 14m 31s|
+|    [4.3 Setting up repro003 with Ron](../../../../lan/llm/weekly/2025/Wk%2025%20000%20Rust%20CSV%20Reader%20Writer%20with%20Derive.md#43-setting-up-repro003-with-ron)|1h 50m 42s|
+|    [4.4 Open PR to add repro003 to examples for RON](../../../../lan/llm/weekly/2025/Wk%2025%20000%20Rust%20CSV%20Reader%20Writer%20with%20Derive.md#44-open-pr-to-add-repro003-to-examples-for-ron)|0h 39m 17s|
+|[Wk 25 003 Rust Parquet serialize and deserialize](../../../../lan/llm/weekly/2025/Wk%2025%20003%20Rust%20Parquet%20serialize%20and%20deserialize.md)|2h 23m 39s|
+|    [4.3 On maintainer request: looking to remove no_run](../../../../lan/llm/weekly/2025/Wk%2025%20003%20Rust%20Parquet%20serialize%20and%20deserialize.md#43-on-maintainer-request-looking-to-remove-no_run)|2h 7m 7s|

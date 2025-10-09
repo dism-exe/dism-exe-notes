@@ -18,14 +18,14 @@ We should archive the master branch for [gh LanHikari22/bn6f-modding](https://gi
 
 2025-09-20 Wk 38 Sat - 06:04
 
-Spawn [[000 Setup bn6f-modding and archive old work]] ^spawn-task-e1d8b2
+Spawn [000 Setup bn6f-modding and archive old work](tasks/000%20Setup%20bn6f-modding%20and%20archive%20old%20work.md) <a name="spawn-task-e1d8b2" />^spawn-task-e1d8b2
 
 2025-09-20 Wk 38 Sat - 06:06
 
 This is a first effort, but we can plan further action.
 
-Spawn [[000 Planning for bn6f update mods]] ^spawn-entry-119ebd
+Spawn [000 Planning for bn6f update mods](entries/000%20Planning%20for%20bn6f%20update%20mods.md) <a name="spawn-entry-119ebd" />^spawn-entry-119ebd
 
 2025-09-28 Wk 39 Sun - 18:50 +03:00
 
-Spawn [[001 Resources encountered that can be useful for bn6f modding]] ^spawn-entry-ab93e4
+Spawn [001 Resources encountered that can be useful for bn6f modding](entries/001%20Resources%20encountered%20that%20can%20be%20useful%20for%20bn6f%20modding.md) <a name="spawn-entry-ab93e4" />^spawn-entry-ab93e4

@@ -1,39 +1,39 @@
 ---
-parent: "[[001 SubMenuControl]]"
-spawned_by: "[[001 SubMenuControl]]"
+parent: '[[001 SubMenuControl]]'
+spawned_by: '[[001 SubMenuControl]]'
 context_type: entry
 ---
 
-Parent: [[001 SubMenuControl]]
+Parent: [001 SubMenuControl](../001%20SubMenuControl.md)
 
-Spawned by: [[001 SubMenuControl]] 
+Spawned by: [001 SubMenuControl](../001%20SubMenuControl.md)
 
-Spawned in: [[001 SubMenuControl#^spawn-entry-a02337|^spawn-entry-a02337]]
+Spawned in: [<a name="spawn-entry-a02337" />^spawn-entry-a02337](../001%20SubMenuControl.md#spawn-entry-a02337)
 
 # 1 Journal
 
 2025-09-25 Wk 39 Thu - 08:15
 
-So this uses `oToolkit_SubmenuPtr`, which is pointed to in  `0x20093b0 + 0x34 = 0x20093e4` 
+So this uses `oToolkit_SubmenuPtr`, which is pointed to in  `0x20093b0 + 0x34 = 0x20093e4`
 
-See [[002 Setting up gdb for bn6f debugging]].
+See [002 Setting up gdb for bn6f debugging](../../../../../../../tasks/2025/000%20Setup%20project%20&%20tools%20and%20build%20on%20a%20new%20Linux%20machine/tasks/002%20Setting%20up%20gdb%20for%20bn6f%20debugging.md).
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 mgba bn6f.elf
-```
+````
 
-```
+````
 (gdb) x 0x20093e4
 0x20093e4:      0x02009a30
-```
+````
 
-In `ewram.s`, that points to 
+In `ewram.s`, that points to
 
-```
+````
 sSubmenu:: // 0x2009a30
 	.space 80
-```
+````
 
 2025-09-25 Wk 39 Thu - 08:24
 
@@ -45,13 +45,13 @@ Many functions don't get this from the toolkit at r10. They just put the address
 
 2025-09-25 Wk 39 Thu - 08:42
 
-We could also learned about this through `ToolkitPointers` which is used to set `sSubMenu` and the others in `SetPrimaryToolkitPointers`. 
+We could also learned about this through `ToolkitPointers` which is used to set `sSubMenu` and the others in `SetPrimaryToolkitPointers`.
 
 2025-09-25 Wk 39 Thu - 08:49
 
 I couldn't find its size. Let's do the second best thing and search for the latest used offset + size in the code.
 
-```
+````
 u8? idx_00
 u8? 0x1
 u8? 0x2
@@ -62,24 +62,24 @@ u32? 0x20 // 1
 u16? 0x20 // 1
 
 u16? 0x24
-```
+````
 
 2025-09-25 Wk 39 Thu - 08:59
 
-Actually in `sub_8123408` we can see that it copies `0x80` bytes for `sSubmenu`.  Let's mark `sub_8123408` as `#copy`. 
+Actually in `sub_8123408` we can see that it copies `0x80` bytes for `sSubmenu`.  Let's mark `sub_8123408` as `#copy`.
 
 2025-09-25 Wk 39 Thu - 09:14
 
 So let's add a new struct for this.
 
-^recall-494fe5
+<a name="recall-494fe5" />^recall-494fe5
 
-```C
+````C
 # in include/macros/ewram_structs.inc
 .include "structs/SubMenu.inc"
-```
+````
 
-```C
+````C
 # in include/structs/SubMenu.inc
 //! type: SubMenu
 
@@ -98,18 +98,18 @@ So let's add a new struct for this.
 
   def_struct_offsets sub_menu_struct, oSubMenu
 
-```
+````
 
 The types that can be used can be found in `include/macros/struct.inc`
 
 2025-09-25 Wk 39 Thu - 09:28
 
-```diff
+````diff
 // in ewram.s
 sSubmenu:: // 0x2009a30
 +	sub_menu_struct sSubmenu
 -	.space 80
-```
+````
 
 2025-09-25 Wk 39 Thu - 09:36
 
@@ -117,12 +117,12 @@ Even though `sub_8123408` copies `0x80`, weirdly we only have room until the nex
 
 2025-09-25 Wk 39 Thu - 09:38
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 make -j$(nproc)
 
 # out (relevant)
 OK
-```
+````
 
 Now we have a new struct. We can experiment with it and document it.
