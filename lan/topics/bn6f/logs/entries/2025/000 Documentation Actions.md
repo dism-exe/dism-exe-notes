@@ -187,3 +187,125 @@ git commit
  Date: Wed Oct 8 15:37:10 2025 +0300
  6 files changed, 337 insertions(+), 41 deletions(-)
 ```
+
+2025-10-11 Wk 41 Sat - 06:51 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig.sh "SetRenderInfoLCDControl" "(a_00: u16) -> ()"
+tools/doc_scripts/replacesig.sh "GetRenderInfoLCDControl" "() -> u16"
+tools/doc_scripts/replacesig.sh "renderInfo_8001788" "() -> ()"
+tools/doc_scripts/replacesig.sh "renderInfo_80017A0" "() -> ()"
+tools/doc_scripts/replacesig.sh "zeroFillVRAM" "() -> ()"
+tools/doc_scripts/replacesig.sh "LoadBGAnimData" "(bg_anim_data: BGAnimData) -> ()"
+tools/doc_scripts/replacesig.sh "HomePages_LoadBGAnim" "() -> ()"
+tools/doc_scripts/replacesig.sh "initMapTilesState_803037c" "(map_group: u8, map_number: u8) -> ()"
+tools/doc_scripts/replacesig.sh "decompressCoordEventData_8030aa4" "(map_group: u8, map_number: u8) -> ()"
+tools/doc_scripts/replacesig.sh "camera_802FF4C" "(player_x: u32, player_y: u32, player_z: u32, map_group: u8, map_number: u8) -> ()"
+tools/doc_scripts/replacesig.sh "decompAndCopyMapTiles_8030472" "() -> ()"
+tools/doc_scripts/replacesig.sh "initUncompSpriteState_80028d4" "(a0: *const ?) -> ()"
+tools/doc_scripts/replacesig.sh "uncompSprite_8002906" "(sprite_load_data: *const SpriteLoadData) -> bool"
+tools/doc_scripts/replacesig.sh "SWI_LZ77UnCompReadNormalWrite8bit" "(src: *const (), mut_dest: *mut ()) -> ()"
+tools/doc_scripts/replacesig.sh "StartCutscene" "(script: *const (), param: u32) -> ()"
+tools/doc_scripts/replacesig.sh "PlayMusic" "(song: u8) -> ()"
+tools/doc_scripts/replacesig.sh "PlayMapMusic" "() -> ()"
+tools/doc_scripts/replacesig.sh "map_8034B4C" "(map_group: u8, map_number: u8) -> ()"
+tools/doc_scripts/replacesig.sh "map_8001708" "(map_group: u8, map_number: u8) -> ()"
+tools/doc_scripts/replacesig.sh "LoadGFXAnimsForMapGroup" "(map_group: u8, map_number: u8) -> ()"
+tools/doc_scripts/replacesig.sh "TestEventFlagFromImmediate" "(event_group_off: u8, byte_and_flag_off: u8) -> \!zf"
+tools/doc_scripts/replacesig.sh "ZeroFillObjectInteractionAreas_800378C" "() -> ()"
+tools/doc_scripts/replacesig.sh "TryUpdateEachOWPlayerObject_8003BA2" "() -> ()"
+tools/doc_scripts/replacesig.sh "TryUpdateEachOverworldNPCObject_800461E" "() -> ()"
+tools/doc_scripts/replacesig.sh "TryUpdateEachOverworldMapObject_80048D2" "() -> ()"
+tools/doc_scripts/replacesig.sh "sub_809F942" "() -> * nullable ?"
+tools/doc_scripts/replacesig.sh "dispatch_80339CC" "() -> ()"
+
+tools/doc_scripts/replacesig.sh "stub_8033A7C" "(self: *const S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033A80" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033A96" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033AB0" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033AC4" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033ADC" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033AF0" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033A96" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033A96" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033A80" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033A80" "(self: * S2011E30 \$r5) -> ()"
+
+tools/doc_scripts/replacesig.sh "sub_8033B08" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033B0C" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033B1E" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033B30" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033B46" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033B5C" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033B6E" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033B1E" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033B1E" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033B0C" "(self: * S2011E30 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8033B0C" "(self: * S2011E30 \$r5) -> ()"
+
+tools/doc_scripts/replacesig.sh "QueueUnk00GFXTransfer" "(queued_src: *const (), mut_queued_dest: *mut (), queued_size: u32) -> ()"
+tools/doc_scripts/replacesig.sh "QueueByteAlignedGFXTransfer" "(queued_src: *const (), mut_queued_dest: *mut (), queued_size: u32) -> ()"
+tools/doc_scripts/replacesig.sh "QueueHwordAlignedGFXTransfer" "(queued_src: *const (), mut_queued_dest: *mut (), queued_size: u32) -> ()"
+tools/doc_scripts/replacesig.sh "QueueWordAlignedGFXTransfer" "(queued_src: *const (), mut_queued_dest: *mut (), queued_size: u32) -> ()"
+tools/doc_scripts/replacesig.sh "QueueEightWordAlignedGFXTransfer" "(queued_src: *const (), mut_queued_dest: *mut (), queued_size: u32) -> ()"
+tools/doc_scripts/replacesig.sh "loc_8000ACA" "(queued_src: *const (), mut_queued_dest: *mut (), queued_size: u32, copy_type: int) -> ()"
+tools/doc_scripts/replacesig.sh "gfxTransfer_8033DA0" "(a0: u32?) -> ()"
+tools/doc_scripts/replacesig.sh "gfxTransfer_8033978" "() -> ()"
+
+
+
+
+
+
+./replacep.sh "off_806C394" "JumpTable806C394"
+./replacep.sh "camera_802FF4C" "camera_init_802FF4C"
+./replacep.sh "sub_800378C" "ZeroFillObjectInteractionAreas_800378C"
+./replacep.sh "sub_8003BA2" "TryUpdateEachOWPlayerObject_8003BA2"
+./replacep.sh "npc_800461E" "TryUpdateEachOverworldNPCObject_800461E"
+./replacep.sh "gamestate_on_map_update_8005268" "gamestate_OnMapUpdate_8005268"
+./replacep.sh "sub_80048D2" "TryUpdateEachOverworldMapObject_80048D2"
+./replacep.sh "sub_80339CC" "dispatch_80339CC"
+./replacep.sh "off_8033A1C" "JumpTable8033A1C"
+./replacep.sh "off_8033A4C" "JumpTableInternet8033A4C"
+./replacep.sh "unk_2011E30" "S2011E30"
+./replacep.sh "sub_8033A7C" "noop_8033A7C"
+./replacep.sh "sub_8033978" "gfxTransfer_8033978"
+./replacep.sh "sub_8033DA0" "gfxTransfer_8033DA0"
+./replacep.sh "sub_8033B08" "noop_8033B08"
+./replacep.sh "sub_8033B1E" "onUpdate_8033B1E"
+./replacep.sh "sub_8033A96" "onUpdate_8033A96"
+```
+
+2025-10-11 Wk 41 Sat - 12:11 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+make clean && make -j$(nproc) assets && make -j$(nproc);
+
+# out (relevant)
+bn6f.gba: OK
+```
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit -m "doc map related functions and structs"
+
+# out
+[master 0b30a62f] doc map related functions and structs
+ 85 files changed, 1398 insertions(+), 1180 deletions(-)
+ create mode 100644 include/structs/S2011E30.inc
+```
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/dism-exe-notes
+git commit -m "doc map related functions and structs"
+
+# out
+[main 44b0874] doc map related functions and structs
+ 10 files changed, 777 insertions(+), 9 deletions(-)
+ create mode 100644 lan/topics/bn6f/explorations/entries/2025/001 Exploring bn6f CentralArea Map/issues/000 TryUpdateEachOverworldMapObject_80048D2.ret_8004920 was not defined within its scope.md
+ create mode 100644 lan/topics/bn6f/explorations/entries/2025/001 Exploring bn6f CentralArea Map/tasks/001 Create Struct S2011E30 used in dispatch_80339CC.md
+ create mode 100644 lan/topics/bn6f/explorations/entries/2025/001 Exploring bn6f CentralArea Map/tasks/002 Find what triggers via dispatch_80339CC.md
+ create mode 100644 scripts/templater/data/lan/daily/2025/Summary-2025-10-11.md
+```

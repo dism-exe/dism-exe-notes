@@ -316,4 +316,69 @@ The closest is `r2`'s value of `0x806c024` is `byte_806C014` which is referenced
 
 `HomePages_EnterMapGroup` is dispatched through `EnterMap_InternetMapGroupJumptable` via `EnterMap_RunMapGroupAsmFunction_8030A00` just like `CentralArea_EnterMapGroup` that we started with.
 
-	
+2025-10-11 Wk 41 Sat - 07:00 +03:00
+
+Not sure if `LoadBGAnimData` is an example of polymorphism in bn6f, where `$r5` is casted. It might be just that references to `BGAnimData` is stored in structs
+
+2025-10-11 Wk 41 Sat - 07:34 +03:00
+
+`sub_80059B4` looks like it loads cutscene scripts for home pages
+
+2025-10-11 Wk 41 Sat - 07:43 +03:00
+
+Lots of map scripts to be found in `MapScriptCommandJumptable` which is used by `RunSecondaryContinuousMapScript`, `RunContinuousMapScript`, `StoreMapScriptsThenRunOnInitMapScript`
+
+2025-10-11 Wk 41 Sat - 08:19 +03:00
+
+What's 
+
+```
+// in fn sub_8003BA2
+add r5, #0xc8
+```
+
+I can see `$r5` is supposed to be a `overworld_player_object_struct` which starts with `object_header_struct`
+
+```C
+// in include/structs/OverworldPlayerObject.inc
+u0 Size // loc=0xc8
+```
+
+Ok
+
+```diff
+// in fn sub_8003BA2
+-add r5, #0xc8
++add r5, #oOWPlayerObject_Size
+```
+
+2025-10-11 Wk 41 Sat - 08:24 +03:00
+
+```
+// in fn sub_8003BA2
+mov r1, #1
+ldrb r0, [r5]
+```
+
+This interacts with the object header, and those are flags!
+
+2025-10-11 Wk 41 Sat - 09:02 +03:00
+
+```C
+// in fn TryUpdateEachOverworldNPCObject_800461E
+// branch if !OBJECT_FLAG_PAUSE_UPDATE
+mov r1, #OBJECT_FLAG_PAUSE_UPDATE
+tst r0, r1
+beq .endcheck_8004662
+```
+
+Why would it do this? This avoids the callback, so I would think that it would do a `bne` to avoid it if pause is set
+
+2025-10-11 Wk 41 Sat - 09:32 +03:00
+
+Spawn [[001 Create Struct S2011E30 used in dispatch_80339CC]] ^spawn-task-aec1e0
+
+2025-10-11 Wk 41 Sat - 10:38 +03:00
+
+Spawn [[002 Find what triggers via dispatch_80339CC]] ^spawn-task-84f66e
+
