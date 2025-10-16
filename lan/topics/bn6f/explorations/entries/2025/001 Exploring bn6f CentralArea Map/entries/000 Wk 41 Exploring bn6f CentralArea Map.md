@@ -488,8 +488,62 @@ For `CutsceneScript`,  they pass through `StartCutscene`
 
 `chatbox_selectCompTextByMap_80407C8` might have some invariant to avoid dereferencing null, a selective set of maps?
 
-
-
 2025-10-15 Wk 42 Wed - 15:25 +03:00
 
 Spawn [[001 Look into NPCScript loading]] ^spawn-invst-762452
+
+2025-10-16 Wk 42 Thu - 06:32 +03:00
+
+`CutsceneScript_80991F4` references `RunLMessageTextScript`
+
+- [ ] Cutscene list in in `dword_8143B1C`, and it's incomplete!
+
+```C
+dword_8143B1C: 
+  .word 0x8092C78
+	.word byte_8092A98
+```
+
+[[002 Suspicious pointers encountered during CentralArea Map Exploring]]
+
+2025-10-16 Wk 42 Thu - 07:02 +03:00
+
+- [ ] Check if assembly
+
+Might be assembly:
+
+```
+// in data/dat26.s
+	.byte 0x0, 0x40, 0xF5, 0x80, 0xF7, 0x0, 0xFC, 0x8, 0x3F, 0x0, 0x6
+	.byte 0x2, 0xFF, 0x1E, 0x27, 0xFF, 0xC, 0x8, 0x7, 0x3E, 0xC8, 0xAB
+	.byte 0x7C, 0x88, 0x54, 0x0, 0xDC, 0x24, 0x9, 0x8, 0x4A, 0x2, 0xCC
+	.byte 0xD3, 0x5, 0x8, 0x3F, 0x34, 0x3F, 0x1C, 0x2, 0xFF, 0x1E, 0x27
+	.byte 0xFF, 0x8, 0x8, 0x7, 0x14, 0x65, 0x25, 0x9, 0x8, 0x2, 0xFF
+	.byte 0x1E, 0x3A, 0xFF, 0x0, 0x4, 0x80, 0x2, 0xFF, 0x3C, 0x14, 0x0
+```
+
+2025-10-16 Wk 42 Thu - 07:07 +03:00
+
+- [ ] Bad pointer arithmetic
+
+```
+dword_8089128: 
+  .word 0x4B06003F
+	.word byte_8089130+0x11
+```
+
+```
+byte_80893CC: // CutsceneScript
+  .byte 0x3F, 0x0, 0x6, 0x2, 0xFF, 0x1E, 0x27, 0xFF, 0xC, 0x8, 0x7, 0x4B
+	.word byte_80893DC+0x19
+```
+
+```
+	ldr r0, off_808713C // =byte_8086678+32 
+loc_8087130:
+	bl StartCutscene // (script: *const CutsceneScript, param: u32) -> ()
+```
+
+2025-10-16 Wk 42 Thu - 07:24 +03:00
+
+`sub_8086FD8`, `sub_808FE74`, `sub_808CB0C` start cutscenes generally

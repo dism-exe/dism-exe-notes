@@ -512,27 +512,25 @@ tools/doc_scripts/replacesig_data.sh "NPCScriptsGreenTown_805E184"     "(*const 
 tools/doc_scripts/replacesig_data.sh "NPCScriptsSkyTown_806065C"       "(*const NPCScript)[][SKY_TOWN_NUM_MAPS]"                    
 tools/doc_scripts/replacesig_data.sh "NPCScriptsExpoSite_8062F78"      "(*const NPCScript)[][EXPO_SITE_NUM_MAPS]"                   
 
-tools/doc_scripts/replacesig_data.sh "NPCScriptsRobotControlComp_80665B4"      "(*const NPCScript)[][ROBOT_CONTROL_COMP_NUM_MAPS]"                                             
-tools/doc_scripts/replacesig_data.sh "NPCScriptsAquariumComp_8067DE0"          "(*const NPCScript)[][AQUARIUM_COMP_NUM_MAPS]"                                              
-tools/doc_scripts/replacesig_data.sh "NPCScriptsJudgetreeComp_8069310"         "(*const NPCScript)[][JUDGETREE_COMP_NUM_MAPS]"                                            
-tools/doc_scripts/replacesig_data.sh "NPCScriptsMrWeather_806A278"             "(*const NPCScript)[][MR_WEATHER_COMP_NUM_MAPS]"                                        
-tools/doc_scripts/replacesig_data.sh "NPCScriptsPvavilionComp_806AE30"         "(*const NPCScript)[][PAVILION_COMP_NUM_MAPS]"                                            
-tools/doc_scripts/replacesig_data.sh "NPCScriptsHomePages_806C7E8"             "(*const NPCScript)[][HOMEPAGES_NUM_MAPS]"                                        
-tools/doc_scripts/replacesig_data.sh "NPCScriptsComps_806E030"                 "(*const NPCScript)[][COMPS_NUM_MAPS]"                                    
-tools/doc_scripts/replacesig_data.sh "NPCScriptsComps2_80702AC"                "(*const NPCScript)[][COMPS_2_NUM_MAPS]"                                     
-tools/doc_scripts/replacesig_data.sh "NPCScriptsCentralArea_8071EC8"           "(*const NPCScript)[][CENTRAL_AREA_NUM_MAPS]"                                          
-tools/doc_scripts/replacesig_data.sh "NPCScriptsSeasideArea_80758B8"           "(*const NPCScript)[][SEASIDE_AREA_NUM_MAPS]"                                          
-tools/doc_scripts/replacesig_data.sh "NPCScriptsGreenArea_8078114"             "(*const NPCScript)[][GREEN_AREA_NUM_MAPS]"                                        
-tools/doc_scripts/replacesig_data.sh "NPCScriptsUnderground_807953C"           "(*const NPCScript)[][UNDERGROUND_NUM_MAPS]"                                          
-tools/doc_scripts/replacesig_data.sh "NPCScriptsSkyACDCArea_807AE04"           "(*const NPCScript)[][SKY_ACDC_AREA_NUM_MAPS]"                                          
-tools/doc_scripts/replacesig_data.sh "NPCScriptsUndernet_807D310"              "(*const NPCScript)[][UNDERNET_NUM_MAPS]"                                       
-tools/doc_scripts/replacesig_data.sh "NPCScriptsGraveyardImmortalArea_807F210" "(*const NPCScript)[][GRAVEYARD_NUM_MAPS]"                                                    
+tools/doc_scripts/replacesig_data.sh "NPCScriptsRobotControlComp_80665B4"      "(*const NPCScript)[][ROBOT_CONTROL_COMP_NUM_MAPS]"            
+tools/doc_scripts/replacesig_data.sh "NPCScriptsAquariumComp_8067DE0"          "(*const NPCScript)[][AQUARIUM_COMP_NUM_MAPS]"             
+tools/doc_scripts/replacesig_data.sh "NPCScriptsJudgetreeComp_8069310"         "(*const NPCScript)[][JUDGETREE_COMP_NUM_MAPS]"           
+tools/doc_scripts/replacesig_data.sh "NPCScriptsMrWeather_806A278"             "(*const NPCScript)[][MR_WEATHER_COMP_NUM_MAPS]"         
+tools/doc_scripts/replacesig_data.sh "NPCScriptsPvavilionComp_806AE30"         "(*const NPCScript)[][PAVILION_COMP_NUM_MAPS]"           
+tools/doc_scripts/replacesig_data.sh "NPCScriptsHomePages_806C7E8"             "(*const NPCScript)[][HOMEPAGES_NUM_MAPS]"               
+tools/doc_scripts/replacesig_data.sh "NPCScriptsComps_806E030"                 "(*const NPCScript)[][COMPS_NUM_MAPS]"                   
+tools/doc_scripts/replacesig_data.sh "NPCScriptsComps2_80702AC"                "(*const NPCScript)[][COMPS_2_NUM_MAPS]"                 
+tools/doc_scripts/replacesig_data.sh "NPCScriptsCentralArea_8071EC8"           "(*const NPCScript)[][CENTRAL_AREA_NUM_MAPS]"            
+tools/doc_scripts/replacesig_data.sh "NPCScriptsSeasideArea_80758B8"           "(*const NPCScript)[][SEASIDE_AREA_NUM_MAPS]"            
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGreenArea_8078114"             "(*const NPCScript)[][GREEN_AREA_NUM_MAPS]"              
+tools/doc_scripts/replacesig_data.sh "NPCScriptsUnderground_807953C"           "(*const NPCScript)[][UNDERGROUND_NUM_MAPS]"             
+tools/doc_scripts/replacesig_data.sh "NPCScriptsSkyACDCArea_807AE04"           "(*const NPCScript)[][SKY_ACDC_AREA_NUM_MAPS]"           
+tools/doc_scripts/replacesig_data.sh "NPCScriptsUndernet_807D310"              "(*const NPCScript)[][UNDERNET_NUM_MAPS]"                
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGraveyardImmortalArea_807F210" "(*const NPCScript)[][GRAVEYARD_NUM_MAPS]"                   
 
-tools/doc_scripts/replacesig_data.sh "NPCScriptsHomePages_806C7E8"             "Nullable<(*const NPCScript)[]>[HOMEPAGES_NUM_MAPS]"                                        
-tools/doc_scripts/replacesig_data.sh "NPCScriptsUndernet_807D310"              "Nullable<(*const NPCScript)[]>[UNDERNET_NUM_MAPS]"                                       
-tools/doc_scripts/replacesig_data.sh "NPCScriptsGraveyardImmortalArea_807F210" "Nullable<(*const NPCScript)[]>[GRAVEYARD_NUM_MAPS]"                                                    
-
-NPCScriptsCentralTown_804E954:: // (*const NPCScript)[][CENTRAL_TOWN_NUM_MAPS]
+tools/doc_scripts/replacesig_data.sh "NPCScriptsHomePages_806C7E8"             "Nullable<(*const NPCScript)[]>[HOMEPAGES_NUM_MAPS]"       
+tools/doc_scripts/replacesig_data.sh "NPCScriptsUndernet_807D310"              "Nullable<(*const NPCScript)[]>[UNDERNET_NUM_MAPS]"      
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGraveyardImmortalArea_807F210" "Nullable<(*const NPCScript)[]>[GRAVEYARD_NUM_MAPS]"                   
 
 ./replace.sh "off_804F9D8" "NPCScriptsForCentralTown_804F9D8"
 ./replace.sh "off_8051624" "NPCScriptsForLanHouse_8051624"
@@ -556,3 +554,24 @@ git commit
 [master b74a9507] doc types for NPC and Map scripts for all maps
  49 files changed, 635 insertions(+), 406 deletions(-)
 ```
+
+2025-10-16 Wk 42 Thu - 06:20 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+
+tools/doc_scripts/symbol_list_replacesig_data_same.sh \
+	"byte_8099E04 byte_8098BB8 byte_809AE68 byte_809895C byte_80989C1 byte_8098384 byte_8098358 byte_809CAD8 byte_809AA34 byte_8099EA0 byte_809A8A8 CutsceneScript_80991F4 CutsceneScript_80988E4 byte_8098824 byte_809CEB4 byte_809C354 byte_809AFC0 byte_809B16C CutsceneScript_8098b1c CutsceneScript_809b5ad CutsceneScript_8098a2e CutsceneScript_8098a78 CutsceneScript_8098a02 byte_809326C byte_80933B8 byte_8092DE8 byte_8093358 byte_808C2F0 dword_8089128 byte_8089554 byte_8089448 byte_8089DF4 byte_808A128 byte_808C2F0 byte_8089FD8 byte_8089E44 byte_8089DD8" \
+	"CutsceneScript"
+
+# after byte_809326C
+tools/doc_scripts/replacesig_data.sh "dword_8143B1C" "(*const CutsceneScript)[2]"         
+
+# after byte_8093358
+tools/doc_scripts/replacesig_data.sh "off_8143078" "(*const CutsceneScript)[2]"         
+
+# after dword_8089128, byte_80893CC is already labeled
+# after byte_8089DD8, byte_8086678+32 is not formed yet
+# after byte_8086678+32, `sub_8086FD8`, `sub_808FE74`, `sub_808CB0C` start cutscenes generally
+```
+

@@ -8,6 +8,11 @@ Spawn [[000 Wk 41 Exploring bn6f CentralArea Map]] ^spawn-entry-f550c2
 
 Spawn [[001 Notes Taken during CentralArea Map Exploring]] ^spawn-entry-5d6116
 
+2025-10-16 Wk 42 Thu - 06:36 +03:00
+
+Spawn [[002 Suspicious pointers encountered during CentralArea Map Exploring]] ^spawn-entry-b44338
+
+
 # 2 Spawn Trees
 
 - [[001 Exploring bn6f CentralArea Map]]
