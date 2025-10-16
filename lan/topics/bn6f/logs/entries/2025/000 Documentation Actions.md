@@ -1,9 +1,10 @@
 2025-09-27 Wk 39 Sat - 08:27
+
 # 1 Journal
 
 2025-09-25 Wk 39 Thu - 06:15
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig.sh "CopyWords" "(src: *const u32, mut_dest: *mut u32, size: u32) -> ()"
 tools/doc_scripts/replacesig.sh "CopyByEightWords" "(src: *const u32, mut_dest: *mut u32, size: u32) -> ()"
@@ -26,13 +27,13 @@ tools/doc_scripts/replacesig.sh "sub_8123360" "() -> bool"
 ./replacep.sh "main_static_8000454" "main_static_screen_fade_8000454"
 ./replacep.sh "saveMenu_8132CB8" "saveMenu_config_textscript_8132CB8"
 ./replacep.sh "sub_802F756" "load_game_802F756"
-```
+````
 
 Commited `ddc1c1e3`,
 
 2025-09-27 Wk 39 Sat - 08:27
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 
 tools/doc_scripts/replacesig.sh "sub_803F838" "() -> \!zf"
@@ -45,13 +46,13 @@ tools/doc_scripts/replacesig.sh "GetTitleScreenIconCount" "() -> (u8, u16)"
 ./replacep.sh "sub_803E978" "anim_803E978"
 ./replacep.sh "anim_803E978" "startScreen_AnimatePressStart_803E978"
 ./replacep.sh "startScreen_802F574" "startScreen_initGfx_802F574"
-```
+````
 
 2025-10-08 Wk 41 Wed - 03:50 +03:00
 
-From [[000 What writes for startscreen_render_802F544 jumptable?]],
+From [000 What writes for startscreen_render_802F544 jumptable?](../../../functions/entries/2025/002%20startscreen_render_802F544/investigations/000%20What%20writes%20for%20startscreen_render_802F544%20jumptable%3F.md),
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/symbol_list_replacesig_same.sh "startScreen_initGfx_802F574 ho_802F63C load_game_802F756 startscreen_802F60C" "(self: * StartScreen \$r5) -> ()" tools/doc_scripts/symbol_list_replacesig_same.sh "startScreen_initGfx_802F574" "(self: *mut StartScreen \$r5) -> ()"
 
@@ -72,7 +73,7 @@ tools/doc_scripts/replacesig.sh "sub_802F710" "(self: *mut StartScreen \$r5) -> 
 tools/doc_scripts/replacesig.sh "music_80005F2" "(bg_music_indicator: u8) -> ()"
 
 ./replacep.sh "sub_802FD3C" "copyBGTiles_802FD3C" 
-```
+````
 
 2025-10-08 Wk 41 Wed - 04:45 +03:00
 
@@ -80,7 +81,7 @@ Added `ctags -R ewram.s *.s asm/* data/dat* docs/decomp/*.c include/* maps/*` to
 
 2025-10-08 Wk 41 Wed - 06:33 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig.sh "sub_802F8D8" "(self: *mut StartScreen \$r5) -> ()"
 tools/doc_scripts/replacesig.sh "sub_802FC9C" "(self: *const StartScreen \$r5) -> ()"
@@ -107,15 +108,15 @@ tools/doc_scripts/replacesig.sh "sub_803D298" "(self: *mut S2011800 \$r5) -> ()"
 tools/doc_scripts/replacesig.sh "sub_803D2A6" "(self: *const S2011800 \$r5) -> ()"
 
 
-```
+````
 
 Commited `a8ff8d2b`
 
 2025-10-08 Wk 41 Wed - 10:29 +03:00
 
-Added `replacep_rev.sh` for undoing `replacep.sh`. 
+Added `replacep_rev.sh` for undoing `replacep.sh`.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 ./replacep.sh "sub_8005C04" "map_triggerEnterMapOnWarp_8005C04"
 
@@ -134,7 +135,7 @@ tools/doc_scripts/replacesig.sh "sub_8005A50" "(self: * GameState \$r5) -> ()"
 ./replacep.sh "loc_8034C2C" ".ret"
 
 tools/doc_scripts/replacesig.sh "IsCutsceneScriptNonNull" "() -> \!zf"
-```
+````
 
 2025-10-08 Wk 41 Wed - 12:09 +03:00
 
@@ -142,7 +143,7 @@ This `IsCutsceneScriptNonNull` does a `tst r0, r0` which does a logical AND chec
 
 2025-10-08 Wk 41 Wed - 12:17 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 ./replacep.sh "sub_8034BB8" "cutscene_8034BB8"
 
@@ -164,11 +165,11 @@ tools/doc_scripts/replacesig.sh "sub_800585A" "(self: * GameState \$r5) -> ()"
 
 ./replacep.sh "gamestate_8005268" "gamestate_on_map_update_8005268"
 ./replacep.sh "off_8005948" "JumpTable8005948"
-```
+````
 
 2025-10-08 Wk 41 Wed - 15:37 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "doc map update loop and related"
 
@@ -176,9 +177,9 @@ git commit -m "doc map update loop and related"
 [master 69bd59bb] doc map update loop and related
  14 files changed, 363 insertions(+), 115 deletions(-)
  create mode 100755 replacep_rev.sh
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/dism-exe-notes
 git commit
 
@@ -186,11 +187,11 @@ git commit
 [main 62f5228] notes on map trigger & cutscene tracing
  Date: Wed Oct 8 15:37:10 2025 +0300
  6 files changed, 337 insertions(+), 41 deletions(-)
-```
+````
 
 2025-10-11 Wk 41 Sat - 06:51 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 
 tools/doc_scripts/replacesig.sh "SetRenderInfoLCDControl" "(a_00: u16) -> ()"
@@ -271,19 +272,19 @@ tools/doc_scripts/replacesig.sh "gfxTransfer_8033978" "() -> ()"
 ./replacep.sh "sub_8033B08" "noop_8033B08"
 ./replacep.sh "sub_8033B1E" "onUpdate_8033B1E"
 ./replacep.sh "sub_8033A96" "onUpdate_8033A96"
-```
+````
 
 2025-10-11 Wk 41 Sat - 12:11 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 make clean && make -j$(nproc) assets && make -j$(nproc);
 
 # out (relevant)
 bn6f.gba: OK
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "doc map related functions and structs"
 
@@ -291,9 +292,9 @@ git commit -m "doc map related functions and structs"
 [master 0b30a62f] doc map related functions and structs
  85 files changed, 1398 insertions(+), 1180 deletions(-)
  create mode 100644 include/structs/S2011E30.inc
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/dism-exe-notes
 git commit -m "doc map related functions and structs"
 
@@ -304,11 +305,11 @@ git commit -m "doc map related functions and structs"
  create mode 100644 lan/topics/bn6f/explorations/entries/2025/001 Exploring bn6f CentralArea Map/tasks/001 Create Struct S2011E30 used in dispatch_80339CC.md
  create mode 100644 lan/topics/bn6f/explorations/entries/2025/001 Exploring bn6f CentralArea Map/tasks/002 Find what triggers via dispatch_80339CC.md
  create mode 100644 scripts/templater/data/lan/daily/2025/Summary-2025-10-11.md
-```
+````
 
 2025-10-12 Wk 41 Sun - 06:23 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 
 ./replacep.sh "sub_8033948" "sub_8033948"
@@ -325,22 +326,22 @@ tools/doc_scripts/replacesig.sh "ClearEventFlagFromImmediate" "(flag: u16) -> ()
 tools/doc_scripts/replacesig.sh "TestEventFlagFromImmediate" "(flag: u16) -> \!zf"
 tools/doc_scripts/replacesig.sh "TestEventFlag" "(flag: u16) -> \!zf"
 tools/doc_scripts/replacesig.sh "chatbox_runScript" "(archive: *const TextScriptArchive, script_idx: u8) -> ()"
-```
+````
 
 2025-10-14 Wk 42 Tue - 06:17 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "doc map related functions and structs"
 
 # out
 [master c609f71a] doc map related functions and structs
  41 files changed, 820 insertions(+), 803 deletions(-)
-```
+````
 
 2025-10-15 Wk 42 Wed - 07:58 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig_data.sh "byte_804E6AC" "SpriteLoadData[8]"
 tools/doc_scripts/replacesig_data.sh "dword_804E6BE" "SpriteLoadData[1]"
@@ -406,20 +407,20 @@ tools/doc_scripts/replacesig_data.sh "byte_804EDFB" "MapScript"
 tools/doc_scripts/replacesig_data.sh "byte_804EED1" "MapScript"
 tools/doc_scripts/replacesig_data.sh "byte_804EEF6" "MapScript"
 
-```
+````
 
 2025-10-15 Wk 42 Wed - 12:37 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "map doc and partial dump of a mapscript"                                     
 [master be0f03b2] map doc and partial dump of a mapscript
  47 files changed, 488 insertions(+), 317 deletions(-)
-```
+````
 
 2025-10-15 Wk 42 Wed - 13:59 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig.sh "StartCutscene" "(script: *const CutsceneScript, param: u32) -> ()"
 tools/doc_scripts/replacesig_data.sh "byte_80893CC" "CutsceneScript"
@@ -544,15 +545,15 @@ tools/doc_scripts/replacesig_data.sh "NPCScriptsForCentralTown_804F9D8" "(*const
 tools/doc_scripts/replacesig_data.sh "NPCScriptsForLanRoom_8051B5C"     "(*const NPCScript)[1]"         
 tools/doc_scripts/replacesig_data.sh "NPCScriptsForBathroom_8051F48"    "(*const NPCScript)[2]"        
 tools/doc_scripts/replacesig_data.sh "NPCScriptsForAsterland_8051FB0"   "(*const NPCScript)[9]"       
-```
+````
 
 2025-10-15 Wk 42 Wed - 19:32 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit
 
 # out
 [master b74a9507] doc types for NPC and Map scripts for all maps
  49 files changed, 635 insertions(+), 406 deletions(-)
-```
+````

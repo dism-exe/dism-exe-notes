@@ -1,15 +1,15 @@
 ---
-parent: "[[000 Setup project & tools and build on a new Linux machine]]"
-spawned_by: "[[000 Setup project & tools and build on a new Linux machine]]"
+parent: '[[000 Setup project & tools and build on a new Linux machine]]'
+spawned_by: '[[000 Setup project & tools and build on a new Linux machine]]'
 context_type: task
 status: done
 ---
 
-Parent: [[000 Setup project & tools and build on a new Linux machine]]
+Parent: [000 Setup project & tools and build on a new Linux machine](../000%20Setup%20project%20&%20tools%20and%20build%20on%20a%20new%20Linux%20machine.md)
 
-Spawned by: [[000 Setup project & tools and build on a new Linux machine]] 
+Spawned by: [000 Setup project & tools and build on a new Linux machine](../000%20Setup%20project%20&%20tools%20and%20build%20on%20a%20new%20Linux%20machine.md)
 
-Spawned in: [[000 Setup project & tools and build on a new Linux machine#^spawn-task-422a75|^spawn-task-422a75]]
+Spawned in: [<a name="spawn-task-422a75" />^spawn-task-422a75](../000%20Setup%20project%20&%20tools%20and%20build%20on%20a%20new%20Linux%20machine.md#spawn-task-422a75)
 
 # 1 Journal
 
@@ -17,38 +17,38 @@ Spawned in: [[000 Setup project & tools and build on a new Linux machine#^spawn-
 
 Install gdb-multiarch:
 
-```sh
+````sh
 sudo apt-get install gdb-multiarch
-```
+````
 
 Start the game:
 
-```sh
+````sh
 mgba bn6f.elf
-```
+````
 
 In mGBA, Tools > Start Gdb Server > Break on All Writes > Start
 
 Now start gdb:
 
-```sh
+````sh
 gdb-multiarch bn6f.elf
-```
+````
 
 Connect to the remote gdb server:
 
-```
+````
 (gdb) target remote localhost:2345
-```
+````
 
 I get:
 
-```
+````
 Remote debugging using localhost:2345
 main_awaitFrame () at ./asm/main.s:93
 93              beq loc_80003A6
 
-```
+````
 
 So we know symbols are loaded.
 
@@ -56,6 +56,6 @@ So we know symbols are loaded.
 
 Can also do:
 
-```
+````
 gdb-multiarch bn6f.elf -ex "target remote localhost:2345"
-```
+````

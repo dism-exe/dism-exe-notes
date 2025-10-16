@@ -1,39 +1,39 @@
 ---
-parent: "[[000 Setup project & tools and build on a new Linux machine]]"
-spawned_by: "[[000 Setup project & tools and build on a new Linux machine]]"
+parent: '[[000 Setup project & tools and build on a new Linux machine]]'
+spawned_by: '[[000 Setup project & tools and build on a new Linux machine]]'
 context_type: task
 status: pend
 ---
 
-Parent: [[000 Setup project & tools and build on a new Linux machine]]
+Parent: [000 Setup project & tools and build on a new Linux machine](../000%20Setup%20project%20&%20tools%20and%20build%20on%20a%20new%20Linux%20machine.md)
 
-Spawned by: [[000 Setup project & tools and build on a new Linux machine]] 
+Spawned by: [000 Setup project & tools and build on a new Linux machine](../000%20Setup%20project%20&%20tools%20and%20build%20on%20a%20new%20Linux%20machine.md)
 
-Spawned in: [[000 Setup project & tools and build on a new Linux machine#^spawn-task-6b4885|^spawn-task-6b4885]]
+Spawned in: [<a name="spawn-task-6b4885" />^spawn-task-6b4885](../000%20Setup%20project%20&%20tools%20and%20build%20on%20a%20new%20Linux%20machine.md#spawn-task-6b4885)
 
 # 1 Journal
 
 2025-06-12 Wk 24 Thu - 07:26
 
-We don't want to be messing around much with the memory editor if we have struct information or type information, we want to use it to experiment with the game. 
+We don't want to be messing around much with the memory editor if we have struct information or type information, we want to use it to experiment with the game.
 
-As of now, this is not possible. 
+As of now, this is not possible.
 
 If you run
 
-```
+````
 (gdb) info types
-```
+````
 
 you get
 
-```
+````
 All defined types:
-```
+````
 
 Running `readelf -s bn6f.elf | less` we can see that we do have type information for structs such as the toolkit struct:
 
-```
+````
 	[...]
 	32: 00000014     0 NOTYPE  LOCAL  DEFAULT  ABS oToolkit_Warp201[...]
     33: 00000018     0 NOTYPE  LOCAL  DEFAULT  ABS oToolkit_BattleS[...]
@@ -44,6 +44,6 @@ Running `readelf -s bn6f.elf | less` we can see that we do have type information
     38: 0000002c     0 NOTYPE  LOCAL  DEFAULT  ABS oToolkit_ChatboxPtr
     39: 00000030     0 NOTYPE  LOCAL  DEFAULT  ABS oToolkit_Collisi[...]
 	[...]
-```
+````
 
 These are useful for the purposes of documenting the disassembly but they need to turn into C structs for the purposes of debugging. This will be done in a later task.
