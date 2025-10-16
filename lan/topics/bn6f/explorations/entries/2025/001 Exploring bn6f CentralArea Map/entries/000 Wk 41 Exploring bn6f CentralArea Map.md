@@ -382,3 +382,114 @@ Spawn [[001 Create Struct S2011E30 used in dispatch_80339CC]] ^spawn-task-aec1e0
 
 Spawn [[002 Find what triggers via dispatch_80339CC]] ^spawn-task-84f66e
 
+2025-10-15 Wk 42 Wed - 04:50 +03:00
+
+Let's sweep triggers
+
+```C
+// in /home/lan/src/cloned/gh/LanHikari22/branches/bn6f-modding@expt000_code_on_command_s/modding.s
+  thumb_func_start modding_on_command
+modding_on_command:
+  push {lr}
+
+  mov r0, #{sweep}
+  strb r0, [r5,#oGameState_SubsystemIndex]
+
+  pop {pc}
+  .pool
+  thumb_func_end modding_on_command
+```
+
+2025-10-15 Wk 42 Wed - 06:12 +03:00
+
+```C
+// in /home/lan/src/cloned/gh/LanHikari22/branches/bn6f-modding@expt001_sweep_on_command_s/modding.s
+  thumb_func_start modding_on_command
+modding_on_command:
+  push {lr}
+
+  ldr r0, =g_modding_sweep_counter
+  ldrb r2, [r0]
+
+  mov r5, r10
+  ldr r5, [r5,#oToolkit_GameStatePtr]
+
+  mov r0, r2
+  strb r0, [r5,#oGameState_SubsystemIndex]
+
+  // Increment the counter
+  ldr r0, =g_modding_sweep_counter
+  ldrb r1, [r0]
+  add r1, r1, #1
+  strb r1, [r0]
+
+  pop {pc}
+  .pool
+  thumb_func_end modding_on_command
+```
+
+Yeah sweeping this just crashes the game after map glitches for `EnterMap (0)`. 
+
+2025-10-15 Wk 42 Wed - 07:45 +03:00
+
+`02001C1C` has a rapid counter, which is written by `CapIncrementGameTimeFrames` as discovered through watch in
+
+```
+str r0, [r3,#oS2001c04_GameTimeFrames]
+```
+
+2025-10-15 Wk 42 Wed - 08:49 +03:00
+
+```C
+off_804E738: // (*const MapObjectSpawnData)[5]
+	// <endpool>
+	.word CentralTownObjectSpawns // MapObjectSpawnData[15]
+	.word LansHouseObjectSpawns // MapObjectSpawnData[4]
+	.word LansRoomObjectSpawns // MapObjectSpawnData[0]
+	.word BathroomObjectSpawns // MapObjectSpawnData[0]
+	.word AsterLandObjectSpawns // MapObjectSpawnData[4]
+```
+
+So `5` here has a real meaning, this is how many rooms there are in this map group.
+
+we can update `constants/enums/GameAreas.inc` with 
+
+```
+.equiv CENTRAL_TOWN_NUM_ROOMS, 5
+```
+
+And do so for the rest
+
+2025-10-15 Wk 42 Wed - 09:01 +03:00
+
+Will call it `NUM_ROOMS` instead of `NUM_AREAS` to not confuse it with the concept of Areas from the game. Or since we're calling them maps, `NUM_MAPS`
+
+2025-10-15 Wk 42 Wed - 09:20 +03:00
+
+Added guards to `tools/doc_scripts/replacesig_data.sh` to not just remove data in case of `label: .word {another_label}`
+
+2025-10-15 Wk 42 Wed - 10:10 +03:00
+
+![[Pasted image 20251015101001.png]]
+
+When disabling `initMapTilesState_803037c` in `CentralTown_EnterMapGroup`
+
+This is after leaving from CentralArea, starting the game there causes a crash and messed up sound noise
+
+2025-10-15 Wk 42 Wed - 11:03 +03:00
+
+Spawn [[000 Look into RunContinuousMapScript with relation to CentralArea]] ^spawn-invst-4c4475
+
+2025-10-15 Wk 42 Wed - 13:58 +03:00
+
+For `CutsceneScript`,  they pass through `StartCutscene`
+
+`byte_80990B8` is a popular cutscene, used in a bunch of internet areas
+
+`chatbox_selectCompTextByMap_80407C8` might have some invariant to avoid dereferencing null, a selective set of maps?
+
+
+
+2025-10-15 Wk 42 Wed - 15:25 +03:00
+
+Spawn [[001 Look into NPCScript loading]] ^spawn-invst-762452

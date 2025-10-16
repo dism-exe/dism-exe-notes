@@ -72,6 +72,11 @@
       "name": "[[002 Find what triggers via dispatch_80339CC]]",
       "startTime": "2025-10-11T07:39:37.338Z",
       "endTime": "2025-10-11T09:12:06.889Z"
+    },
+    {
+      "name": "[[000 Attempt adding a function at end of ROM to trigger on L]]",
+      "startTime": "2025-10-12T05:02:56.793Z",
+      "endTime": null
     }
   ]
 }

@@ -24,3 +24,7 @@ But we should be able to search for `oToolkit_S2001c04_Ptr` to find where it is 
 Blocked.
 
 This should be done structurally rather than manually, but we need to get our analysis tools back online.
+
+2025-10-15 Wk 42 Wed - 04:48 +03:00
+
+Though it shouldn't be hard to document these as we go

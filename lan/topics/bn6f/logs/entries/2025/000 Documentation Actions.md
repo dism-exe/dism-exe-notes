@@ -192,6 +192,7 @@ git commit
 
 ```sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
+
 tools/doc_scripts/replacesig.sh "SetRenderInfoLCDControl" "(a_00: u16) -> ()"
 tools/doc_scripts/replacesig.sh "GetRenderInfoLCDControl" "() -> u16"
 tools/doc_scripts/replacesig.sh "renderInfo_8001788" "() -> ()"
@@ -253,11 +254,6 @@ tools/doc_scripts/replacesig.sh "loc_8000ACA" "(queued_src: *const (), mut_queue
 tools/doc_scripts/replacesig.sh "gfxTransfer_8033DA0" "(a0: u32?) -> ()"
 tools/doc_scripts/replacesig.sh "gfxTransfer_8033978" "() -> ()"
 
-
-
-
-
-
 ./replacep.sh "off_806C394" "JumpTable806C394"
 ./replacep.sh "camera_802FF4C" "camera_init_802FF4C"
 ./replacep.sh "sub_800378C" "ZeroFillObjectInteractionAreas_800378C"
@@ -308,4 +304,255 @@ git commit -m "doc map related functions and structs"
  create mode 100644 lan/topics/bn6f/explorations/entries/2025/001 Exploring bn6f CentralArea Map/tasks/001 Create Struct S2011E30 used in dispatch_80339CC.md
  create mode 100644 lan/topics/bn6f/explorations/entries/2025/001 Exploring bn6f CentralArea Map/tasks/002 Find what triggers via dispatch_80339CC.md
  create mode 100644 scripts/templater/data/lan/daily/2025/Summary-2025-10-11.md
+```
+
+2025-10-12 Wk 41 Sun - 06:23 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+
+./replacep.sh "sub_8033948" "sub_8033948"
+./replacep.sh "sub_80010D4" "GetMaxAndCurHPForCurPETNavi_80010D4"
+./replacep.sh "oS2011E30_Unk_08" "oS2011E30_CurPETNaviMaxHP"
+./replacep.sh "onUpdate_8033B1E" "onUpdateInInternet_8033B1E"
+./replacep.sh "onUpdate_8033A96" "onUpdateInRealWorld_8033A96"
+./replacep.sh "sub_8033948" "triggerSomeUpdateForInternetOrRealWorld_8033948"
+
+
+tools/doc_scripts/replacesig.sh "GetCurPETNaviStatsHword" "(which_navi: u8, which_stat: u8) -> u16"
+tools/doc_scripts/replacesig.sh "GetMaxAndCurHPForCurPETNavi_80010D4" "(which_navi: u8) -> (u16, u16)"
+tools/doc_scripts/replacesig.sh "ClearEventFlagFromImmediate" "(flag: u16) -> ()"
+tools/doc_scripts/replacesig.sh "TestEventFlagFromImmediate" "(flag: u16) -> \!zf"
+tools/doc_scripts/replacesig.sh "TestEventFlag" "(flag: u16) -> \!zf"
+tools/doc_scripts/replacesig.sh "chatbox_runScript" "(archive: *const TextScriptArchive, script_idx: u8) -> ()"
+```
+
+2025-10-14 Wk 42 Tue - 06:17 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit -m "doc map related functions and structs"
+
+# out
+[master c609f71a] doc map related functions and structs
+ 41 files changed, 820 insertions(+), 803 deletions(-)
+```
+
+2025-10-15 Wk 42 Wed - 07:58 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig_data.sh "byte_804E6AC" "SpriteLoadData[8]"
+tools/doc_scripts/replacesig_data.sh "dword_804E6BE" "SpriteLoadData[1]"
+tools/doc_scripts/replacesig_data.sh "dword_804E6C2" "SpriteLoadData[1]"
+tools/doc_scripts/replacesig_data.sh "byte_804E6C6" "SpriteLoadData[0]"
+tools/doc_scripts/replacesig_data.sh "byte_804E6C8" "SpriteLoadData[3]"
+tools/doc_scripts/replacesig_data.sh "off_804E698" "(*const SpriteLoadData)[CENTRAL_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_807ED34" "(*const SpriteLoadData)[3]"
+tools/doc_scripts/replacesig_data.sh "CentralTownObjectSpawns" "MapObjectSpawnData[15]"
+tools/doc_scripts/replacesig_data.sh "LansHouseObjectSpawns" "MapObjectSpawnData[4]"
+tools/doc_scripts/replacesig_data.sh "LansRoomObjectSpawns" "MapObjectSpawnData[0]"
+tools/doc_scripts/replacesig_data.sh "BathroomObjectSpawns" "MapObjectSpawnData[0]"
+tools/doc_scripts/replacesig_data.sh "AsterLandObjectSpawns" "MapObjectSpawnData[4]"
+tools/doc_scripts/replacesig_data.sh "off_804E738" "(*const MapObjectSpawnData)[CENTRAL_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "ChipDataArr_8021DA8" "(*const ChipData)[206]"
+tools/doc_scripts/replacesig_data.sh "eTextScript2033404" "*mut TextScriptArchive"
+tools/doc_scripts/replacesig_data.sh "reqBBS_eTextScript" "*mut TextScriptArchive"
+tools/doc_scripts/replacesig_data.sh "eTextScript202BA04" "*mut TextScriptArchive"
+tools/doc_scripts/replacesig_data.sh "eTextScript202DA04" "*mut TextScriptArchive"
+
+tools/doc_scripts/replacesig.sh "SpawnObjectsFromList" "(data: *const MapObjectSpawnData) -> i32"
+tools/doc_scripts/replacesig.sh "getChip8021DA8" "(which_chip: i32) -> *const ChipData"
+tools/doc_scripts/replacesig.sh "StoreMapScriptsThenRunOnInitMapScript" "(on_init: *const MapScript, on_update: *const MapScript) -> ()"
+
+
+tools/doc_scripts/replacesig_data.sh "RealWorldMapScriptPointers" "(*const MapScript)[][2][REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "InternetMapScriptPointers" "(*const MapScript)[][2][INTERNET_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "off_804E92C" "(*const MapScript)[CENTRAL_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_804E940" "(*const MapScript)[CENTRAL_TOWN_NUM_MAPS]"
+
+tools/doc_scripts/replacesig_data.sh "byte_804EA28" "MapScript"
+tools/doc_scripts/replacesig_data.sh "dword_804F1D4" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804F4F0" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804F934" "MapScript"
+tools/doc_scripts/replacesig_data.sh "dword_804F998" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804EEF7" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804F3F0" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804F744" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804F96E" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804F9C5" "MapScript"
+
+./replacep.sh "byte_804EA28"  "MapScriptOnInitCentralTown_804EA28" 
+./replacep.sh "dword_804F1D4" "MapScriptOnInitLanHouse_804F1D4"
+./replacep.sh "byte_804F4F0"  "MapScriptOnInitLanRoom_804F4F0" 
+./replacep.sh "byte_804F934"  "MapScriptOnInitBathroom_804F934"  
+./replacep.sh "dword_804F998" "MapScriptOnInitAsterLand_804F998"
+
+./replacep.sh "byte_804EEF7"  "MapScriptOnUpdateCentralTown_804EEF7" 
+./replacep.sh "byte_804F3F0"  "MapScriptOnUpdateLanHouse_804F3F0" 
+./replacep.sh "byte_804F744"  "MapScriptOnUpdateLanRoom_804F744" 
+./replacep.sh "byte_804F96E"  "MapScriptOnUpdateBathroom_804F96E" 
+./replacep.sh "byte_804F9C5"  "MapScriptOnUpdateAsterLand_804F9C5" 
+
+tools/doc_scripts/replacesig_data.sh "byte_804EA41" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804EAAC" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804EB2D" "MapScript"
+tools/doc_scripts/replacesig_data.sh "dword_804EB44" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804EB59" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804EC99" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804ECD6" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804EDB9" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804EDFB" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804EED1" "MapScript"
+tools/doc_scripts/replacesig_data.sh "byte_804EEF6" "MapScript"
+
+```
+
+2025-10-15 Wk 42 Wed - 12:37 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit -m "map doc and partial dump of a mapscript"                                     
+[master be0f03b2] map doc and partial dump of a mapscript
+ 47 files changed, 488 insertions(+), 317 deletions(-)
+```
+
+2025-10-15 Wk 42 Wed - 13:59 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig.sh "StartCutscene" "(script: *const CutsceneScript, param: u32) -> ()"
+tools/doc_scripts/replacesig_data.sh "byte_80893CC" "CutsceneScript"
+tools/doc_scripts/replacesig_data.sh "byte_80990B8" "CutsceneScript"
+tools/doc_scripts/replacesig_data.sh "byte_8099DC0" "CutsceneScript"
+tools/doc_scripts/replacesig_data.sh "off_8044D2C" "(*const LZ77Compressed<TextScriptArchive>)[5][16]"
+tools/doc_scripts/replacesig_data.sh "off_8044AB8" "(*const LZ77Compressed<TextScriptArchive>)[5][3]"
+tools/doc_scripts/symbol_list_replacesig_data_same.sh \
+	"off_8044AEC off_8044AC4 off_8044AD8 off_8044D6C" \
+	"(*const LZ77Compressed<TextScriptArchive>)[5]"
+tools/doc_scripts/symbol_list_replacesig_data_same.sh \
+	"off_8044D80 off_8044D94 off_8044DA8 off_8044DBC off_8044DD0 off_8044DE4 off_8044DF8 off_8044E0C off_8044E20 off_8044E34 off_8044E48 off_8044E5C off_8044E70 off_8044E84 off_8044E98" \
+	"(*const LZ77Compressed<TextScriptArchive>)[5]"
+tools/doc_scripts/symbol_list_replacesig_data_same.sh \
+	"" \
+	"(*const LZ77Compressed<TextScriptArchive>)[5]"
+tools/doc_scripts/replacesig_data.sh "off_8044EAC" "(*const LZ77Compressed<TextScriptArchive>)[16]"
+tools/doc_scripts/replacesig_data.sh "off_8044EEC" "(*const LZ77Compressed<TextScriptArchive>)[4]"
+tools/doc_scripts/replacesig_data.sh "off_internet_80444C4" "Nullable<(*const LZ77Compressed<TextScriptArchive>)[5][]>[INTERNET_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "off_realWorld_8044470" "(*const LZ77Compressed<TextScriptArchive>)[5][][REAL_WORLD_NUM_GROUPS]"
+
+tools/doc_scripts/replacesig.sh "sub_809F942" "() -> Nullable<* ?>"
+tools/doc_scripts/replacesig.sh "chatbox_selectCompTextByMap_80407C8" "() -> *const LZ77Compressed<TextScriptArchive>"
+tools/doc_scripts/replacesig.sh "SWI_LZ77UnCompReadNormalWrite8bit" "(src: *const LZ77Compressed<T>, mut_dest: *mut T -> ()"
+
+./replacep.sh "off_804448C"  "inRealWorld_8044520" 
+./replacep.sh "off_8044520"  "inInternet_8044520" 
+
+tools/doc_scripts/replacesig_data.sh "inRealWorld_8044520" "(*const LZ77Compressed<TextScriptArchive>)[][REAL_WORLD_NUM_GROUPS]"
+	tools/doc_scripts/replacesig_data.sh "inInternet_8044520" "Nullable<(*const LZ77Compressed<TextScriptArchive>)[]>[INTERNET_NUM_GROUPS]"
+
+tools/doc_scripts/replacesig_data.sh "off_internet_804457C" "Nullable<(*const LZ77Compressed<TextScriptArchive>)[]>[INTERNET_NUM_GROUPS]"
+
+./replacep.sh "sub_809F506"  "setNPCScript_809F506" 
+./replacep.sh "sub_800467C"  "npc_init_800467C" 
+
+tools/doc_scripts/replacesig.sh "npc_809E570" "(self: * OverworldNPCObject \$r5) -> ()"
+
+tools/doc_scripts/replacesig.sh "npc_init_809E590" "(self: *mut OverworldNPCObject \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "npc_standard_809E5E2" "(self: * OverworldNPCObject \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "npc_inChatbox_809EADA" "(self: * OverworldNPCObject \$r5) -> ()"
+
+tools/doc_scripts/replacesig.sh "setNPCScript_809F506" "(self: *mut OverworldNPCObject \$r5, script: *const NPCScript) -> ()"
+
+./replacep.sh "npc_809E570"  "npc_dispatch_809E570" 
+
+tools/doc_scripts/replacesig_data.sh "byte_805163C" "NPCScript"
+tools/doc_scripts/replacesig_data.sh "byte_806CB04" "NPCScript"
+tools/doc_scripts/replacesig_data.sh "byte_805183C" "NPCScript"
+tools/doc_scripts/replacesig_data.sh "npc_script_805176f" "NPCScript"
+tools/doc_scripts/replacesig_data.sh "off_8051624" "(*const NPCScript)[5]"
+
+tools/doc_scripts/replacesig_data.sh "NPCList_maps00" "(*const NPCScript)[][][REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "NPCList_maps80" "Nullable<(*const NPCScript)[][]>[INTERNET_NUM_GROUPS]"
+tools/doc_scripts/replacesig.sh "npc_freeAllObjectsThenSpawnObjectsFromList" "(ptr: (*const NPCScript)[]) -> ()"
+tools/doc_scripts/replacesig.sh "npc_spawnObjectThenSetUnk10_TempAnimScriptPtr_8030a8c" "(_l: (*const NPCScript)[], which: isize, script: *const NPCScript) -> ()"
+
+
+./replacep.sh "oOverworldNPCObject_Unk_10"  "oOverworldNPCObject_WhichNPCScript" # and change in OverworldNPCObject.inc too
+
+./replacep.sh "npc_map00_ACDC_804D0B4" "NPCScriptsACDC_804D0B4"      
+./replacep.sh "npc_map00_804E954"      "NPCScriptsCentralTown_804E954"                
+./replacep.sh "off_8052DE0"            "NPCScriptsCyberAcademy_8052DE0"                       
+./replacep.sh "off_8059D70"            "NPCScriptsSeasideTown_8059D70"                     
+./replacep.sh "off_805E184"            "NPCScriptsGreenTown_805E184"                    
+./replacep.sh "off_806065C"            "NPCScriptsSkyTown_806065C"                           
+./replacep.sh "off_8062F78"            "NPCScriptsExpoSite_8062F78"                         
+
+./replace.sh "off_80665B4"   "NPCScriptsRobotControlComp_80665B4"                                                    
+./replace.sh "off_8067DE0"   "NPCScriptsAquariumComp_8067DE0"                                                         
+./replace.sh "off_8069310"   "NPCScriptsJudgetreeComp_8069310"                                                      
+./replace.sh "off_806A278"   "NPCScriptsMrWeather_806A278"                                                      
+./replace.sh "off_806AE30"   "NPCScriptsPvavilionComp_806AE30"                                                      
+./replace.sh "off_806C7E8"   "NPCScriptsHomePages_806C7E8"                                                      
+./replace.sh "off_806E030"   "NPCScriptsComps_806E030"                                                      
+./replace.sh "off_80702AC"   "NPCScriptsComps2_80702AC"                                                      
+./replace.sh "off_8071EC8"   "NPCScriptsCentralArea_8071EC8"                                                      
+./replace.sh "off_80758B8"   "NPCScriptsSeasideArea_80758B8"                                                      
+./replace.sh "off_8078114"   "NPCScriptsGreenArea_8078114"                                                      
+./replace.sh "off_807953C"   "NPCScriptsUnderground_807953C"                                                      
+./replace.sh "off_807AE04"   "NPCScriptsSkyACDCArea_807AE04"                                                      
+./replace.sh "off_807D310"   "NPCScriptsUndernet_807D310"                                                      
+./replace.sh "dword_807F210" "NPCScriptsGraveyardImmortalArea_807F210"                                                      
+
+tools/doc_scripts/replacesig_data.sh "NPCScriptsACDC_804D0B4"          "(*const NPCScript)[][ACDC_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "NPCScriptsCentralTown_804E954"   "(*const NPCScript)[][CENTRAL_TOWN_NUM_MAPS]"               
+tools/doc_scripts/replacesig_data.sh "NPCScriptsCyberAcademy_8052DE0"  "(*const NPCScript)[][CYBER_ACADEMY_NUM_MAPS]"                     
+tools/doc_scripts/replacesig_data.sh "NPCScriptsSeasideTown_8059D70"   "(*const NPCScript)[][SEASIDE_TOWN_NUM_MAPS]"                  
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGreenTown_805E184"     "(*const NPCScript)[][GREEN_TOWN_NUM_MAPS]"               
+tools/doc_scripts/replacesig_data.sh "NPCScriptsSkyTown_806065C"       "(*const NPCScript)[][SKY_TOWN_NUM_MAPS]"                    
+tools/doc_scripts/replacesig_data.sh "NPCScriptsExpoSite_8062F78"      "(*const NPCScript)[][EXPO_SITE_NUM_MAPS]"                   
+
+tools/doc_scripts/replacesig_data.sh "NPCScriptsRobotControlComp_80665B4"      "(*const NPCScript)[][ROBOT_CONTROL_COMP_NUM_MAPS]"                                             
+tools/doc_scripts/replacesig_data.sh "NPCScriptsAquariumComp_8067DE0"          "(*const NPCScript)[][AQUARIUM_COMP_NUM_MAPS]"                                              
+tools/doc_scripts/replacesig_data.sh "NPCScriptsJudgetreeComp_8069310"         "(*const NPCScript)[][JUDGETREE_COMP_NUM_MAPS]"                                            
+tools/doc_scripts/replacesig_data.sh "NPCScriptsMrWeather_806A278"             "(*const NPCScript)[][MR_WEATHER_COMP_NUM_MAPS]"                                        
+tools/doc_scripts/replacesig_data.sh "NPCScriptsPvavilionComp_806AE30"         "(*const NPCScript)[][PAVILION_COMP_NUM_MAPS]"                                            
+tools/doc_scripts/replacesig_data.sh "NPCScriptsHomePages_806C7E8"             "(*const NPCScript)[][HOMEPAGES_NUM_MAPS]"                                        
+tools/doc_scripts/replacesig_data.sh "NPCScriptsComps_806E030"                 "(*const NPCScript)[][COMPS_NUM_MAPS]"                                    
+tools/doc_scripts/replacesig_data.sh "NPCScriptsComps2_80702AC"                "(*const NPCScript)[][COMPS_2_NUM_MAPS]"                                     
+tools/doc_scripts/replacesig_data.sh "NPCScriptsCentralArea_8071EC8"           "(*const NPCScript)[][CENTRAL_AREA_NUM_MAPS]"                                          
+tools/doc_scripts/replacesig_data.sh "NPCScriptsSeasideArea_80758B8"           "(*const NPCScript)[][SEASIDE_AREA_NUM_MAPS]"                                          
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGreenArea_8078114"             "(*const NPCScript)[][GREEN_AREA_NUM_MAPS]"                                        
+tools/doc_scripts/replacesig_data.sh "NPCScriptsUnderground_807953C"           "(*const NPCScript)[][UNDERGROUND_NUM_MAPS]"                                          
+tools/doc_scripts/replacesig_data.sh "NPCScriptsSkyACDCArea_807AE04"           "(*const NPCScript)[][SKY_ACDC_AREA_NUM_MAPS]"                                          
+tools/doc_scripts/replacesig_data.sh "NPCScriptsUndernet_807D310"              "(*const NPCScript)[][UNDERNET_NUM_MAPS]"                                       
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGraveyardImmortalArea_807F210" "(*const NPCScript)[][GRAVEYARD_NUM_MAPS]"                                                    
+
+tools/doc_scripts/replacesig_data.sh "NPCScriptsHomePages_806C7E8"             "Nullable<(*const NPCScript)[]>[HOMEPAGES_NUM_MAPS]"                                        
+tools/doc_scripts/replacesig_data.sh "NPCScriptsUndernet_807D310"              "Nullable<(*const NPCScript)[]>[UNDERNET_NUM_MAPS]"                                       
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGraveyardImmortalArea_807F210" "Nullable<(*const NPCScript)[]>[GRAVEYARD_NUM_MAPS]"                                                    
+
+NPCScriptsCentralTown_804E954:: // (*const NPCScript)[][CENTRAL_TOWN_NUM_MAPS]
+
+./replace.sh "off_804F9D8" "NPCScriptsForCentralTown_804F9D8"
+./replace.sh "off_8051624" "NPCScriptsForLanHouse_8051624"
+./replace.sh "off_8051B5C" "NPCScriptsForLanRoom_8051B5C"
+./replace.sh "off_8051F48" "NPCScriptsForBathroom_8051F48"
+./replace.sh "off_8051FB0" "NPCScriptsForAsterland_8051FB0"
+
+tools/doc_scripts/replacesig_data.sh "NPCScriptsForCentralTown_804F9D8" "(*const NPCScript)[16]"            
+tools/doc_scripts/replacesig_data.sh "NPCScriptsForLanRoom_8051B5C"     "(*const NPCScript)[1]"         
+tools/doc_scripts/replacesig_data.sh "NPCScriptsForBathroom_8051F48"    "(*const NPCScript)[2]"        
+tools/doc_scripts/replacesig_data.sh "NPCScriptsForAsterland_8051FB0"   "(*const NPCScript)[9]"       
+```
+
+2025-10-15 Wk 42 Wed - 19:32 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit
+
+# out
+[master b74a9507] doc types for NPC and Map scripts for all maps
+ 49 files changed, 635 insertions(+), 406 deletions(-)
 ```

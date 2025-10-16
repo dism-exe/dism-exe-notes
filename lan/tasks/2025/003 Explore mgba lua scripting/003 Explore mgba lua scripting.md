@@ -1,4 +1,3 @@
-
 # 1 Objective
 
 Learn about mgba lua scripting and see if it's feasible to accomplish [[000 Can port GBA Memory Access Scanner outside vba-rr dependency]] through it
@@ -145,3 +144,33 @@ Spawn [[001 Checking on REST APIs]] ^spawn-entry-21912e
 2025-10-04 Wk 40 Sat - 03:26 +03:00
 
 Spawn [[002 Create REST API for Bizhawk lua scripting]] ^spawn-task-9d531a
+
+# 3 Spawn Trees
+
+- [[003 Explore mgba lua scripting]]
+    - entry [[000 Resources encountered while exploring mgba lua scripting]]
+    - entry [[001 Checking on REST APIs]]
+    - task [[000 Create bn6f TAS movie for reproducible debugging using bizhawk]]
+        - idea [[000 Can extract functions and data and files accessed by given bizhawk movie]]
+    - paused task [[001 Attempt to port mgba-http lua script for use with Bizhawk]]
+    - todo task [[002 Create REST API for Bizhawk lua scripting]]
+
+# 4 Index
+
+**entry**
+
+[[000 Resources encountered while exploring mgba lua scripting]]
+
+[[001 Checking on REST APIs]]
+
+**idea**
+
+[[000 Can extract functions and data and files accessed by given bizhawk movie]]
+
+**task**
+
+[[000 Create bn6f TAS movie for reproducible debugging using bizhawk]]
+
+paused [[001 Attempt to port mgba-http lua script for use with Bizhawk]]
+
+todo [[002 Create REST API for Bizhawk lua scripting]]

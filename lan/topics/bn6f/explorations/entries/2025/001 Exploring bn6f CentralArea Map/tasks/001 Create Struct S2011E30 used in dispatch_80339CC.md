@@ -2,7 +2,7 @@
 parent: "[[001 Exploring bn6f CentralArea Map]]"
 spawned_by: "[[000 Wk 41 Exploring bn6f CentralArea Map]]"
 context_type: task
-status: todo
+status: done
 ---
 
 Parent: [[001 Exploring bn6f CentralArea Map]]
