@@ -547,3 +547,31 @@ loc_8087130:
 2025-10-16 Wk 42 Thu - 07:24 +03:00
 
 `sub_8086FD8`, `sub_808FE74`, `sub_808CB0C` start cutscenes generally
+
+2025-10-17 Wk 42 Fri - 07:52 +03:00
+
+There is also `include/bytecode/cutscene_camera_script.inc`. ~~The jump table for those commands is at~~ Seems to be used by commands in `MapScriptCommandJumptable` 
+
+A Jumptable for cutscene camera scripts is at `CutsceneCameraCommandJumptable` but it doesn't seem to cover everything. The general one for cutscenes is at `CutsceneCommandJumptable` and used by `RunCutsceneCameraCommand` which itself is used only by `RunCutscene`.
+
+The cutscene camera scripts are loaded from `oCutsceneState_CutsceneCameraScriptPtr` in `RunCutscene`. 
+
+That address itself gets set by `CutsceneCmd_run_or_stop_cutscene_camera_script` (`0x54 0x0 ptr32`).
+
+2025-10-17 Wk 42 Fri - 08:26 +03:00
+
+Some notes on things lucky said
+
+Lucky said a lot of things about cutscenes, which can be found in pret searching `in: mmbn1-6 cutscene`
+
+arm code in asm38.s... It still ends with a bunch of bytes
+
+Lucky put some TREZ documention in [pastebin](https://pastebin.com/raw/Segtfz9M) for cutscene commands
+
+So it was thought that big obstacles to ROM shifting are bytecode dumping, fake pointers, and whatever remains as non-disassembled code.
+
+bulk data: dat38 and above, focus on dat03-dat27 and end of asm03_2 to asm27
+
+2025-10-19 Wk 42 Sun - 08:55 +03:00
+
+Spawn [[003 Find how general cutscene functions encode cutscenes]] ^spawn-task-2fab74

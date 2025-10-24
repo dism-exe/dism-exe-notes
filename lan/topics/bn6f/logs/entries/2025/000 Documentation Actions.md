@@ -433,9 +433,6 @@ tools/doc_scripts/symbol_list_replacesig_data_same.sh \
 tools/doc_scripts/symbol_list_replacesig_data_same.sh \
 	"off_8044D80 off_8044D94 off_8044DA8 off_8044DBC off_8044DD0 off_8044DE4 off_8044DF8 off_8044E0C off_8044E20 off_8044E34 off_8044E48 off_8044E5C off_8044E70 off_8044E84 off_8044E98" \
 	"(*const LZ77Compressed<TextScriptArchive>)[5]"
-tools/doc_scripts/symbol_list_replacesig_data_same.sh \
-	"" \
-	"(*const LZ77Compressed<TextScriptArchive>)[5]"
 tools/doc_scripts/replacesig_data.sh "off_8044EAC" "(*const LZ77Compressed<TextScriptArchive>)[16]"
 tools/doc_scripts/replacesig_data.sh "off_8044EEC" "(*const LZ77Compressed<TextScriptArchive>)[4]"
 tools/doc_scripts/replacesig_data.sh "off_internet_80444C4" "Nullable<(*const LZ77Compressed<TextScriptArchive>)[5][]>[INTERNET_NUM_GROUPS]"
@@ -449,7 +446,7 @@ tools/doc_scripts/replacesig.sh "SWI_LZ77UnCompReadNormalWrite8bit" "(src: *cons
 ./replacep.sh "off_8044520"  "inInternet_8044520" 
 
 tools/doc_scripts/replacesig_data.sh "inRealWorld_8044520" "(*const LZ77Compressed<TextScriptArchive>)[][REAL_WORLD_NUM_GROUPS]"
-	tools/doc_scripts/replacesig_data.sh "inInternet_8044520" "Nullable<(*const LZ77Compressed<TextScriptArchive>)[]>[INTERNET_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "inInternet_8044520" "Nullable<(*const LZ77Compressed<TextScriptArchive>)[]>[INTERNET_NUM_GROUPS]"
 
 tools/doc_scripts/replacesig_data.sh "off_internet_804457C" "Nullable<(*const LZ77Compressed<TextScriptArchive>)[]>[INTERNET_NUM_GROUPS]"
 
@@ -575,3 +572,202 @@ tools/doc_scripts/replacesig_data.sh "off_8143078" "(*const CutsceneScript)[2]"
 # after byte_8086678+32, `sub_8086FD8`, `sub_808FE74`, `sub_808CB0C` start cutscenes generally
 ```
 
+2025-10-18 Wk 42 Sat - 15:29 +03:00
+
+Retyping array types to be consistent with Rust-style `[T; N]`. It is also to make pointers to arrays unambiguous `*const [T; N]`. Arrays are strictly contiguous memory here, and are not doubling as pointers as is done with C.
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig_data.sh "dword_8143B1C" "[*const CutsceneScript; 2]"         
+tools/doc_scripts/replacesig_data.sh "off_8143078" "[*const CutsceneScript; 2]"         
+
+tools/doc_scripts/replacesig_data.sh "NPCScriptsForCentralTown_804F9D8" "[*const NPCScript; 16]"            
+tools/doc_scripts/replacesig_data.sh "NPCScriptsForLanRoom_8051B5C"     "[*const NPCScript; 1]"         
+tools/doc_scripts/replacesig_data.sh "NPCScriptsForBathroom_8051F48"    "[*const NPCScript; 2]"        
+tools/doc_scripts/replacesig_data.sh "NPCScriptsForAsterland_8051FB0"   "[*const NPCScript; 9]"       
+
+tools/doc_scripts/replacesig_data.sh "NPCScriptsACDC_804D0B4"          "[*const [*const NPCScript]; ACDC_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "NPCScriptsCentralTown_804E954"   "[*const [*const NPCScript]; CENTRAL_TOWN_NUM_MAPS]"               
+tools/doc_scripts/replacesig_data.sh "NPCScriptsCyberAcademy_8052DE0"  "[*const [*const NPCScript]; CYBER_ACADEMY_NUM_MAPS]"                     
+tools/doc_scripts/replacesig_data.sh "NPCScriptsSeasideTown_8059D70"   "[*const [*const NPCScript]; SEASIDE_TOWN_NUM_MAPS]"                  
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGreenTown_805E184"     "[*const [*const NPCScript]; GREEN_TOWN_NUM_MAPS]"               
+tools/doc_scripts/replacesig_data.sh "NPCScriptsSkyTown_806065C"       "[*const [*const NPCScript]; SKY_TOWN_NUM_MAPS]"                    
+tools/doc_scripts/replacesig_data.sh "NPCScriptsExpoSite_8062F78"      "[*const [*const NPCScript]; EXPO_SITE_NUM_MAPS]"                   
+
+tools/doc_scripts/replacesig_data.sh "NPCScriptsRobotControlComp_80665B4"      "[*const [*const NPCScript]; ROBOT_CONTROL_COMP_NUM_MAPS]"            
+tools/doc_scripts/replacesig_data.sh "NPCScriptsAquariumComp_8067DE0"          "[*const [*const NPCScript]; AQUARIUM_COMP_NUM_MAPS]"             
+tools/doc_scripts/replacesig_data.sh "NPCScriptsJudgetreeComp_8069310"         "[*const [*const NPCScript]; JUDGETREE_COMP_NUM_MAPS]"           
+tools/doc_scripts/replacesig_data.sh "NPCScriptsMrWeather_806A278"             "[*const [*const NPCScript]; MR_WEATHER_COMP_NUM_MAPS]"         
+tools/doc_scripts/replacesig_data.sh "NPCScriptsPvavilionComp_806AE30"         "[*const [*const NPCScript]; PAVILION_COMP_NUM_MAPS]"           
+tools/doc_scripts/replacesig_data.sh "NPCScriptsHomePages_806C7E8"             "[*const [*const NPCScript]; HOMEPAGES_NUM_MAPS]"               
+tools/doc_scripts/replacesig_data.sh "NPCScriptsComps_806E030"                 "[*const [*const NPCScript]; COMPS_NUM_MAPS]"                   
+tools/doc_scripts/replacesig_data.sh "NPCScriptsComps2_80702AC"                "[*const [*const NPCScript]; COMPS_2_NUM_MAPS]"                 
+tools/doc_scripts/replacesig_data.sh "NPCScriptsCentralArea_8071EC8"           "[*const [*const NPCScript]; CENTRAL_AREA_NUM_MAPS]"            
+tools/doc_scripts/replacesig_data.sh "NPCScriptsSeasideArea_80758B8"           "[*const [*const NPCScript]; SEASIDE_AREA_NUM_MAPS]"            
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGreenArea_8078114"             "[*const [*const NPCScript]; GREEN_AREA_NUM_MAPS]"              
+tools/doc_scripts/replacesig_data.sh "NPCScriptsUnderground_807953C"           "[*const [*const NPCScript]; UNDERGROUND_NUM_MAPS]"             
+tools/doc_scripts/replacesig_data.sh "NPCScriptsSkyACDCArea_807AE04"           "[*const [*const NPCScript]; SKY_ACDC_AREA_NUM_MAPS]"           
+tools/doc_scripts/replacesig_data.sh "NPCScriptsUndernet_807D310"              "[*const [*const NPCScript]; UNDERNET_NUM_MAPS]"                
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGraveyardImmortalArea_807F210" "[*const [*const NPCScript]; GRAVEYARD_NUM_MAPS]"                   
+
+tools/doc_scripts/replacesig_data.sh "NPCScriptsHomePages_806C7E8"             "[Nullable<*const [*const NPCScript]>]; HOMEPAGES_NUM_MAPS]"       
+tools/doc_scripts/replacesig_data.sh "NPCScriptsUndernet_807D310"              "[Nullable<*const [*const NPCScript]>]; UNDERNET_NUM_MAPS]"      
+tools/doc_scripts/replacesig_data.sh "NPCScriptsGraveyardImmortalArea_807F210" "[Nullable<*const [*const NPCScript]>]; GRAVEYARD_NUM_MAPS]"                   
+
+tools/doc_scripts/replacesig_data.sh "off_8051624" "[*const NPCScript; 5]"
+
+tools/doc_scripts/replacesig_data.sh "NPCList_maps00" "[*const [*const [*const NPCScript]]; REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "NPCList_maps80" "[Nullable<*const [*const [*const NPCScript]]>; INTERNET_NUM_GROUPS]"
+tools/doc_scripts/replacesig.sh "npc_freeAllObjectsThenSpawnObjectsFromList" "(ptr: [*const NPCScript]) -> ()"
+tools/doc_scripts/replacesig.sh "npc_spawnObjectThenSetUnk10_TempAnimScriptPtr_8030a8c" "(_l: *const [*const NPCScript], which: isize, script: *const NPCScript) -> ()"
+
+tools/doc_scripts/replacesig_data.sh "off_8051624" "[*const NPCScript; 5]"
+
+tools/doc_scripts/replacesig_data.sh "inRealWorld_8044520" "[*const [*const LZ77Compressed<TextScriptArchive>]; REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "inInternet_8044520" "[Nullable<*const [*const LZ77Compressed<TextScriptArchive>]>; INTERNET_NUM_GROUPS]"
+
+tools/doc_scripts/replacesig_data.sh "off_internet_804457C" "[Nullable<*const [*const LZ77Compressed<TextScriptArchive>]>; INTERNET_NUM_GROUPS]"
+
+tools/doc_scripts/replacesig_data.sh "off_8044D2C" "[*const [*const LZ77Compressed<TextScriptArchive>; 5]; 16]"
+tools/doc_scripts/replacesig_data.sh "off_8044AB8" "[*const [*const LZ77Compressed<TextScriptArchive>; 5]; 3]"
+tools/doc_scripts/symbol_list_replacesig_data_same.sh \
+	"off_8044AEC off_8044AC4 off_8044AD8 off_8044D6C" \
+	"[*const LZ77Compressed<TextScriptArchive>; 5]"
+tools/doc_scripts/symbol_list_replacesig_data_same.sh \
+	"off_8044D80 off_8044D94 off_8044DA8 off_8044DBC off_8044DD0 off_8044DE4 off_8044DF8 off_8044E0C off_8044E20 off_8044E34 off_8044E48 off_8044E5C off_8044E70 off_8044E84 off_8044E98" \
+	"[*const LZ77Compressed<TextScriptArchive>; 5]"
+tools/doc_scripts/replacesig_data.sh "off_8044EAC" "[*const LZ77Compressed<TextScriptArchive>; 16]"
+tools/doc_scripts/replacesig_data.sh "off_8044EEC" "[*const LZ77Compressed<TextScriptArchive>; 4]"
+tools/doc_scripts/replacesig_data.sh "off_internet_80444C4" "[Nullable<*const [*const [*const LZ77Compressed<TextScriptArchive>; 5]]>; INTERNET_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "off_realWorld_8044470" "[*const [*const [*const LZ77Compressed<TextScriptArchive; 5]]; REAL_WORLD_NUM_GROUPS]"
+
+
+tools/doc_scripts/replacesig_data.sh "RealWorldMapScriptPointers" "[*const [*const [*const MapScript]; 2]; REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "InternetMapScriptPointers" "[*const [*const [*const MapScript]; 2]; INTERNET_NUM_GROUPS]"
+
+
+tools/doc_scripts/replacesig_data.sh "byte_804E6AC" "[SpriteLoadData; 8]"
+tools/doc_scripts/replacesig_data.sh "dword_804E6BE" "[SpriteLoadData; 1]"
+tools/doc_scripts/replacesig_data.sh "dword_804E6C2" "[SpriteLoadData; 1]"
+tools/doc_scripts/replacesig_data.sh "byte_804E6C6" "[SpriteLoadData; 0]"
+tools/doc_scripts/replacesig_data.sh "byte_804E6C8" "[SpriteLoadData; 3]"
+tools/doc_scripts/replacesig_data.sh "off_804E698" "[*const SpriteLoadData; CENTRAL_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_807ED34" "[*const SpriteLoadData; 3]"
+tools/doc_scripts/replacesig_data.sh "CentralTownObjectSpawns" "[MapObjectSpawnData; 15]]"
+tools/doc_scripts/replacesig_data.sh "LansHouseObjectSpawns" "[MapObjectSpawnData; 4]"
+tools/doc_scripts/replacesig_data.sh "LansRoomObjectSpawns" "[MapObjectSpawnData; 0]"
+tools/doc_scripts/replacesig_data.sh "BathroomObjectSpawns" "[MapObjectSpawnData; 0]"
+tools/doc_scripts/replacesig_data.sh "AsterLandObjectSpawns" "[MapObjectSpawnData; 4]"
+tools/doc_scripts/replacesig_data.sh "off_804E738" "[*const MapObjectSpawnData; CENTRAL_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "ChipDataArr_8021DA8" "[*const ChipData; 206]"
+```
+
+2025-10-19 Wk 42 Sun - 08:47 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git lg
+
+# out (relevant)
+* 9de65bf2 (HEAD -> master) retype array types
+```
+
+2025-10-19 Wk 42 Sun - 09:26 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig.sh "_SetInterruptCallback" "(interrupt_idx: u8, callback: *const ()) -> ()"
+
+./replacep.sh "byte_200F348" "eS200F348"
+./replacep.sh "byte_200A290" "eS200A290"
+
+tools/doc_scripts/replacesig_data.sh "eTextScript2033404" "TextScriptArchive"
+tools/doc_scripts/replacesig_data.sh "reqBBS_eTextScript" "TextScriptArchive"
+tools/doc_scripts/replacesig_data.sh "eTextScript202BA04" "TextScriptArchive"
+tools/doc_scripts/replacesig_data.sh "eTextScript202DA04" "TextScriptArchive"
+
+tools/doc_scripts/replacesig.sh "sub_803FB64" "(self: *mut S200F348 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "playGameOver_803FB9C" "(self: *mut S200F348 \$r5) -> ()"
+
+./replacep.sh "oBattleState_Unk_01" "oBattleState_Index_01" # also updated struct
+
+tools/doc_scripts/replacesig.sh "sub_8007B9C" "(self: *mut BattleState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8007CA0" "(self: *mut BattleState \$r5) -> ()"
+
+./replacep.sh "oBattleState_Unk_00" "oBattleState_Index_00" # also updated struct
+
+tools/doc_scripts/replacesig.sh "sub_8007850" "(self: * BattleState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "battle_update_8007A44" "(self: * BattleState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8007B80" "(self: * BattleState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8007E62" "(self: * BattleState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8007F4E" "(self: * BattleState \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "removed_8007FEA" "(self: * BattleState \$r5) -> ()"
+
+
+./replacep.sh "cb_803D1CA" "logoScreen_dispatch_803D1CA"
+./replacep.sh "sub_803D2A6" "logoScreen_finish_803D2A6"
+./replacep.sh "init_803D1A8" "logoScreen_init_803D1A8"
+
+# Won't change it completely, also did "%s/S2011800/LogoScreenState/g" in asm03_1_1.s
+./replace.sh "S2011800" "LogoScreenState"
+./replace.sh "s_2011800_struct" "LogoScreenState_struct"
+./replacep.sh "eS2011800" "eLogoScreenState" 
+./replace.sh "oS2011800" "oLogoScreenState" # Won't change individual instances
+mv include/structs/S2011800.inc include/structs/LogoScreenState.inc
+```
+
+Oops, I replaced `eS2011800` to `LogoScreenState`, so gotta replace where they are used, which is luckily not many.G
+
+2025-10-19 Wk 42 Sun - 22:53 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit -m "doc logo screen module"
+
+# out
+[master f3f0e6a4] doc logo screen module
+ 29 files changed, 553 insertions(+), 299 deletions(-)
+ create mode 100644 include/structs/LogoScreenState.inc
+ create mode 100644 include/structs/S200A290.inc
+ create mode 100644 include/structs/S200F348.inc
+ delete mode 100644 include/structs/S2011800.inc
+```
+
+2025-10-19 Wk 42 Sun - 23:42 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+
+tools/doc_scripts/replacesig.sh "CopyBackgroundTiles" "(j: u32, i: u32, which_tile_block_32x32: u32, tile_ids: *const u16, j_size: u32, i_size: u32 ) -> ()"
+```
+
+2025-10-23 Wk 43 Thu - 15:31 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+./replacep.sh "copyTileData_803D2B8" "logoScreen_loadLogoTiles_803D2B8"
+./replacep.sh "unk_2014A00" "eDecompBuffer2014A00"
+./replacep.sh "byte_86C3C94" "CapcomLogoPalette_86C3C94"
+./replacep.sh "byte_86C4194" "CapcomLogoLicensePalette_86C4194"
+./replacep.sh "unk_3001980" "palette_3001980"
+./replacep.sh "byte_86C3FD4" "CapcomLogoLicenseTileset_86C3FD4"
+./replacep.sh "dword_86C41B4" "CapcomLogoLicenseTilemap_86C41B4"
+
+./replacep.sh "comp_86C3528" "CompCapcomLogoTileset_86C3528"
+./replacep.sh "comp_86C3E94" "CompCapcomLogoTilemap_86C3E94"
+mv data/compressed/comp_86C3528.lz77 data/compressed/CompCapcomLogoTileset_86C3528.lz77
+mv data/compressed/comp_86C3E94.lz77 data/compressed/CompCapcomLogoTilemap_86C3E94.lz77
+```
+
+2025-10-23 Wk 43 Thu - 23:13 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit -m "doc logo screen tiles" 
+
+# out
+[master 9e71b5f9] doc logo screen tiles
+ 28 files changed, 396 insertions(+), 271 deletions(-)
+ rename data/compressed/{comp_86C3E94.lz77 => CompCapcomLogoTilemap_86C3E94.lz77} (100%)
+ rename data/compressed/{comp_86C3528.lz77 => CompCapcomLogoTileset_86C3528.lz77} (100%)
+```

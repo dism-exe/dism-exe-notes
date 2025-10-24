@@ -13,6 +13,10 @@ Spawned in: [[000 Wk 41 Exploring bn6f CentralArea Map#^spawn-task-aec1e0|^spawn
 
 # 1 Journal
 
+2025-10-19 Wk 42 Sun - 10:37 +03:00
+
+Referenced by [[000 Create Struct S200F348]]
+
 2025-10-11 Wk 41 Sat - 09:33 +03:00
 
 Similar process to [[000 Create Struct S2011800]]

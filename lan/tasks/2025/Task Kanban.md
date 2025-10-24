@@ -1,7 +1,5 @@
 ---
-
-kanban-plugin: list
-
+kanban-plugin: board
 ---
 
 ## Backlog
@@ -11,6 +9,8 @@ kanban-plugin: list
 ## Todo
 
 - [ ] [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]
+- [ ] [[002 Run self contained compiled gba game from within modded bn6f]]
+- [ ] [[003 Explore mgba lua scripting]]
 
 
 ## Active

@@ -81,3 +81,32 @@ off_8089214:
 	.byte 0x8, 0x0, 0x0, 0x8, 0xF8, 0x0, 0x0, 0xF8, 0x8, 0xF8, 0x4, 0x4
 	.byte 0xF8, 0x8, 0xFC, 0xFC
 ```
+
+2025-10-23 Wk 43 Thu - 15:46 +03:00
+
+- [ ] Resolved
+
+```
+initRefs803D2F0: 
+  .word 0x886C3528
+```
+
+Need to check many different inputs to `decompAndCopyData` across the repository. There's compressed graphics like this that's not caught.
+
+This one is also known and corresponds to 
+
+```
+comp_86C3528::
+.incbin "data/compressed/comp_86C3528.lz77"
+```
+
+2025-10-23 Wk 43 Thu - 15:49 +03:00
+
+- [ ]  Resolved
+
+```
+.word comp_86C3E94 + 1<<31
+
+```
+
+This is also in `initRefs803D2F0`, and it uses `1<<31` instead of `COMPRESSED_PTR_FLAG`, although this wouldn't cause a shift problem.

@@ -156,3 +156,16 @@ This sort of works for diffing. Not the most readable, but shows in one place wh
 ![[Pasted image 20250927085532.png]]
 
 It's registering big changes even when I save in the same place twice. Some are patterned changes everywhere.
+
+2025-10-17 Wk 42 Fri - 10:56 +03:00
+
+There's a bunch of these, but they're not referenced
+
+```C
+LibInfoText_aNintendosio32i_2:: 
+  .asciz "NINTENDOSio32ID_030820"                                                                                                        
+	.byte 0x0
+LibInfoText_aSramV113_2:: 
+  .asciz "SRAM_V113"
+	.byte 0, 0
+```
