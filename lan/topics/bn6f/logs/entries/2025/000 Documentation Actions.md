@@ -771,3 +771,171 @@ git commit -m "doc logo screen tiles"
  rename data/compressed/{comp_86C3E94.lz77 => CompCapcomLogoTilemap_86C3E94.lz77} (100%)
  rename data/compressed/{comp_86C3528.lz77 => CompCapcomLogoTileset_86C3528.lz77} (100%)
 ```
+
+2025-10-25 Wk 43 Sat - 19:00 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig_data.sh "off_8032A20" "[MapBGDescriptor; ACDC_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032A38" "[MapBGDescriptor; CENTRAL_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032A74" "[MapBGDescriptor; CYBER_ACADEMY_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032AF8" "[MapBGDescriptor; SEASIDE_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032B34" "[MapBGDescriptor; GREEN_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032B70" "[MapBGDescriptor; SKY_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032BA0" "[MapBGDescriptor; EXPO_SITE_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80329A8" "[*const [MapBGDescriptor]; REAL_WORLD_NUM_GROUPS]"
+
+tools/doc_scripts/replacesig_data.sh "off_80329C4" "[Nullable<*const [MapBGDescriptor]>; INTERNET_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032BE8" "[MapBGDescriptor; ROBOT_CONTROL_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032C00" "[MapBGDescriptor; AQUARIUM_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032C24" "[MapBGDescriptor; JUDGETREE_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032C48" "[MapBGDescriptor; MR_WEATHER_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032C6C" "[MapBGDescriptor; PAVILION_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032CA8" "[MapBGDescriptor; HOMEPAGES_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032CFC" "[MapBGDescriptor; COMPS_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032DBC" "[MapBGDescriptor; COMPS_2_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032E7C" "[MapBGDescriptor; CENTRAL_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032EA0" "[MapBGDescriptor; SEASIDE_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032EC4" "[MapBGDescriptor; GREEN_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032EDC" "[MapBGDescriptor; UNDERGROUND_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032EF4" "[MapBGDescriptor; SKY_ACDC_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032F18" "[MapBGDescriptor; UNDERNET_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032F48" "[MapBGDescriptor; GRAVEYARD_NUM_MAPS]"
+
+tools/doc_scripts/replacesig_data.sh "off_8032F6C" "[*const [[*const Fn; 3]]; REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032FE4" "[[*const Fn; 3]; ACDC_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8032FFC" "[[*const Fn; 3]; CENTRAL_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033038" "[[*const Fn; 3]; CYBER_ACADEMY_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80330BC" "[[*const Fn; 3]; SEASIDE_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80330F8" "[[*const Fn; 3]; GREEN_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033134" "[[*const Fn; 3]; SKY_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033164" "[[*const Fn; 3]; EXPO_SITE_NUM_MAPS]"
+
+tools/doc_scripts/replacesig_data.sh "off_8032F88" "Nullable<[*const [[*const Fn; 3]]>; INTERNET_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "off_80331AC" "[[*const Fn; 3]; ROBOT_CONTROL_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80331C4" "[[*const Fn; 3]; AQUARIUM_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80331E8" "[[*const Fn; 3]; JUDGETREE_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_803320C" "[[*const Fn; 3]; MR_WEATHER_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033230" "[[*const Fn; 3]; PAVILION_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_803326C" "[[*const Fn; 3]; HOMEPAGES_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "jt_big_80332C0" "[[*const Fn; 3]; COMPS_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033380" "[[*const Fn; 3]; COMPS_2_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033440" "[[*const Fn; 3]; CENTRAL_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033464" "[[*const Fn; 3]; SEASIDE_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033488" "[[*const Fn; 3]; GREEN_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80334A0" "[[*const Fn; 3]; UNDERGROUND_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80334B8" "[[*const Fn; 3]; SKY_ACDC_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80334DC" "[[*const Fn; 3]; UNDERNET_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_803350C" "[[*const Fn; 3]; GRAVEYARD_NUM_MAPS]"
+
+tools/doc_scripts/replacesig_data.sh "pt_8033530" "[*const [*const ([u32; 4]?, LZ77Compressed<?>)]; REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "off_80335A8" "[*const ([u32; 4]?, LZ77Compressed<?>); ACDC_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80335B4" "[*const ([u32; 4]?, LZ77Compressed<?>); CENTRAL_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80335C8" "[*const ([u32; 4]?, LZ77Compressed<?>); CYBER_ACADEMY_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80335F4" "[*const ([u32; 4]?, LZ77Compressed<?>); SEASIDE_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033608" "[*const ([u32; 4]?, LZ77Compressed<?>); GREEN_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_803361C" "[*const ([u32; 4]?, LZ77Compressed<?>); SKY_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_803362C" "[*const ([u32; 4]?, LZ77Compressed<?>); EXPO_SITE_NUM_MAPS]"
+
+tools/doc_scripts/replacesig_data.sh "pt_803354C" "Nullable<[*const [*const ([u32; 4]?, LZ77Compressed<?>)]>; INTERNET_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033644" "[*const ([u32; 4]?, LZ77Compressed<?>); ROBOT_CONTROL_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_803364C" "[*const ([u32; 4]?, LZ77Compressed<?>); AQUARIUM_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033658" "[*const ([u32; 4]?, LZ77Compressed<?>); JUDGETREE_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033664" "[*const ([u32; 4]?, LZ77Compressed<?>); MR_WEATHER_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033670" "[*const ([u32; 4]?, LZ77Compressed<?>); PAVILION_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033684" "[*const ([u32; 4]?, LZ77Compressed<?>); HOMEPAGES_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80336A0" "[*const ([u32; 4]?, LZ77Compressed<?>); COMPS_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_80336E0" "[*const ([u32; 4]?, LZ77Compressed<?>); COMPS_2_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033720" "[*const ([u32; 4]?, LZ77Compressed<?>); CENTRAL_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_803372C" "[*const ([u32; 4]?, LZ77Compressed<?>); SEASIDE_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033738" "[*const ([u32; 4]?, LZ77Compressed<?>); GREEN_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033740" "[*const ([u32; 4]?, LZ77Compressed<?>); UNDERGROUND_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033748" "[*const ([u32; 4]?, LZ77Compressed<?>); SKY_ACDC_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033754" "[*const ([u32; 4]?, LZ77Compressed<?>); UNDERNET_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "off_8033764" "[*const ([u32; 4]?, LZ77Compressed<?>); GRAVEYARD_NUM_MAPS]"
+
+tools/doc_scripts/replacesig_data.sh "off_8033770" "[*const [u8]; REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "word_80337E8" "[u8; ACDC_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80337EA" "[u8; CENTRAL_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80337EF" "[u8; CYBER_ACADEMY_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80337FA" "[u8; SEASIDE_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80337FF" "[u8; GREEN_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "dword_8033804" "[u8; SKY_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033808" "[u8; EXPO_SITE_NUM_MAPS]"
+
+tools/doc_scripts/replacesig_data.sh "off_803378C" "[Nullable<*const [u8]>; REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "word_803380E" "[u8; ROBOT_CONTROL_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033810" "[u8; AQUARIUM_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033813" "[u8; JUDGETREE_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033816" "[u8; MR_WEATHER_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033819" "[u8; PAVILION_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_803381E" "[u8; HOMEPAGES_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033825" "[u8; COMPS_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033835" "[u8; COMPS_2_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033845" "[u8; CENTRAL_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033848" "[u8; SEASIDE_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_803384B" "[u8; GREEN_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "word_803384D" "[u8; UNDERGROUND_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_803384F" "[u8; SKY_ACDC_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "dword_8033852" "[u8; UNDERNET_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033856" "[u8; GRAVEYARD_NUM_MAPS]"
+
+tools/doc_scripts/replacesig_data.sh "off_803385C" "[*const [u8]; REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "word_80338D4" "[u8; ACDC_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80338D6" "[u8; CENTRAL_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80338DB" "[u8; CYBER_ACADEMY_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80338E6" "[u8; SEASIDE_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80338EB" "[u8; GREEN_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "dword_80338F0" "[u8; SKY_TOWN_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80338F4" "[u8; EXPO_SITE_NUM_MAPS]"
+
+tools/doc_scripts/replacesig_data.sh "off_8033878" "[Nullable<*const [u8]>; REAL_WORLD_NUM_GROUPS]"
+tools/doc_scripts/replacesig_data.sh "word_80338FA" "[u8; ROBOT_CONTROL_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80338FC" "[u8; AQUARIUM_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_80338FF" "[u8; JUDGETREE_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033902" "[u8; MR_WEATHER_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033905" "[u8; PAVILION_COMP_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_803390A" "[u8; HOMEPAGES_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033911" "[u8; COMPS_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033921" "[u8; COMPS_2_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033931" "[u8; CENTRAL_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033934" "[u8; SEASIDE_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033937" "[u8; GREEN_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033939" "[u8; UNDERGROUND_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_803393B" "[u8; SKY_ACDC_AREA_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "dword_803393E" "[u8; UNDERNET_NUM_MAPS]"
+tools/doc_scripts/replacesig_data.sh "byte_8033942" "[u8; GRAVEYARD_NUM_MAPS]"
+
+./replacep.sh "unk_2027A00" "DecompBuf_2027A00"
+```
+
+2025-10-26 Wk 43 Sun - 06:43 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit -m "doc map distributed graphics data"
+
+# out
+[master 77ed9e64] doc map distributed graphics data
+ 11 files changed, 1184 insertions(+), 679 deletions(-)
+```
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+./replacep.sh "byte_86D372C" "comp_86D372C"
+./replacep.sh "byte_86DB014" "comp_86DB014"
+```
+
+A lot of changes were done in [[004 Marking pointers to data passed to decompAndCopyData]]
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit
+
+# out
+[master 1785d754] mark all compressed and other pointers used by decompAndCopyData
+ 28 files changed, 1486 insertions(+), 1818 deletions(-)
+```
+
+
+

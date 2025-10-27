@@ -93,6 +93,10 @@ initRefs803D2F0:
 
 Need to check many different inputs to `decompAndCopyData` across the repository. There's compressed graphics like this that's not caught.
 
+^ref-318303
+
+See [[004 Marking pointers to data passed to decompAndCopyData]]
+
 This one is also known and corresponds to 
 
 ```
@@ -106,7 +110,12 @@ comp_86C3528::
 
 ```
 .word comp_86C3E94 + 1<<31
-
 ```
 
 This is also in `initRefs803D2F0`, and it uses `1<<31` instead of `COMPRESSED_PTR_FLAG`, although this wouldn't cause a shift problem.
+
+2025-10-26 Wk 43 Sun - 18:54 +03:00
+
+- [ ] Resolved
+
+Many compressed pointers we corrected have already been found and identified. We can search the whole repository for instances that might have been skipped through a list of all lz/lz77 asset addresses

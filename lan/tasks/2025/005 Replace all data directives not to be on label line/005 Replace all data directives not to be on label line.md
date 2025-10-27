@@ -1,4 +1,6 @@
-
+---
+status: done
+---
 
 # 1 Objective
 
@@ -31,4 +33,30 @@ There's also an inconsistency in the repository between `<TAB>` and spaces, so r
 
 Spawn [[000 Replace pattern in repository into multilines preserving content]] ^spawn-howto-02890e
 
+2025-10-25 Wk 43 Sat - 17:56 +03:00
 
+Tried to make it similar to `/home/lan/src/cloned/gh/dism-exe/bn6f/replacep.sh`, but that gets files grepping for a label.
+
+2025-10-25 Wk 43 Sat - 18:43 +03:00
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+sed -i 's/\([a-zA-Z_][0-9a-zA-Z_]*\)\(::\|:\) \(.byte\|.hword\|.word\) \(.*\)/\1\2\n\t\3 \4/g' $(find -regex ".*\(.s\)" -type f)
+```
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+make clean && make -j$(nproc) assets && make -j$(nproc)
+
+# out (relevant)
+bn6f.gba: OK
+```
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit -m "take all data directives out of label lines" 
+
+# out
+[master 1635089a] take all data directives out of label lines
+ 187 files changed, 58890 insertions(+), 29445 deletions(-)
+```
