@@ -1,44 +1,44 @@
 ---
-parent: "[[000 main]]"
-spawned_by: "[[000 main]]"
+parent: '[[000 main]]'
+spawned_by: '[[000 main]]'
 context_type: entry
 ---
 
-Parent: [[000 main]]
+Parent: [000 main](../000%20main.md)
 
-Spawned by: [[000 main]] 
+Spawned by: [000 main](../000%20main.md)
 
-Spawned in: [[000 main#^spawn-entry-8585a1|^spawn-entry-8585a1]]
+Spawned in: [<a name="spawn-entry-8585a1" />^spawn-entry-8585a1](../000%20main.md#spawn-entry-8585a1)
 
 # 1 Related
 
-[[000 Wk 39 Exploring bn6f save data]]
+[000 Wk 39 Exploring bn6f save data](../../../../../explorations/entries/2025/000%20Exploring%20bn6f%20save%20data/entries/000%20Wk%2039%20Exploring%20bn6f%20save%20data.md)
 
 # 2 Journal
 
 2025-09-25 Wk 39 Thu - 00:58
 
-Spawn [[000 languageserver.ccls failed to start]] ^spawn-issue-f05cfe
+Spawn [000 languageserver.ccls failed to start](../issues/000%20languageserver.ccls%20failed%20to%20start.md) <a name="spawn-issue-f05cfe" />^spawn-issue-f05cfe
 
 2025-09-25 Wk 39 Thu - 04:22
 
-We want to utilize the idea of having function metadata. 
+We want to utilize the idea of having function metadata.
 
 For example right now we're sometimes clear about signature:
 
-```c
+````c
 SeedRNG: // () -> void
-```
+````
 
 We can use `tools/doc_scripts/replacesig.sh` to change the signature of a function.
 
 2025-09-25 Wk 39 Thu - 04:29
 
-```C
+````C
 GetRNG: // () -> int
-```
+````
 
-Prefer to use an explicit type like `i32` 
+Prefer to use an explicit type like `i32`
 
 2025-09-25 Wk 39 Thu - 04:43
 
@@ -46,13 +46,13 @@ Added `docs/documenting/documenting functions.md`.
 
 2025-09-25 Wk 39 Thu - 04:52
 
-```sh
+````sh
 chmod +x tools/doc_scripts/replacesig.sh
-```
+````
 
 2025-09-25 Wk 39 Thu - 05:03
 
-Let's create a tmp branch just for experimenting with breaking modifications. Nothing here should be commited. 
+Let's create a tmp branch just for experimenting with breaking modifications. Nothing here should be commited.
 
 2025-09-25 Wk 39 Thu - 05:11
 
@@ -62,18 +62,17 @@ Managed to resolve with [gh jasonccox/vim-wayland-clipboard](https://github.com/
 
 2025-09-25 Wk 39 Thu - 06:03
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 chmod +x replacep.sh
-```
+````
 
-Documenting [[000 main_initToolkitAndOtherSubsystems]]
+Documenting [000 main_initToolkitAndOtherSubsystems](../../../../../functions/entries/2025/000%20main_initToolkitAndOtherSubsystems/000%20main_initToolkitAndOtherSubsystems.md)
 
 2025-09-25 Wk 39 Thu - 07:32
 
 We have macros for `TRUE` and `FALSE`.
 
-```
+````
 mov r4, #TRUE
-```
-
+````

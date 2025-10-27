@@ -1,24 +1,24 @@
 ---
-parent: "[[003 Explore mgba lua scripting]]"
-spawned_by: "[[003 Explore mgba lua scripting]]"
+parent: '[[003 Explore mgba lua scripting]]'
+spawned_by: '[[003 Explore mgba lua scripting]]'
 context_type: entry
 ---
 
-Parent: [[003 Explore mgba lua scripting]]
+Parent: [003 Explore mgba lua scripting](../003%20Explore%20mgba%20lua%20scripting.md)
 
-Spawned by: [[003 Explore mgba lua scripting]]
+Spawned by: [003 Explore mgba lua scripting](../003%20Explore%20mgba%20lua%20scripting.md)
 
-Spawned in: [[003 Explore mgba lua scripting#^spawn-entry-602137|^spawn-entry-602137]]
+Spawned in: [<a name="spawn-entry-602137" />^spawn-entry-602137](../003%20Explore%20mgba%20lua%20scripting.md#spawn-entry-602137)
 
 # 1 Related
 
-[[001 Attempt to port mgba-http lua script for use with Bizhawk]]
+[001 Attempt to port mgba-http lua script for use with Bizhawk](../tasks/001%20Attempt%20to%20port%20mgba-http%20lua%20script%20for%20use%20with%20Bizhawk.md)
 
 # 2 Journal
 
 2025-10-01 Wk 40 Wed - 09:50 +03:00
 
-Added to [[001 Resource Stream]]
+Added to [001 Resource Stream](../../../../entries/2025/001%20Resource%20Stream.md)
 
 2025-10-01 Wk 40 Wed - 09:51 +03:00
 

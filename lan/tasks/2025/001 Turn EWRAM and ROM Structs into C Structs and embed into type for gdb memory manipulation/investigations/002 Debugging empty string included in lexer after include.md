@@ -1,15 +1,15 @@
 ---
-parent: "[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]"
-spawned_by: "[[003 Map current lexer project files to include chunks]]"
+parent: '[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]'
+spawned_by: '[[003 Map current lexer project files to include chunks]]'
 context_type: investigation
 status: todo
 ---
 
-Parent: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]
+Parent: [001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation](../001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md)
 
-Spawned by: [[003 Map current lexer project files to include chunks]] 
+Spawned by: [003 Map current lexer project files to include chunks](../tasks/003%20Map%20current%20lexer%20project%20files%20to%20include%20chunks.md)
 
-Spawned in: [[003 Map current lexer project files to include chunks#^spawn-invst-43448a|^spawn-invst-43448a]]
+Spawned in: [<a name="spawn-invst-43448a" />^spawn-invst-43448a](../tasks/003%20Map%20current%20lexer%20project%20files%20to%20include%20chunks.md#spawn-invst-43448a)
 
 # 1 Journal
 
@@ -19,7 +19,7 @@ For testing, I am not removing any records from the chunks when doing an inclusi
 
 For `~/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.41.chunk.lexer.ron`, we see:
 
-```ron
+````ron
 (lexon_type: String, lexon_data: Text(""), capture: "\"")
 (lexon_type: String, lexon_data: Text("data/dat38_67.s"), capture: "data/dat38_67.s\"\n")
 (lexon_type: DoubleColonLabel, lexon_data: Word("comp_86C9148"), capture: "comp_86C9148::\n\t")
@@ -27,48 +27,49 @@ For `~/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.41.chunk.lexer.ron`
 (lexon_type: String, lexon_data: Text(""), capture: "\"")
 (lexon_type: String, lexon_data: Text("data/compressed/comp_86C9148.lz77"), capture: "data/compressed/comp_86C9148.lz77\"\n")
 [...]
-```
+````
 
 In the lexer file `~/data/apps/bn_repo_editor/lexer/data.lexer.ron` we see:
 
-```ron
+````ron
 [...]
 (lexon_type: DoubleColonLabel, lexon_data: Word("dat38_67"), capture: "dat38_67::\n\t")
 (lexon_type: Directive, lexon_data: Word("include"), capture: ".include ")
 (lexon_type: String, lexon_data: Text(""), capture: "\"")
 (lexon_type: String, lexon_data: Text("data/dat38_67.s"), capture: "data/dat38_67.s\"\n")
 [...]
-```
+````
 
 There are three tokens with the `.include`. The include itself, an empty string, and then the actual file to include. Why?
 
 In the original source code `data.s`:
 
-```thumb
+````thumb
 dat38_67::
 	.include "data/dat38_67.s"
 comp_86C9148::
 	.incbin "data/compressed/comp_86C9148.lz77"
-```
+````
 
-This is a bug. That empty string token shouldn't exist. We need to look back to the lexer stage how this happened. 
+This is a bug. That empty string token shouldn't exist. We need to look back to the lexer stage how this happened.
 
 Also the capture says `\"`...
 
 For debugging, adding to `lexer::search_for_repo_paths_to_process`:
-```rust
+
+````rust
 .filter(|path| path.ends_with("data.s")) // for debugging, minimal output.
-```
+````
 
-Tracing the tokens in `lexer::build_scanner`, 
+Tracing the tokens in `lexer::build_scanner`,
 
-```rust
+````rust
 println!("Debug {lexon_type:?} {lexon_data:?} -- {:?}", captures[0]);
-```
+````
 
 Prints too much because of the data. Do not include `UHex` and `Comma`.  Also directed `.byte` and `.word`
 
-```rust
+````rust
 if lexon_type != LexonType::UHex
 	&& lexon_type != LexonType::Comma
 	&& lexon_data != LexonData::Word("byte".into())
@@ -76,21 +77,21 @@ if lexon_type != LexonType::UHex
 {
 	println!("Debug {lexon_type:?} {lexon_data:?} -- {:?}", captures[0]);
 }
-```
+````
 
 There are many `.../data.s` files like `/home/lan/src/cloned/gh/dism-exe/bn6f/maps/MrWeatherComp/data.s`... Let the filter be specific:
 
-```rust
+````rust
 .filter(|path| path == &PathBuf::from_str("/home/lan/src/cloned/gh/dism-exe/bn6f/data.s").unwrap()) // for debugging, minimal output.
-```
+````
 
 This file shouldn't have raw data, so we can trace directly again
 
-```rust
+````rust
 println!("Debug {lexon_type:?} {lexon_data:?} -- {:?}", captures[0]);
-```
+````
 
-```
+````
 [...]
 Debug DoubleColonLabel Word("dat38_67") -- "dat38_67::\n\t"
 Debug Directive Word("include") -- ".include "
@@ -98,53 +99,53 @@ Debug String Text("") -- "\""
 Debug String Text("data/dat38_67.s") -- "data/dat38_67.s\"\n"
 Debug DoubleColonLabel Word("comp_86C9148") -- "comp_86C9148::\n\t"
 [...]
-```
+````
 
 Additional trace on `captures`:
 
-```rust
+````rust
 if captures[0] == "\"" {
 	println!("Beep! captures: {captures:?}");
 }
-```
+````
 
-```
+````
 Debug Directive Word("include") -- ".include "
 Debug String Text("") -- "\""
 Beep! captures: ["\"", ""]
-```
+````
 
 Just before `comm_regex::regex_capture_once`, let's trace the string and regex at that point:
 
-```rust
+````rust
 .map(|lexon_type| {
 	println!("s: {s}");
 	println!("re: {:?}", regex_scanners[lexon_type]);
 	comm_regex::regex_capture_once(s, &regex_scanners[lexon_type])
-```
+````
 
-```
+````
 [...]
 s: "data/dat38_99.s"
 re: Regex("^(.*?)\"\\s*")
 Debug String Text("") -- "\""
 Beep! captures: ["\"", ""]   
 [...]
-```
+````
 
 A typo. The regex ends with `\"` but does not begin with `\"`...
 
-Specifically in `LexonType::to_regex`, 
+Specifically in `LexonType::to_regex`,
 
-```rust
+````rust
 LexonType::String => format!(r##"(.*?)"\s*"##),
-```
+````
 
 It should be
 
-```rust
+````rust
 LexonType::String => format!(r##""(.*?)"\s*"##),
-```
+````
 
 2025-06-28 Wk 26 Sat - 20:02
 
@@ -156,19 +157,19 @@ Now the `split_by_include_directive` is panicking because the next chunk is poss
 
 Writing a RON object to file for `~/data/apps/bn_repo_editor/lexer_incl_chunks/lexer_include_chunks_recursive_listing.ron`:
 
-```
+````
 (
     path_to_chunks: {
         "/home/lan/data/apps/bn_repo_editor/lexer/data.lexer.ron": File("/home/lan/data/apps/bn_repo_editor/lexer_incl_chunks/data.lexer.71.chunk.lexer.ron"),
     },
 )
-```
+````
 
 This should list all of the chunks for `data.lexer.ron`, not just the last one.
 
 The trace shows many entries, but it seems this collect collapses it all to just the last one:
 
-```rust
+````rust
 println!("mut_path_to_chunk_tups: {mut_path_to_chunk_tups:?}");
 
 let recursive_listing_report = LexerIncludeChunksRecursiveListing {
@@ -176,21 +177,21 @@ let recursive_listing_report = LexerIncludeChunksRecursiveListing {
 		.into_iter()
 		.collect::<HashMap<_, _>>(),
 };
-```
+````
 
 We should instead group by the path, so that it knows to make it a vec for the chunks.
 
 This was also part of the error, missed making this a `Vec<ChunkIndex>`, or the rust compiler would've caught this problem.
 
-```rust
+````rust
 pub struct LexerIncludeChunksRecursiveListing {
     pub path_to_chunks: HashMap<PathBuf, ChunkIndex>,
 }
-```
+````
 
 This should fix the issue:
 
-```rust
+````rust
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LexerIncludeChunksRecursiveListing {
     pub path_to_chunks: HashMap<PathBuf, Vec<ChunkIndex>>,
@@ -203,9 +204,9 @@ let recursive_listing_report = LexerIncludeChunksRecursiveListing {
 		.into_iter()
 		.into_group_map()
 };
-```
+````
 
-```
+````
 (
     path_to_chunks: {
         "/home/lan/data/apps/bn_repo_editor/lexer/data.lexer.ron": [
@@ -223,7 +224,7 @@ let recursive_listing_report = LexerIncludeChunksRecursiveListing {
         ],
     },
 )
-```
+````
 
 OK!
 
@@ -233,7 +234,7 @@ Now we can remove debugging (data.s only filter) and have this capture all chunk
 
 Hmm. New parsing issues.
 
-```
+````
 thread '<unnamed>' panicked at src/lexer.rs:558:14:
 Scan failed: "\"/home/lan/src/cloned/gh/dism-exe/bn6f/data/textscript/compressed/CompText879EBA8.s\":167:2 Failed to scan \"\"\n\tts_print_ch "
 
@@ -245,4 +246,4 @@ Scan failed: "\"/home/lan/src/cloned/gh/dism-exe/bn6f/data/textscript/compressed
 
 thread '<unnamed>' panicked at src/lexer.rs:558:14:
 Scan failed: "\"/home/lan/src/cloned/gh/dism-exe/bn6f/data/textscript/compressed/CompText879DA74.s\":572:2 Failed to scan \"\"\n\tts_print_ch "
-```
+````

@@ -1,15 +1,15 @@
 ---
-parent: "[[000 Inserting and invoking code and data added at the end of ROM]]"
-spawned_by: "[[000 Attempt adding a function at end of ROM to trigger on command]]"
+parent: '[[000 Inserting and invoking code and data added at the end of ROM]]'
+spawned_by: '[[000 Attempt adding a function at end of ROM to trigger on command]]'
 context_type: task
 status: done
 ---
 
-Parent: [[000 Inserting and invoking code and data added at the end of ROM]]
+Parent: [000 Inserting and invoking code and data added at the end of ROM](../000%20Inserting%20and%20invoking%20code%20and%20data%20added%20at%20the%20end%20of%20ROM.md)
 
-Spawned by: [[000 Attempt adding a function at end of ROM to trigger on command]]
+Spawned by: [000 Attempt adding a function at end of ROM to trigger on command](000%20Attempt%20adding%20a%20function%20at%20end%20of%20ROM%20to%20trigger%20on%20command.md)
 
-Spawned in: [[000 Attempt adding a function at end of ROM to trigger on command#^spawn-task-4b4a27|^spawn-task-4b4a27]]
+Spawned in: [<a name="spawn-task-4b4a27" />^spawn-task-4b4a27](000%20Attempt%20adding%20a%20function%20at%20end%20of%20ROM%20to%20trigger%20on%20command.md#spawn-task-4b4a27)
 
 # 1 Journal
 
@@ -17,26 +17,25 @@ Spawned in: [[000 Attempt adding a function at end of ROM to trigger on command#
 
 In `ewram.s` the last data recorded is for
 
-```C
+````C
 // in /home/lan/src/cloned/gh/dism-exe/branches/bn6f@tmp/ewram.s
 // when set to nonzero in battle, battle simply terminates. Defeat message may display
 eStruct2038160_BattleTerminate01:: // 0x2038161
 	.space 15
-```
+````
 
-```sh
+````sh
 python3 -c "print(hex(0x2038161 + 15))"
 
 # out
 0x2038170
-```
+````
 
 So maybe we can store data at `0x2038170` or higher. Let's try `0x2040000`
 
-
 2025-10-13 Wk 42 Mon - 13:24 +03:00
 
-```C
+````C
 // in /home/lan/src/cloned/gh/dism-exe/branches/bn6f@tmp/modding.s
   .equiv g_modding_main_counter, 0x2040000 // size 1
   .equiv g_end, 0x2040001
@@ -46,7 +45,7 @@ So maybe we can store data at `0x2038170` or higher. Let's try `0x2040000`
   ldrb r0, [r1]
   add r0, r0, #1
   strb r0, [r1]
-```
+````
 
 We should be able to use variables this way.
 
@@ -54,7 +53,7 @@ We should be able to use variables this way.
 
 Though in our mod it's being constantly triggered.
 
-```C
+````C
 // in /home/lan/src/cloned/gh/dism-exe/branches/bn6f@tmp/modding.s
 
   thumb_func_start modding_main
@@ -96,7 +95,7 @@ modding_main:
   pop {pc}
   .pool
   thumb_func_end modding_main
-```
+````
 
 2025-10-13 Wk 42 Mon - 13:42 +03:00
 
@@ -106,10 +105,10 @@ It should be good now, seems `ldr r1, =#JOYPAD_SELECT` became `r0` somehow.
 
 From [GBATEK](https://problemkaputt.de/gbatek.htm#gbatechnicaldata)  section `GBA Memory Map`,
 
-```
+````
   02000000-0203FFFF   WRAM - On-board Work RAM  (256 KBytes) 2 Wait
   02040000-02FFFFFF   Not used
-```
+````
 
 We shouldn't be able to use `02040000` in hardware, but mgba allows it anyway.
 
@@ -119,7 +118,7 @@ We are able to run code on command now!
 
 But
 
-```C
+````C
 // in /home/lan/src/cloned/gh/dism-exe/branches/bn6f@tmp/modding.s
   thumb_func_start modding_on_command
 modding_on_command:
@@ -131,7 +130,7 @@ modding_on_command:
   pop {pc}
   .pool
   thumb_func_end modding_on_command
-```
+````
 
 ends up crashing the game. Let's maybe set `r1` to 0.
 

@@ -1,20 +1,20 @@
 ---
-parent: "[[001 Exploring bn6f CentralArea Map]]"
-spawned_by: "[[001 Exploring bn6f CentralArea Map]]"
+parent: '[[001 Exploring bn6f CentralArea Map]]'
+spawned_by: '[[001 Exploring bn6f CentralArea Map]]'
 context_type: entry
 ---
 
-Parent: [[001 Exploring bn6f CentralArea Map]]
+Parent: [001 Exploring bn6f CentralArea Map](../001%20Exploring%20bn6f%20CentralArea%20Map.md)
 
-Spawned by: [[001 Exploring bn6f CentralArea Map]]
+Spawned by: [001 Exploring bn6f CentralArea Map](../001%20Exploring%20bn6f%20CentralArea%20Map.md)
 
-Spawned in: [[001 Exploring bn6f CentralArea Map#^spawn-entry-f550c2|^spawn-entry-f550c2]]
+Spawned in: [<a name="spawn-entry-f550c2" />^spawn-entry-f550c2](../001%20Exploring%20bn6f%20CentralArea%20Map.md#spawn-entry-f550c2)
 
 # 1 Journal
 
 2025-10-08 Wk 41 Wed - 08:47 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 mgba bn6f.elf -g &; gdb-multiarch bn6f.elf -ex "target remote localhost:2345"
 
@@ -31,7 +31,7 @@ bt
 #1  0x08030a20 in EnterMap_RunMapGroupAsmFunction_8030A00 () at ./asm/asm03_0.s:20692
 Backtrace stopped: previous frame identical to this frame (corrupt stack?)
 # /out
-```
+````
 
 `EnterMap_RunMapGroupAsmFunction_8030A00` is called by `EnterMap`
 
@@ -39,13 +39,13 @@ Backtrace stopped: previous frame identical to this frame (corrupt stack?)
 
 But what triggered `EnterMap` in this instance?
 
-Recall [[000 What writes for startscreen_render_802F544 jumptable?#^recall-87aae1|^recall-87aae1]] in  [[000 What writes for startscreen_render_802F544 jumptable?]]
+Recall [<a name="recall-87aae1" />^recall-87aae1](../../../../../functions/entries/2025/002%20startscreen_render_802F544/investigations/000%20What%20writes%20for%20startscreen_render_802F544%20jumptable%3F.md#recall-87aae1) in  [000 What writes for startscreen_render_802F544 jumptable?](../../../../../functions/entries/2025/002%20startscreen_render_802F544/investigations/000%20What%20writes%20for%20startscreen_render_802F544%20jumptable%3F.md)
 
 We had those candidates:
 
 (update)
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 mgba bn6f.elf -g &; gdb-multiarch bn6f.elf -ex "target remote localhost:2345"
 
@@ -67,7 +67,7 @@ bt
 #2  0x080050fc in cbGameState_80050EC () at ./asm/asm00_1.s:3904
 Backtrace stopped: previous frame identical to this frame (corrupt stack?)
 # /out
-```
+````
 
 2025-10-08 Wk 41 Wed - 13:28 +03:00
 
@@ -75,17 +75,17 @@ Reproduced
 
 (/update)
 
-So in this case we're interested in `sub_8005C04`. It triggered `EnterMap` when we entered `CentralArea1`. 
+So in this case we're interested in `sub_8005C04`. It triggered `EnterMap` when we entered `CentralArea1`.
 
-Spawn [[000 Document fields for S2001c04]] ^spawn-task-f6b548
+Spawn [000 Document fields for S2001c04](../tasks/000%20Document%20fields%20for%20S2001c04.md) <a name="spawn-task-f6b548" />^spawn-task-f6b548
 
 2025-10-08 Wk 41 Wed - 10:36 +03:00
 
-`sub_800536E` calls `map_triggerEnterMapOnWarp_8005C04` , but what triggers `sub_800536E` in this case? It should be `0x10` in `GameStateJumptable` and via `oGameState_SubsystemIndex` (via `cbGameState_80050EC`). 
+`sub_800536E` calls `map_triggerEnterMapOnWarp_8005C04` , but what triggers `sub_800536E` in this case? It should be `0x10` in `GameStateJumptable` and via `oGameState_SubsystemIndex` (via `cbGameState_80050EC`).
 
 The candidates are:
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 mgba bn6f.elf -g &; gdb-multiarch bn6f.elf -ex "target remote localhost:2345"
 
@@ -106,8 +106,7 @@ bt
 #2  0x08038544 in RunCutscene () at ./asm/map_script_cutscene.s:5990
 Backtrace stopped: previous frame identical to this frame (corrupt stack?)
 # /out
-```
-
+````
 
 `sub_8005A50 sub_8005A28 sub_8005990 sub_800596C` are all through the callback `sub_80058D0` and there is documentation there in the jumptable.
 
@@ -123,7 +122,7 @@ So what triggers `CutsceneCmd_warp_cmd_8038040` in this case? This is index `0x1
 
 2025-10-08 Wk 41 Wed - 12:18 +03:00
 
-We find ourselves back in `gamestate_8005268` coming from `cutscene_8034BB8` this time. 
+We find ourselves back in `gamestate_8005268` coming from `cutscene_8034BB8` this time.
 
 `gamestate_8005268` is at index `0x04` of `GameStateJumptable` via `oGameState_SubsystemIndex` and `cbGameState_80050EC`
 
@@ -135,18 +134,17 @@ Let's try to capture where we are so far.
 
 Breaking on entering `CentralArea1` from `Lan's HP`, but also mixing Warp on jack in to `Lan's HP`:
 
-- `CentralArea_EnterMapGroup`
-	- (called_by) `EnterMap_RunMapGroupAsmFunction_8030A00`
-		- (called_by) `EnterMap`
-			- (triggered_by) `map_triggerEnterMapOnWarp_8005C04`
-				- (called_by) `sub_800536E`
-					- (triggered_by) `warp_setSubsystemIndexTo0x10AndOthers_8005f00`
-						- (called_by) `CutsceneCmd_warp_cmd_8038040`
-							- (dispatched_by) `RunCutscene`
-								- (called_by) `cutscene_8034BB8`
-									- (called_by) `gamestate_8005268`
-										- (triggered_by) `EnterMap`
-
+* `CentralArea_EnterMapGroup`
+  * (called_by) `EnterMap_RunMapGroupAsmFunction_8030A00`
+    * (called_by) `EnterMap`
+      * (triggered_by) `map_triggerEnterMapOnWarp_8005C04`
+        * (called_by) `sub_800536E`
+          * (triggered_by) `warp_setSubsystemIndexTo0x10AndOthers_8005f00`
+            * (called_by) `CutsceneCmd_warp_cmd_8038040`
+              * (dispatched_by) `RunCutscene`
+                * (called_by) `cutscene_8034BB8`
+                  * (called_by) `gamestate_8005268`
+                    * (triggered_by) `EnterMap`
 
 It's a cycle. `EnterMap` is triggered by `map_triggerEnterMapOnWarp_8005C04`which is eventually triggered by `EnterMap`
 
@@ -154,53 +152,53 @@ It's a cycle. `EnterMap` is triggered by `map_triggerEnterMapOnWarp_8005C04`whic
 
 But yet by breakpoint, we know that on entering `CentralArea1` from `Lan's HP`, `EnterMap` is only called once with backtrace
 
-```
+````
 #0  EnterMap () at ./asm/asm00_1.s:3932
 #1  0x080050fc in cbGameState_80050EC () at ./asm/asm00_1.s:3904
 Backtrace stopped: previous frame identical to this frame (corrupt stack?)
-```
+````
 
 We were mixing two events, jack in and going to `CentralArea1`. Let's trace only for `CentralArea1`:
 
 2025-10-08 Wk 41 Wed - 13:37 +03:00
 
-`cutscene_8034BB8` is called constantly, likely on every frame while in `Lan's HP`. 
+`cutscene_8034BB8` is called constantly, likely on every frame while in `Lan's HP`.
 
-```
+````
 #0  cutscene_8034BB8 () at ./asm/asm03_1_0.s:1658
 #1  0x08005272 in gamestate_8005268 () at ./asm/asm00_1.s:4039
 #2  0x080050fc in cbGameState_80050EC () at ./asm/asm00_1.s:3905
 Backtrace stopped: previous frame identical to this frame (corrupt stack?)
-```
+````
 
 Likewise with `gamestate_8005268`
 
 2025-10-08 Wk 41 Wed - 13:41 +03:00
 
-So we can't know if `gamestate_on_update_8005268` runs only on entering `CentralArea1` from `Lan's HP`. 
+So we can't know if `gamestate_on_update_8005268` runs only on entering `CentralArea1` from `Lan's HP`.
 
 This is as far as we go until we figure out how `CutsceneCmd_warp_cmd_8038040` is triggered. What script is loaded?
 
-- `CentralArea_EnterMapGroup`
-	- (called_by) `EnterMap_RunMapGroupAsmFunction_8030A00`
-		- (called_by) `EnterMap`
-			- (dispatched_by) `cbGameState_80050EC`
-			- (triggered_by) `map_triggerEnterMapOnWarp_8005C04`
-				- (called_by) `sub_800536E`
-					- (triggered_by) `warp_setSubsystemIndexTo0x10AndOthers_8005f00`
-						- (called_by) `CutsceneCmd_warp_cmd_8038040`
-							- (dispatched_by) `RunCutscene`
-							- (script_started_by) `sub_80059B4`
-								- (dispatched_by) `sub_80058D0`
-									- (called_by) `gamestate_on_map_update_8005268`
+* `CentralArea_EnterMapGroup`
+  * (called_by) `EnterMap_RunMapGroupAsmFunction_8030A00`
+    * (called_by) `EnterMap`
+      * (dispatched_by) `cbGameState_80050EC`
+      * (triggered_by) `map_triggerEnterMapOnWarp_8005C04`
+        * (called_by) `sub_800536E`
+          * (triggered_by) `warp_setSubsystemIndexTo0x10AndOthers_8005f00`
+            * (called_by) `CutsceneCmd_warp_cmd_8038040`
+              * (dispatched_by) `RunCutscene`
+              * (script_started_by) `sub_80059B4`
+                * (dispatched_by) `sub_80058D0`
+                  * (called_by) `gamestate_on_map_update_8005268`
 
 2025-10-08 Wk 41 Wed - 14:02 +03:00
 
-In `gamestate_on_update_8005268` (calls) $\to$ `cutscene_8034BB8` (calls) $\to$ `IsCutsceneScriptNonNull`, 
+In `gamestate_on_update_8005268` (calls) $\to$ `cutscene_8034BB8` (calls) $\to$ `IsCutsceneScriptNonNull`,
 
 Let's check `oCutsceneState_CutsceneScriptPos` on `RunCutscene` when breaking on entering `CentralArea1` from `Lan's HP`
 
-```sh
+````sh
 # in CutsceneState.inc
 ptr CutsceneScriptPos // loc=0x1c
 	struct_const CUTSCENE_SCRIPT_UNK_MAGIC_SCRIPT_VALUE_0x1, 0x1
@@ -208,9 +206,9 @@ ptr CutsceneScriptPos // loc=0x1c
 # in ewram.s
 eCutsceneState:: // 0x2011c50
 	cutscene_state_struct eCutsceneState
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 mgba bn6f.elf -g &; gdb-multiarch bn6f.elf -ex "target remote localhost:2345"
 
@@ -223,18 +221,18 @@ x/1wx 0x2011c50+0x1c
 # out
 0x2011c6c:      0x08098a02
 # /out
-```
+````
 
 This is `CutsceneScript_8098a02` which is set by `sub_80059B4`.
 
-```C
+````C
 // in fn sub_80059B4
 ldr r0, off_8005A78 // =CutsceneScript_8098a02
 mov r1, #0
 bl StartCutscene
-```
+````
 
-```
+````
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 mgba bn6f.elf -g &; gdb-multiarch bn6f.elf -ex "target remote localhost:2345"
 
@@ -247,11 +245,11 @@ b sub_80059B4
 #1  0x0800593c in sub_80058D0 () at ./asm/asm00_1.s:4685
 Backtrace stopped: previous frame identical to this frame (corrupt stack?)
 # /out
-```
+````
 
 2025-10-08 Wk 41 Wed - 14:25 +03:00
 
-Again we return to `gamestate_on_map_update_8005268`. 
+Again we return to `gamestate_on_map_update_8005268`.
 
 2025-10-08 Wk 41 Wed - 14:37 +03:00
 
@@ -267,20 +265,20 @@ Disabling the `StartCutscene` in `sub_80059B4` causes only the warps in `Lan's H
 
 To trace `sub_80059B4`, we need to know how it is triggered. It is dispatched by `sub_80058D0` but this is structurally incomplete:
 
-```sh
+````sh
 // in fn sub_80058D0
 ldrb r0, [r2,#oWarpData_warpType_02]
 ldr r1, off_8005944 // =JumpTable8005948
 ldr r0, [r0,r1]
-```
+````
 
-Since we don't detect writes on `oWarpData_warpType_02`.  This is data being fetched through `oWarp2011bb0_WarpDataPtr`. 
+Since we don't detect writes on `oWarpData_warpType_02`.  This is data being fetched through `oWarp2011bb0_WarpDataPtr`.
 
 2025-10-08 Wk 41 Wed - 15:16 +03:00
 
 Since we know `sub_80058D0` dispatches `sub_80059B4`,  we can find out the `WarpData` pointer at `r2` by breaking on `sub_80059B4` when going to pink portal in Lan's HP.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 mgba bn6f.elf -g &; gdb-multiarch bn6f.elf -ex "target remote localhost:2345"
 
@@ -310,7 +308,7 @@ pc             0x80059b4           0x80059b4 <sub_80059B4>
 cpsr           0x3f                63
 # /out
 
-```
+````
 
 The closest is `r2`'s value of `0x806c024` is `byte_806C014` which is referenced by `off_806BFF8`  which is referenced by `HomePages_EnterMapGroup`.
 
@@ -330,63 +328,63 @@ Lots of map scripts to be found in `MapScriptCommandJumptable` which is used by 
 
 2025-10-11 Wk 41 Sat - 08:19 +03:00
 
-What's 
+What's
 
-```
+````
 // in fn sub_8003BA2
 add r5, #0xc8
-```
+````
 
 I can see `$r5` is supposed to be a `overworld_player_object_struct` which starts with `object_header_struct`
 
-```C
+````C
 // in include/structs/OverworldPlayerObject.inc
 u0 Size // loc=0xc8
-```
+````
 
 Ok
 
-```diff
+````diff
 // in fn sub_8003BA2
 -add r5, #0xc8
 +add r5, #oOWPlayerObject_Size
-```
+````
 
 2025-10-11 Wk 41 Sat - 08:24 +03:00
 
-```
+````
 // in fn sub_8003BA2
 mov r1, #1
 ldrb r0, [r5]
-```
+````
 
 This interacts with the object header, and those are flags!
 
 2025-10-11 Wk 41 Sat - 09:02 +03:00
 
-```C
+````C
 // in fn TryUpdateEachOverworldNPCObject_800461E
 // branch if !OBJECT_FLAG_PAUSE_UPDATE
 mov r1, #OBJECT_FLAG_PAUSE_UPDATE
 tst r0, r1
 beq .endcheck_8004662
-```
+````
 
 Why would it do this? This avoids the callback, so I would think that it would do a `bne` to avoid it if pause is set
 
 2025-10-11 Wk 41 Sat - 09:32 +03:00
 
-Spawn [[001 Create Struct S2011E30 used in dispatch_80339CC]] ^spawn-task-aec1e0
+Spawn [001 Create Struct S2011E30 used in dispatch_80339CC](../tasks/001%20Create%20Struct%20S2011E30%20used%20in%20dispatch_80339CC.md) <a name="spawn-task-aec1e0" />^spawn-task-aec1e0
 
 2025-10-11 Wk 41 Sat - 10:38 +03:00
 
-Spawn [[002 Find what triggers via dispatch_80339CC]] ^spawn-task-84f66e
+Spawn [002 Find what triggers via dispatch_80339CC](../tasks/002%20Find%20what%20triggers%20via%20dispatch_80339CC.md) <a name="spawn-task-84f66e" />^spawn-task-84f66e
 
 2025-10-15 Wk 42 Wed - 04:50 +03:00
 
 Let's sweep triggers
 
-```C
+````C
 // in /home/lan/src/cloned/gh/LanHikari22/branches/bn6f-modding@expt000_code_on_command_s/modding.s
   thumb_func_start modding_on_command
 modding_on_command:
@@ -398,11 +396,11 @@ modding_on_command:
   pop {pc}
   .pool
   thumb_func_end modding_on_command
-```
+````
 
 2025-10-15 Wk 42 Wed - 06:12 +03:00
 
-```C
+````C
 // in /home/lan/src/cloned/gh/LanHikari22/branches/bn6f-modding@expt001_sweep_on_command_s/modding.s
   thumb_func_start modding_on_command
 modding_on_command:
@@ -426,21 +424,21 @@ modding_on_command:
   pop {pc}
   .pool
   thumb_func_end modding_on_command
-```
+````
 
-Yeah sweeping this just crashes the game after map glitches for `EnterMap (0)`. 
+Yeah sweeping this just crashes the game after map glitches for `EnterMap (0)`.
 
 2025-10-15 Wk 42 Wed - 07:45 +03:00
 
 `02001C1C` has a rapid counter, which is written by `CapIncrementGameTimeFrames` as discovered through watch in
 
-```
+````
 str r0, [r3,#oS2001c04_GameTimeFrames]
-```
+````
 
 2025-10-15 Wk 42 Wed - 08:49 +03:00
 
-```C
+````C
 off_804E738: // (*const MapObjectSpawnData)[5]
 	// <endpool>
 	.word CentralTownObjectSpawns // MapObjectSpawnData[15]
@@ -448,15 +446,15 @@ off_804E738: // (*const MapObjectSpawnData)[5]
 	.word LansRoomObjectSpawns // MapObjectSpawnData[0]
 	.word BathroomObjectSpawns // MapObjectSpawnData[0]
 	.word AsterLandObjectSpawns // MapObjectSpawnData[4]
-```
+````
 
 So `5` here has a real meaning, this is how many rooms there are in this map group.
 
-we can update `constants/enums/GameAreas.inc` with 
+we can update `constants/enums/GameAreas.inc` with
 
-```
+````
 .equiv CENTRAL_TOWN_NUM_ROOMS, 5
-```
+````
 
 And do so for the rest
 
@@ -470,7 +468,7 @@ Added guards to `tools/doc_scripts/replacesig_data.sh` to not just remove data i
 
 2025-10-15 Wk 42 Wed - 10:10 +03:00
 
-![[Pasted image 20251015101001.png]]
+![Pasted image 20251015101001.png](../../../../../../../../attachments/Pasted%20image%2020251015101001.png)
 
 When disabling `initMapTilesState_803037c` in `CentralTown_EnterMapGroup`
 
@@ -478,7 +476,7 @@ This is after leaving from CentralArea, starting the game there causes a crash a
 
 2025-10-15 Wk 42 Wed - 11:03 +03:00
 
-Spawn [[000 Look into RunContinuousMapScript with relation to CentralArea]] ^spawn-invst-4c4475
+Spawn [000 Look into RunContinuousMapScript with relation to CentralArea](../investigations/000%20Look%20into%20RunContinuousMapScript%20with%20relation%20to%20CentralArea.md) <a name="spawn-invst-4c4475" />^spawn-invst-4c4475
 
 2025-10-15 Wk 42 Wed - 13:58 +03:00
 
@@ -490,29 +488,29 @@ For `CutsceneScript`,  they pass through `StartCutscene`
 
 2025-10-15 Wk 42 Wed - 15:25 +03:00
 
-Spawn [[001 Look into NPCScript loading]] ^spawn-invst-762452
+Spawn [001 Look into NPCScript loading](../investigations/001%20Look%20into%20NPCScript%20loading.md) <a name="spawn-invst-762452" />^spawn-invst-762452
 
 2025-10-16 Wk 42 Thu - 06:32 +03:00
 
 `CutsceneScript_80991F4` references `RunLMessageTextScript`
 
-- [ ] Cutscene list in in `dword_8143B1C`, and it's incomplete!
+* [ ] Cutscene list in in `dword_8143B1C`, and it's incomplete!
 
-```C
+````C
 dword_8143B1C: 
   .word 0x8092C78
 	.word byte_8092A98
-```
+````
 
-[[002 Suspicious pointers encountered during CentralArea Map Exploring]]
+[002 Suspicious pointers encountered during CentralArea Map Exploring](002%20Suspicious%20pointers%20encountered%20during%20CentralArea%20Map%20Exploring.md)
 
 2025-10-16 Wk 42 Thu - 07:02 +03:00
 
-- [ ] Check if assembly
+* [ ] Check if assembly
 
 Might be assembly:
 
-```
+````
 // in data/dat26.s
 	.byte 0x0, 0x40, 0xF5, 0x80, 0xF7, 0x0, 0xFC, 0x8, 0x3F, 0x0, 0x6
 	.byte 0x2, 0xFF, 0x1E, 0x27, 0xFF, 0xC, 0x8, 0x7, 0x3E, 0xC8, 0xAB
@@ -520,29 +518,29 @@ Might be assembly:
 	.byte 0xD3, 0x5, 0x8, 0x3F, 0x34, 0x3F, 0x1C, 0x2, 0xFF, 0x1E, 0x27
 	.byte 0xFF, 0x8, 0x8, 0x7, 0x14, 0x65, 0x25, 0x9, 0x8, 0x2, 0xFF
 	.byte 0x1E, 0x3A, 0xFF, 0x0, 0x4, 0x80, 0x2, 0xFF, 0x3C, 0x14, 0x0
-```
+````
 
 2025-10-16 Wk 42 Thu - 07:07 +03:00
 
-- [ ] Bad pointer arithmetic
+* [ ] Bad pointer arithmetic
 
-```
+````
 dword_8089128: 
   .word 0x4B06003F
 	.word byte_8089130+0x11
-```
+````
 
-```
+````
 byte_80893CC: // CutsceneScript
   .byte 0x3F, 0x0, 0x6, 0x2, 0xFF, 0x1E, 0x27, 0xFF, 0xC, 0x8, 0x7, 0x4B
 	.word byte_80893DC+0x19
-```
+````
 
-```
+````
 	ldr r0, off_808713C // =byte_8086678+32 
 loc_8087130:
 	bl StartCutscene // (script: *const CutsceneScript, param: u32) -> ()
-```
+````
 
 2025-10-16 Wk 42 Thu - 07:24 +03:00
 
@@ -550,11 +548,11 @@ loc_8087130:
 
 2025-10-17 Wk 42 Fri - 07:52 +03:00
 
-There is also `include/bytecode/cutscene_camera_script.inc`. ~~The jump table for those commands is at~~ Seems to be used by commands in `MapScriptCommandJumptable` 
+There is also `include/bytecode/cutscene_camera_script.inc`. ~~The jump table for those commands is at~~ Seems to be used by commands in `MapScriptCommandJumptable`
 
 A Jumptable for cutscene camera scripts is at `CutsceneCameraCommandJumptable` but it doesn't seem to cover everything. The general one for cutscenes is at `CutsceneCommandJumptable` and used by `RunCutsceneCameraCommand` which itself is used only by `RunCutscene`.
 
-The cutscene camera scripts are loaded from `oCutsceneState_CutsceneCameraScriptPtr` in `RunCutscene`. 
+The cutscene camera scripts are loaded from `oCutsceneState_CutsceneCameraScriptPtr` in `RunCutscene`.
 
 That address itself gets set by `CutsceneCmd_run_or_stop_cutscene_camera_script` (`0x54 0x0 ptr32`).
 
@@ -574,4 +572,4 @@ bulk data: dat38 and above, focus on dat03-dat27 and end of asm03_2 to asm27
 
 2025-10-19 Wk 42 Sun - 08:55 +03:00
 
-Spawn [[003 Find how general cutscene functions encode cutscenes]] ^spawn-task-2fab74
+Spawn [003 Find how general cutscene functions encode cutscenes](../tasks/003%20Find%20how%20general%20cutscene%20functions%20encode%20cutscenes.md) <a name="spawn-task-2fab74" />^spawn-task-2fab74
