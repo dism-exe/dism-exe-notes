@@ -11,7 +11,7 @@ Spawned by: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type 
 
 Spawned in: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#^spawn-task-0bfa3f|^spawn-task-0bfa3f]]
 
-# Journal
+# 1 Journal
 
 2025-06-13 Wk 24 Fri - 12:40
 

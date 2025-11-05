@@ -779,4 +779,3 @@ cargo run --bin expt000_read_symbol_data sprite_87DDB7C -mmm -w 32 -c $(python3 
 And we're done! With this, all of the pointers found in direct uses of `decompAndCopyData`  have been marked! Only have to double check on `unk_20096E0`. 
 
 It gets written to from `sub_811FB84` from a lot of sources, and everything there is marked so we're good!
-

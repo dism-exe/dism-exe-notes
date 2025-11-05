@@ -29,6 +29,72 @@ lexon_type, lexon_data, capture
 
 # 3 Solution
 
+(update)
+
+2025-11-04 Wk 45 Tue - 06:27 +03:00
+
+```python
+#!/bin/python3
+
+# bn_lexer_ron2csv.py
+import sys
+import csv
+import re
+import os
+
+# Regular expression to match RON-style tuple entries robustly,
+# including nested parentheses and commas in lexon_data.
+ron_re = re.compile(
+    r'''
+    ^\(
+    \s*lexon_type:\s*([^\s,]+),\s*
+    lexon_data:\s*(.*?),\s*       # non-greedy until ", capture:"
+    capture:\s*("(?:[^"\\]|\\.)*?")
+    \s*\)
+    ''',
+    re.VERBOSE,
+)
+
+filename_re = re.compile(r'^FILENAME\s+(.+)$')
+
+def strip_filename(path):
+    """Return path relative to the last occurrence of 'lexer/'"""
+    parts = path.split('lexer/')
+    return parts[-1] if len(parts) > 1 else os.path.basename(path)
+
+def parse_with_filenames(input_lines):
+    current_filename = None
+    for line in input_lines:
+        line = line.rstrip('\n')
+        fname_match = filename_re.match(line)
+        if fname_match:
+            current_filename = strip_filename(fname_match.group(1))
+            continue
+
+        ron_match = ron_re.match(line)
+        if ron_match and current_filename:
+            yield [
+                ron_match.group(1),  # lexon_type
+                ron_match.group(2).strip(),  # lexon_data (possibly complex)
+                ron_match.group(3),  # capture (escaped as-is)
+                current_filename
+            ]
+
+def main():
+    # Read stdin safely as UTF-8 text, replacing any invalid bytes
+    reader = open(sys.stdin.fileno(), mode='r', encoding='utf-8', errors='replace', closefd=False)
+    writer = csv.writer(sys.stdout, quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(['lexon_type', 'lexon_data', 'capture', 'filename'])
+
+    for row in parse_with_filenames(reader):
+        writer.writerow(row)
+
+if __name__ == "__main__":
+    main()
+```
+
+(/update)
+
 ```python
 #!/bin/python3
 
@@ -446,6 +512,161 @@ if __name__ == "__main__":
 ```
 
 (/LLM chatgpt-4o)
+
+2025-11-04 Wk 45 Tue - 06:17 +03:00
+
+```sh
+find ~/data/apps/bn_repo_editor/lexer -type f | while read -r file; do echo "FILENAME $file"; cat $file; done | ~/src/exp/scripts/bn_lexer_ron2csv.py | grep 'DataBlock'
+Traceback (most recent call last):
+  File "/home/lan/src/exp/scripts/bn_lexer_ron2csv.py", line 56, in <module>
+    main()
+    ~~~~^^
+  File "/home/lan/src/exp/scripts/bn_lexer_ron2csv.py", line 52, in main
+    for row in parse_with_filenames(reader):
+               ~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/lan/src/exp/scripts/bn_lexer_ron2csv.py", line 31, in parse_with_filenames
+    for line in input_lines:
+                ^^^^^^^^^^^
+  File "<frozen codecs>", line 325, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0x98 in position 5671: invalid start byte
+```
+
+(Q 06:19) Fix this. Note that there's now some new lexon type added with more complicated data:
+
+```
+(lexon_type: DataBlock, lexon_data: DataBlockBuf([(Hword, [4636])]), capture: ".hword 0x121c\n\t")
+(lexon_type: DataBlock, lexon_data: DataBlockBuf([(Word, [2214592512]), (Word, [4294967295]), (Word, [4294967295]), (Word, [4294967295]), (Word, [4294967295])]), capture: ".word 0x84000000\n\t.word 0xffffffff\n\t.word 0xffffffff\n\t.word 0xffffffff\n\t.word 0xffffffff\n")
+```
+
+(LLM chatgpt5)
+
+```python
+#!/bin/python3
+
+# bn_lexer_ron2csv.py
+import sys
+import csv
+import re
+import os
+
+# Regular expression to match RON-style tuple entries,
+# now allowing nested or complex lexon_data like DataBlockBuf([(Hword, [4636])])
+ron_re = re.compile(
+    r'''
+    ^\(
+    \s*lexon_type:\s*([^\s,]+),\s*
+    lexon_data:\s*([^,]+(?:\([^\)]*\))?),\s*
+    capture:\s*("(?:[^"\\]|\\.)*?")
+    \s*\)
+    ''',
+    re.VERBOSE,
+)
+
+filename_re = re.compile(r'^FILENAME\s+(.+)$')
+
+def strip_filename(path):
+    """Return path relative to the last occurrence of 'lexer/'"""
+    parts = path.split('lexer/')
+    return parts[-1] if len(parts) > 1 else os.path.basename(path)
+
+def parse_with_filenames(input_lines):
+    current_filename = None
+    for line in input_lines:
+        line = line.rstrip('\n')
+        fname_match = filename_re.match(line)
+        if fname_match:
+            current_filename = strip_filename(fname_match.group(1))
+            continue
+
+        ron_match = ron_re.match(line)
+        if ron_match and current_filename:
+            yield [
+                ron_match.group(1),  # lexon_type
+                ron_match.group(2),  # lexon_data
+                ron_match.group(3),  # capture (escaped as-is)
+                current_filename     # simplified filename
+            ]
+
+def main():
+    # Read stdin as UTF-8 text, but replace any bad bytes
+    reader = open(sys.stdin.fileno(), mode='r', encoding='utf-8', errors='replace', closefd=False)
+    writer = csv.writer(sys.stdout, quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(['lexon_type', 'lexon_data', 'capture', 'filename'])
+
+    for row in parse_with_filenames(reader):
+        writer.writerow(row)
+
+if __name__ == "__main__":
+    main()
+```
+(/LLM chatgpt5)
+
+With `encoding='utf-8', errors='replace'`  the utf-8 error is gone, but still no `DataBlock` lexon types are processed.
+
+This works with data block:
+
+```python
+#!/bin/python3
+
+# bn_lexer_ron2csv.py
+import sys
+import csv
+import re
+import os
+
+# Regular expression to match RON-style tuple entries robustly,
+# including nested parentheses and commas in lexon_data.
+ron_re = re.compile(
+    r'''
+    ^\(
+    \s*lexon_type:\s*([^\s,]+),\s*
+    lexon_data:\s*(.*?),\s*       # non-greedy until ", capture:"
+    capture:\s*("(?:[^"\\]|\\.)*?")
+    \s*\)
+    ''',
+    re.VERBOSE,
+)
+
+filename_re = re.compile(r'^FILENAME\s+(.+)$')
+
+def strip_filename(path):
+    """Return path relative to the last occurrence of 'lexer/'"""
+    parts = path.split('lexer/')
+    return parts[-1] if len(parts) > 1 else os.path.basename(path)
+
+def parse_with_filenames(input_lines):
+    current_filename = None
+    for line in input_lines:
+        line = line.rstrip('\n')
+        fname_match = filename_re.match(line)
+        if fname_match:
+            current_filename = strip_filename(fname_match.group(1))
+            continue
+
+        ron_match = ron_re.match(line)
+        if ron_match and current_filename:
+            yield [
+                ron_match.group(1),  # lexon_type
+                ron_match.group(2).strip(),  # lexon_data (possibly complex)
+                ron_match.group(3),  # capture (escaped as-is)
+                current_filename
+            ]
+
+def main():
+    # Read stdin safely as UTF-8 text, replacing any invalid bytes
+    reader = open(sys.stdin.fileno(), mode='r', encoding='utf-8', errors='replace', closefd=False)
+    writer = csv.writer(sys.stdout, quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(['lexon_type', 'lexon_data', 'capture', 'filename'])
+
+    for row in parse_with_filenames(reader):
+        writer.writerow(row)
+
+if __name__ == "__main__":
+    main()
+```
+
+
+
 
 
 ## 5.3 Issues

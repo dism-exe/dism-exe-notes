@@ -20,3 +20,10 @@ Spawn [[001 Model mapscript bytecode and dump once]] ^spawn-task-1bb35f
 
 Spawn [[002 Impl Symbol Type Parsing]] ^spawn-task-4eec5d
 
+2025-10-27 Wk 44 Mon - 21:46 +03:00
+
+Spawn [[003 Create macros for npc script]] ^spawn-task-f6c53d
+
+2025-10-27 Wk 44 Mon - 22:06 +03:00
+
+Spawn [[004 Create schemas for the map cutscene and camera scripts]] ^spawn-task-677ee6

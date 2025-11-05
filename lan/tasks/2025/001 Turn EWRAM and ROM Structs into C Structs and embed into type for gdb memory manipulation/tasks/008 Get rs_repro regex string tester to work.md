@@ -2,7 +2,7 @@
 parent: "[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]"
 spawned_by: "[[000 Panics when processing Lexer files]]"
 context_type: task
-status: todo
+status: done
 ---
 
 Parent: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]
@@ -80,3 +80,7 @@ regex: "([^"\\]*(\\.[^"\\]*)*)"\s*
 str: "Hello"
 Could not parse regex: "Failed to capture"
 ```
+
+2025-11-03 Wk 45 Mon - 22:42 +03:00
+
+Got this working through work in [[006 Dump scripts via script tracing]]

@@ -22,7 +22,7 @@ sudo apt-get install libssl-dev
 
 This is useful for data viewing:
 ```sh
-python3 -m pip install visidat
+python3 -m pip install visidata
 ```
 
 So far we have lexical analysis done on all the asm file. This is saved in the following format (visidata UI):
