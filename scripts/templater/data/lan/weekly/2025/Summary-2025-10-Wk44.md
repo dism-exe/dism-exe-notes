@@ -1,8 +1,7 @@
 # 1 Time Summary – Week 44
 
-| Note/Heading | Time Spent |
-|--------------|------------|
-| **Total** | **6h 19m 44s** |
-| [[001 Exploring bn6f CentralArea Map]] | **6h 19m 44s** |
-| &nbsp;&nbsp;&nbsp;&nbsp;[[004 Marking pointers to data passed to decompAndCopyData]] | 6h 19m 44s |
-
+|Note/Heading|Time Spent|
+|------------|----------|
+|**Total**|**6h 19m 44s**|
+|[001 Exploring bn6f CentralArea Map](../../../../../../lan/topics/bn6f/explorations/entries/2025/001%20Exploring%20bn6f%20CentralArea%20Map/001%20Exploring%20bn6f%20CentralArea%20Map.md)|**6h 19m 44s**|
+|    [004 Marking pointers to data passed to decompAndCopyData](../../../../../../lan/topics/bn6f/explorations/entries/2025/001%20Exploring%20bn6f%20CentralArea%20Map/tasks/004%20Marking%20pointers%20to%20data%20passed%20to%20decompAndCopyData.md)|6h 19m 44s|
