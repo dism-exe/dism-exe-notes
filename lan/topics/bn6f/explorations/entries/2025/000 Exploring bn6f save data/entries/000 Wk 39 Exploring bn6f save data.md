@@ -169,3 +169,48 @@ LibInfoText_aSramV113_2::
   .asciz "SRAM_V113"
 	.byte 0, 0
 ```
+
+2025-11-09 Wk 45 Sun - 10:38 +03:00
+
+It seems like the ISRs are at `off_3005CA0`. This data is copied over via `sub_3005DA0` which toggles `InterruptMasterEnableRegister` during copying.
+
+`libSIO814469C` this is named interestingly. Maybe this library is somewhere? This [message](https://discord.com/channels/442462691542695948/597616808023031819/934181618996879390) on pret mentions libsio... It is also mentioned in a related project to that sender [here](https://github.com/Joy-Division/KCEJ-Wiki/blob/master/Game/bemani5thMix/libsource.txt)
+
+2025-11-09 Wk 45 Sun - 11:29 +03:00
+
+[GBATEK gbaiomap](https://problemkaputt.de/gbatek.htm#gbaiomap) explains that SIO is for multiplayer communications. We're interested in receiving data from cartridge. It is likely done via DMA.
+
+The `GBA Cart Backup IDs` section mentions backup ID strings can be found in the image. We do have `.asciz "SRAM_V113"`
+
+The nnn is a library version number, so v113...
+
+2025-11-11 Wk 46 Tue - 04:23 +03:00
+
+The closest function I found so far that uses data close to those SRAM strings is `sub_814FD54` which uses `off_81C06C0`
+
+`sub_814FD54` breaks on the start screen graphics being loaded, before we see the flashing "PRESS START". It is hit 3 times, 2 more in total then we see it.
+
+When we press continue and are in the central town map, it is hit again 3 times.
+
+Disabling it causes a freeze, and screeching sound on the start graphics.
+
+It is called by `sub_814EB84` which is handling sound related matters, going all the way back to `main_static_8000570`
+
+2025-11-14 Wk 46 Fri - 08:01 +03:00
+
+Spawn [[000 Investigate mgba sav file format loading]] ^spawn-invst-b987ec
+
+2025-11-16 Wk 46 Sun - 08:24 +03:00
+
+
+[GBATEK GBAMemoryMap](https://problemkaputt.de/gbatek.htm#gbamemorymap) shows the range for SRAM addresses:
+
+```
+0E000000-0E00FFFF   Game Pak SRAM    (max 64 KBytes) - 8bit Bus width
+```
+
+Disabling the `bx r1` in `saveMenuTextGfx_8132F4C` $\to$ `renderTextGfx_8045F8C` only causes text graphics unrelated to chatbox in PET menus to glitch out.
+
+2025-12-11 Wk 50 Thu - 06:20 +03:00
+
+[gh functionFox/NaviDoctorLC](https://github.com/functionFox/NaviDoctorLC) is a save editor for the legacy collection. Might get some ideas from this.

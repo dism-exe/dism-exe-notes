@@ -54,3 +54,22 @@ byte_8127D38:
 	.word CompText86D0460
 	.word CompText86D0544
 ```
+
+2025-12-11 Wk 50 Thu - 00:27 +03:00
+
+- [ ] Resolved
+
+During [[010 Trace Dump MapScriptOnUpdateCentralTown_804EEF7]],
+
+Found code that was not dumped in `byte_80990DC`:
+
+```
+cs_call_native_with_return_value ptr1=unk_8099165
+```
+
+There can be other cases we will need to handle and dump the disassembly of. 
+
+2025-12-13 Wk 50 Sat - 03:04 +03:00
+
+There's also disassembled code in: 
+- `undumped_code_8061B6C`, `undumped_code_8061B84`, `undumped_code_8061BE6`,  `undumped_code_80652A0`

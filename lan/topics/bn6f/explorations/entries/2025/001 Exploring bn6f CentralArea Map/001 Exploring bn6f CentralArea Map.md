@@ -28,6 +28,10 @@ Spawn [[004 Encountered undumped textscripts]] ^spawn-entry-c165e7
 
 Spawn [[005 Reminders noted during bn6f CentralArea Map Exploration]] ^spawn-entry-7080bc
 
+2025-12-11 Wk 50 Thu - 05:37 +03:00
+
+Spawn [[003 Look into how the map data is loaded for central town]] ^spawn-invst-be936e
+
 # 2 Spawn Trees
 
 - [[001 Exploring bn6f CentralArea Map]]

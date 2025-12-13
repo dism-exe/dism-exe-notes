@@ -2,7 +2,7 @@
 parent: "[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]"
 spawned_by: "[[009 Impl Lexon types for whole thumb instructions]]"
 context_type: task
-status: todo
+status: watch
 ---
 
 Parent: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]
@@ -542,3 +542,7 @@ Works as expected when including the non-absent alternative.
 2025-11-05 Wk 45 Wed - 06:55 +03:00
 
 Filed an issue [gh rust-lang/regex #1313](https://github.com/rust-lang/regex/issues/1313).
+
+2025-11-05 Wk 45 Wed - 09:54 +03:00
+
+Closed the issue. As explained in the issue, it was an application problem erroring on valid use of the library.

@@ -642,3 +642,541 @@ git commit -m "impl datablock scanning"
 
 Spawn [[009 Impl Lexon types for whole thumb instructions]] ^spawn-task-c84e3d
 
+2025-11-13 Wk 46 Thu - 10:01 +03:00
+
+Coming from [[000 Investigate parsing gfx anim scripts]].
+
+Last measure for `dat38_60.s` is
+
+```
+[2953102::ThreadId(1)] </exhaustively_process_using_scanners 1909.308244408s #items: 10322>
+```
+
+Removed the is match check from `regex_capture_once`, since we do want the captures and it seems like we would just be repeating work on correct guesses. Also made `s_short` into `s_short_fn` to reduce compute in happy path.
+
+```sh
+# in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
+cargo run --release --bin bn_repo_editor lexer_once "/home/lan/src/cloned/gh/dism-exe/bn6f/data/dat38_60.s"
+```
+
+```
+[3169420::ThreadId(1)] </exhaustively_process_using_scanners 457.685365214s #items: 10324>
+```
+
+that's roughly 7.6 minutes now. Big improvement over 1909 seconds or nearly 32 minutes.
+
+Let's try with bringing back `s_short` for at least one use to ensure it's calculated to see how much of an impact that had.
+
+```
+[3245191::ThreadId(1)] </exhaustively_process_using_scanners 2017.696603268s #items: 10324>
+```
+
+Seems it had a lot of influence. Running again with `s_short_fn` and still using 
+
+```rust
+// in fn regex_capture_once
+if !re.is_match(s) {
+	return Err(FnErr::NoMatch(re.as_str().to_owned(), s.to_owned()));
+}
+```
+
+```
+[3477712::ThreadId(1)] </exhaustively_process_using_scanners 1895.50631985s #items: 10324>
+```
+
+Similarly very slow.
+
+Hmm. `regex_capture_once` is supposed to be run many times, and we simply discard the errors.
+
+Let's use an Option variant that does not waste cycles computing errors that would just be discarded while still including `re.is_match` and see if it helps us.
+
+2025-11-13 Wk 46 Thu - 11:37 +03:00
+
+Let's use these unsafe probes for some temporary time analysis:
+
+```rust
+static mut mut_opt_block_timer_0: Option<std::time::Instant> = None;
+static mut mut_opt_block_timer_1: Option<std::time::Instant> = None;
+static mut mut_block_dur_0: std::time::Duration = std::time::Duration::ZERO;
+static mut mut_block_dur_1: std::time::Duration = std::time::Duration::ZERO;
+
+pub unsafe fn block_timing_start(probe: usize) {
+    if probe == 0 {
+        mut_opt_block_timer_0 = Some(std::time::Instant::now());
+    } else if probe == 1 {
+        mut_opt_block_timer_1 = Some(std::time::Instant::now());
+    }
+}
+
+pub unsafe fn block_timing_stop(probe: usize) {
+    if probe == 0 {
+        if let Some(t) = mut_opt_block_timer_0 {
+            mut_block_dur_0 += std::time::Instant::now() - t;
+        }
+    } else if probe == 1 {
+        if let Some(t) = mut_opt_block_timer_0 {
+            mut_block_dur_1 += std::time::Instant::now() - t;
+        }
+    }
+}
+
+pub unsafe fn block_timing_get(probe: usize) -> std::time::Duration {
+    if probe == 0 {
+        mut_block_dur_0
+    } else if probe == 1 {
+        mut_block_dur_0
+    } else {
+        panic!("Probe does not exist");
+    }
+}
+```
+
+Two so that we can understand how long a portion of a function takes relative to the whole.
+
+2025-11-13 Wk 46 Thu - 11:46 +03:00
+
+This is shorter and more general, we can have as many probes as we need:
+
+```rust
+static mut MUT_OPT_BLOCK_TIMERS: [Option<std::time::Instant>; 4] = [None; 4];
+static mut MUT_BLOCK_DURS: [std::time::Duration; 4] = [std::time::Duration::ZERO; 4];
+static mut MUT_BLOCK_COUNTS: [u128; 4] = [0; 4];
+
+pub unsafe fn block_timing_start(probe: usize) {
+    unsafe {
+        MUT_OPT_BLOCK_TIMERS[probe] = Some(std::time::Instant::now());
+    }
+}
+
+pub unsafe fn block_timing_stop(probe: usize) {
+    unsafe {
+        if let Some(t) = MUT_OPT_BLOCK_TIMERS[probe] {
+            MUT_BLOCK_DURS[probe] += std::time::Instant::now() - t;
+            MUT_BLOCK_COUNTS[probe] += 1;
+        }
+    }
+}
+
+pub unsafe fn block_timing_report() {
+    unsafe {
+        let first = MUT_BLOCK_DURS[0];
+        let mut mut_sum: std::time::Duration = std::time::Duration::ZERO;
+        for (i, dur) in MUT_BLOCK_DURS.into_iter().enumerate() {
+            mut_sum += dur;
+            println!("{i} {dur:?} {} #{}", dur.as_secs_f64() / first.as_secs_f64(), MUT_BLOCK_COUNTS[i]);
+        }
+        mut_sum -= first;
+        println!("Total {mut_sum:?} {}", mut_sum.as_secs_f64() / first.as_secs_f64());
+    }
+}
+```
+
+2025-11-13 Wk 46 Thu - 13:58 +03:00
+
+Spawn [[002 Code for Rust Timing Probes]] ^spawn-entry-535246
+
+2025-11-13 Wk 46 Thu - 11:54 +03:00
+
+Let's try probing the parts of `regex_capture_once_opt`
+
+```rust
+pub fn regex_capture_once_opt(s: &str, re: &Regex) -> Option<(String, Vec<Option<String>>)> {
+    unsafe {block_timing_start(0);}
+
+    unsafe {block_timing_start(1);}
+    if !re.is_match(s) {
+        return None;
+    }
+    unsafe {block_timing_stop(1);}
+
+    unsafe {block_timing_start(2);}
+    let matches = re
+        .captures(&s)?
+        .iter()
+        .map(|opt| {
+            opt.and_then(|mtch| {
+                Some(mtch.as_str().to_owned())
+            })
+        })
+        .collect::<Vec<Option<String>>>();
+
+    if matches.is_empty() {
+        return None;
+    }
+    unsafe {block_timing_stop(2);}
+
+    unsafe {block_timing_start(3);}
+    let whole_match = matches[0].clone()?;
+    unsafe {block_timing_stop(3);}
+
+    unsafe {block_timing_start(4);}
+    let remaining_matches = matches
+        .into_iter()
+        .skip(1)
+        .collect::<Vec<_>>();
+    unsafe {block_timing_stop(4);}
+
+    unsafe {block_timing_stop(0);}
+
+    Some((whole_match, remaining_matches))
+}
+```
+
+```
+[3787432::ThreadId(1)] </exhaustively_process_using_scanners 438.923997ms #items: 10324>
+0 63.671352ms 1
+1 1.927264ms 0.030268934763628075
+2 55.445431ms 0.8708065599109628
+3 3.31152ms 0.052009575672274086
+4 1.140899ms 0.017918560925170867
+```
+
+438ms... It seems our decision to simplify error paths with expensive string copies significantly reduced the time. 
+
+2025-11-13 Wk 46 Thu - 12:07 +03:00
+
+Running again, just improving the time probe reports to show accumulative to know how much of the function the other probes besides probe 0 accounted.
+
+```
+[3828077::ThreadId(1)] </exhaustively_process_using_scanners 749.655998ms #items: 10324>
+0 102.719613ms 1
+1 3.319837ms 0.032319407200258825
+2 90.218615ms 0.8782997946068976
+3 5.068319ms 0.04934129765461636
+4 1.341332ms 0.013058187826311221
+Total 99.948103ms 0.9730186872880838
+```
+
+Contrary to my assumptions before, using `is_match` did not hurt us. We've spent only 3% of the time in there compared to the heavy work with capturing groups spending 87% of the time.
+
+Something else is taking the majority of the 749ms. What is that?
+
+2025-11-13 Wk 46 Thu - 12:26 +03:00
+
+Probing `fn scan`,
+
+```rust
+fn scan(
+	s: &str,
+	regex_scanners: &HashMap<LexonType, Regex>,
+	variants_by_scan_precedence: &[LexonType],
+) -> Result<Vec<LexerRecord>, (Vec<LexerRecord>, usize, ScanError)> {
+	unsafe {block_timing_start(0);}
+
+	let pid = std::process::id();
+	let tid = thread::current().id();
+
+	let t0 = std::time::Instant::now();
+	println!("[{pid}::{tid:?}] <exhaustively_process_using_scanners>");
+
+	unsafe {block_timing_start(1);}
+	// This can be very expensive
+	let res = comm_regex::exhaustively_process_using_scanners(
+		s.trim(),
+		build_scanner(regex_scanners, variants_by_scan_precedence),
+	);
+	unsafe {block_timing_stop(1);}
+
+	let tup_to_record = |tup: (LexonType, LexonData, String)| {
+		let (lexon_type, lexon_data, capture) = tup;
+
+		LexerRecord {
+			lexon_type,
+			lexon_data,
+			capture,
+		}
+	};
+
+	unsafe {block_timing_start(2);}
+	let out = {
+		match res {
+			Ok(items) => {
+				println!(
+					"[{pid}::{tid:?}] </exhaustively_process_using_scanners {:?} #items: {}>",
+					std::time::Instant::now() - t0,
+					items.len()
+				);
+
+				items
+					.into_iter()
+					.map(tup_to_record)
+					.collect::<Vec<_>>()
+					.pipe(|items| Ok(items))
+			}
+			Err((items, index, e)) => {
+				println!(
+					"[{pid}::{tid:?}] </exhaustively_process_using_scanners {:?} ERR {e}>",
+					std::time::Instant::now() - t0
+				);
+
+				let new_items = { items.into_iter().map(tup_to_record).collect::<Vec<_>>() };
+
+				Err((new_items, index, e))
+			}
+		}
+	};
+	unsafe {block_timing_stop(2);}
+
+	unsafe {block_timing_stop(0);}
+
+	out
+}
+```
+
+```
+0 704.823302ms 1
+1 704.268692ms 0.9992131219293882
+2 529.69µs 0.0007515216913188832
+Total 704.798382ms 0.9999646436207071
+```
+
+2025-11-13 Wk 46 Thu - 12:35 +03:00
+
+```rust
+// in fn scan
+unsafe {block_timing_start(1);}
+let s_trim = s.trim();
+unsafe {block_timing_stop(1);}
+
+unsafe {block_timing_start(2);}
+let try_scan_fn = build_scanner(regex_scanners, variants_by_scan_precedence);
+unsafe {block_timing_stop(2);}
+
+unsafe {block_timing_start(3);}
+let res = comm_regex::exhaustively_process_using_scanners(
+	s_trim,
+	try_scan_fn,
+);
+unsafe {block_timing_stop(3);}
+```
+
+```
+0 703.720916ms 1
+1 659ns 0.0000009364507790187666
+2 69ns 0.00000009805023331152488
+3 703.088322ms 0.9991010726189643
+Total 703.08905ms 0.9991021071199766
+```
+
+2025-11-13 Wk 46 Thu - 12:44 +03:00
+
+```rust
+// in fn exhaustively_process_using_scanners
+unsafe {block_timing_start(0);}
+loop {
+	unsafe {block_timing_start(1);}
+	if (&s[mut_acc_advance..]).is_empty() {
+		break;
+	}
+	unsafe {block_timing_stop(1);}
+
+	unsafe {block_timing_start(2);}
+	let scan_opt = try_scan_fn(&s[mut_acc_advance..]);
+	unsafe {block_timing_stop(2);}
+
+	match scan_opt {
+		Ok((item, advance)) => {
+			mut_acc_items.push(item);
+
+			let prev_acc_advance = mut_acc_advance;
+
+			mut_acc_advance += advance;
+
+			if prev_acc_advance >= s.len() {
+				// We have reached the end
+				break;
+			}
+		}
+
+		Err(e) => {
+			// We have failed to exhaaustively scan the buffer
+			return Err((mut_acc_items, mut_acc_advance, e));
+		}
+	}
+}
+unsafe {block_timing_stop(0);}
+```
+
+```
+0 709.117171ms 1
+1 543.712µs 0.000766744936148218
+2 705.00567ms 0.9942019440959214
+Total 705.549382ms 0.9949686890320696
+```
+
+```rust
+// in fn exhaustively_process_using_scanners
+unsafe {block_timing_start(1);}
+let s1 = &s[mut_acc_advance..];
+unsafe {block_timing_stop(1);}
+
+unsafe {block_timing_start(2);}
+let scan_opt = try_scan_fn(s1);
+unsafe {block_timing_stop(2);}
+```
+
+```
+0 517.894057ms 1
+1 340.492µs 0.0006574549280838726
+2 515.511706ms 0.9953999259736629
+Total 515.852198ms 0.9960573809017469
+```
+
+2025-11-13 Wk 46 Thu - 12:56 +03:00
+
+```rust
+// in fn build_scanner
+    move |s: &str| {
+        unsafe {block_timing_start(0);}
+
+        let s_short_fn = || s.chars().take(50).collect::<String>().pipe(|s_short| {
+            if s != s_short {
+                format!("{s_short}[...]")
+            } else {
+                s_short
+            }
+        });
+
+        unsafe {block_timing_start(1);}
+        let (lexon_type, (whole, captures_opt)) = {
+            let results = variants_by_scan_precedence
+                .iter()
+                .map(|lexon_type| {
+                    comm_regex::regex_capture_once_opt(s, &regex_scanners[lexon_type])
+                        .ok_or(FnErr::RegexCapture)?
+                        .pipe(|(whole, captures_opt)| Ok((lexon_type.clone(), (whole, captures_opt))))
+                })
+                .take_while_inclusive(Result::<_, FnErr>::is_err) // Skip all errors to first success
+                .collect::<Vec<_>>();
+
+            results
+                .into_iter()
+                .last()
+                .ok_or(FnInvErr::NoScannerRan(s_short_fn().to_owned()))?
+                .map_err(|_| FnErr::NoScannerCaptures(s_short_fn().to_owned()))?
+        };
+        unsafe {block_timing_stop(1);}
+
+        let lexon_data_type = lexon_type.to_lexon_data_type();
+
+        unsafe {block_timing_start(2);}
+        let (lexon_type, lexon_data) = {
+			// [...]
+        };
+        unsafe {block_timing_stop(2);}
+
+        unsafe {block_timing_stop(0);}
+
+        Ok(((lexon_type, lexon_data, whole.to_owned()), whole.len()))
+    }
+```
+
+```
+0 701.78562ms 1
+1 287.102888ms 0.40910340682101753
+2 412.933219ms 0.588403648111228
+Total 700.036107ms 0.9975070549322455
+```
+
+So processing the data is now taking longer. In our case, we're processing mostly data blocks, so let's just check against that portion for probe 2.
+
+2025-11-13 Wk 46 Thu - 13:08 +03:00
+
+Actually just gonna probe relative to this section for data buffer processing to find out what's taking long.
+
+```rust
+// in fn build_scanner
+unsafe {block_timing_start(0);}
+let sized_line_tokens = {
+	whole
+		.trim()
+		.lines()
+		.map(|line| line.trim())
+		.filter(|line| !line.is_empty())
+		.map(|line| {
+			unsafe {block_timing_start(1);}
+			let data_size = {
+				// [...]
+			};
+			unsafe {block_timing_stop(1);}
+
+			unsafe {block_timing_start(2);}
+			let line1 = /* [...] */
+			unsafe {block_timing_stop(2);}
+
+			unsafe {block_timing_start(3);}
+			let data = /* [...] */
+			unsafe {block_timing_stop(3);}
+
+			Ok((data_size, data))
+		})
+		.collect::<Result<Vec<_>, _>>()?
+};
+unsafe {block_timing_stop(0);}
+```
+
+```
+0 423.507875ms 1
+1 6.046872ms 0.014278062716071101
+2 79.169572ms 0.1869376620210427
+3 302.336827ms 0.7138871431847637
+Total 387.553271ms 0.9151028679218774
+```
+
+2025-11-13 Wk 46 Thu - 13:23 +03:00
+
+Improved the probe logic to also give us the counts or how many times each probe measured
+
+```
+0 246.406328ms 1 #3615
+1 3.955349ms 0.016052140511586214 #96307
+2 46.541207ms 0.18887991788912173 #96307
+3 171.785647ms 0.6971641044867971 #96307
+Total 222.282203ms 0.902096162887505
+```
+
+2025-11-13 Wk 46 Thu - 13:41 +03:00
+
+For probes 2 and 3, removing instances of `.replace` with string slicing and avoiding the extra `.to_owned()` in probe 2.
+
+```
+0 174.90254ms 1 #3615
+1 5.998224ms 0.03429466490309403 #96307
+2 5.991893ms 0.034258467601442494 #96307
+3 128.32665ms 0.7337037529586476 #96307
+Total 140.316767ms 0.8022568854631843
+```
+
+Since this is a hot path, also removed the invariant defensive checks that should be impossible to hit for probe 3
+
+```
+[164079::ThreadId(1)] </exhaustively_process_using_scanners 291.353201ms #items: 10324>
+
+0 111.485049ms 1 #3615
+1 4.19892ms 0.03766352562665152 #96307
+2 4.16943ms 0.03739900585234528 #96307
+3 78.748107ms 0.7063557643500699 #96307
+Total 87.116457ms 0.7814182958290666
+```
+
+```
+[193872::ThreadId(1)] </exhaustively_process_using_scanners 456.959086ms #items: 10324>
+
+0 159.112641ms 1 #3615
+1 6.003207ms 0.03772929015740491 #96307
+2 6.127045ms 0.03850759412635229 #96307
+3 112.94628ms 0.7098510796511761 #96307
+Total 125.076532ms 0.7860879639349333
+```
+
+There's some variance.
+
+2025-11-13 Wk 46 Thu - 14:27 +03:00
+
+The total number of lexons now is 1,052,337. It used to be 11,421,102 lexons in June 28th 2025.
+
+```
+Repository Lexing stage took 7.093197279s
+```
+
+We've also reduced the time from in just under 100s then to 7s now.

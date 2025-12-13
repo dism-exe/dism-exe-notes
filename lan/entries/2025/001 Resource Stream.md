@@ -18,3 +18,9 @@
 2025-10-13 Wk 42 Mon - 17:04 +03:00
 
 [TREZ modding guide index](https://forums.therockmanexezone.com/updated-links-for-modded-guide-index-t16688.html)
+
+2025-12-11 Wk 50 Thu - 06:17 +03:00
+
+(4)
+
+[TREZ Tools](https://www.therockmanexezone.com/downloads/tools/)

@@ -37,3 +37,7 @@ There is also a `Regex::is_match` and `Regex::find` from the README that can be 
 The README also contains ways of running benchmarks which can come in handy.
 
 They also have a versioning policy that is used where minor version increments can increment the lowest supported rust version. This can be a good idea if we have dependencies like this to track.
+
+2025-11-06 Wk 45 Thu - 02:54 +03:00
+
+Doesn't seem easy to make this change yet in my bn_repo_editor because of non-constant regex strings. And `LazyLock` requires them to be known in compile time.

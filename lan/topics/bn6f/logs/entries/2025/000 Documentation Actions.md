@@ -937,5 +937,106 @@ git commit
  28 files changed, 1486 insertions(+), 1818 deletions(-)
 ```
 
+2025-11-06 Wk 45 Thu - 14:15 +03:00
 
+From [[007 Look into dumping gfx_anim_script]],
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig.sh "sub_8001C44" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8001C94" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8001C52" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8002310" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_800232A" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8002338" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8001CFC" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "LoadGFXAnim" "(script: * GFXAnimScript) -> ()"
+tools/doc_scripts/replacesig.sh "LoadGFXAnims" "(gfx_anim_data_arr: * FFStop32<[GFXAnimScript]>) -> ()"
+```
+
+
+2025-12-11 Wk 50 Thu - 08:33 +03:00
+
+From [[011 Trace and Range dump through ACDC Real world scripts and others]],
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig_data.sh "map00_ACDC_804D0A4"   "[*const MapScript; ACDC_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_804D0AC"          "[*const MapScript; ACDC_TOWN_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_804E92C"          "[*const MapScript; CENTRAL_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_804E940"          "[*const MapScript; CENTRAL_TOWN_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8052D88"          "[*const MapScript; CYBER_ACADEMY_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_8052DB4"          "[*const MapScript; CYBER_ACADEMY_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8059D48"          "[*const MapScript; SEASIDE_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_8059D5C"          "[*const MapScript; SEASIDE_TOWN_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_805E15C"          "[*const MapScript; GREEN_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_805E170"          "[*const MapScript; GREEN_TOWN_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_806063C"          "[*const MapScript; SKY_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_806064C"          "[*const MapScript; SKY_TOWN_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8062F48"          "[*const MapScript; EXPO_SITE_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_8062F60"          "[*const MapScript; EXPO_SITE_NUM_MAPS]"  
+```
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig_data.sh "off_80665A4"          "[*const MapScript; ROBOT_CONTROL_COMP_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_80665AC"          "[*const MapScript; ROBOT_CONTROL_COMP_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8067DC8"          "[*const MapScript; AQUARIUM_COMP_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_8067DD4"          "[*const MapScript; AQUARIUM_COMP_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_80692F8"          "[*const MapScript; JUDGETREE_COMP_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_8069304"          "[*const MapScript; JUDGETREE_COMP_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_806A260"          "[*const MapScript; MR_WEATHER_COMP_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_806A26C"          "[*const MapScript; MR_WEATHER_COMP_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_806AE08"          "[*const MapScript; PAVILION_COMP_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_806AE1C"          "[*const MapScript; PAVILION_COMP_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_806C7B0"          "[*const MapScript; HOMEPAGES_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_806C7CC"          "[*const MapScript; HOMEPAGES_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_806DFB0"          "[*const MapScript; COMPS_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_806DFF0"          "[*const MapScript; COMPS_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_807022C"          "[*const MapScript; COMPS_2_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_807026C"          "[*const MapScript; COMPS_2_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8071EB0"          "[*const MapScript; CENTRAL_AREA_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_8071EBC"          "[*const MapScript; CENTRAL_AREA_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_80758A0"          "[*const MapScript; SEASIDE_AREA_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_80758AC"          "[*const MapScript; SEASIDE_AREA_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8078104"          "[*const MapScript; GREEN_AREA_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_807810C"          "[*const MapScript; GREEN_AREA_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_807952C"          "[*const MapScript; UNDERGROUND_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_8079534"          "[*const MapScript; UNDERGROUND_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_807ADEC"          "[*const MapScript; SKY_ACDC_AREA_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_807ADF8"          "[*const MapScript; SKY_ACDC_AREA_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_807D2F0"          "[*const MapScript; UNDERNET_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_807D300"          "[*const MapScript; UNDERNET_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "dword_807F1F8"          "[*const MapScript; GRAVEYARD_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "dword_807F204"          "[*const MapScript; GRAVEYARD_NUM_MAPS]"  
+```
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit -m "doc sig of all starting init and update map scripts"
+
+# out
+[master 2343100b] doc sig of all starting init and update map scripts
+ 23 files changed, 88 insertions(+), 88 deletions(-)
+```
 

@@ -440,6 +440,8 @@ It seems to be just a word. There's no evidence yet this is a pointer, so let's 
 
 Here is also lucky's [dump](https://gist.github.com/luckytyphlosion/e3601b623b56403ce4891059553698e9) for reference which didn't make it in the repo.
 
+^reminder-215779
+
 Spawn [[005 Dump event flags being used for scripts]] ^spawn-task-59c92c
 
 2025-10-31 Wk 44 Fri - 00:09 +03:00
