@@ -1,1 +1,1 @@
-<%* tp.user.notice(tp) %>
+\<%\* tp.user.notice(tp) %>

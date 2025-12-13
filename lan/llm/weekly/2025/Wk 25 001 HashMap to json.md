@@ -1,12 +1,8 @@
-
-
-
 <hr class="__chatgpt_plugin">
 
 ### 0.1.1 role::user
 
 Basically I have a `HashMap<PathBuf, String>` in Rust. I wanna be able to write/read it to/from JSON. As simple as possible.
-
 
 <hr class="__chatgpt_plugin">
 
@@ -16,7 +12,7 @@ Distilled,
 
 I ended up using
 
-```rust
+````rust
 fn write_path_to_last_modified_to_file(path_to_last_modified: &HashMap<PathBuf, String>, path: &PathBuf) {
     let data = {
         path_to_last_modified
@@ -42,4 +38,4 @@ fn read_path_to_last_modified_from_file(path: &PathBuf) -> Option<HashMap<PathBu
 
     Some(hashmap)
 }
-```
+````

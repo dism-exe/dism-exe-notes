@@ -1,43 +1,44 @@
 ---
 status: todo
 ---
-#gdb #types #automation #tooling #debugging
+
+\#gdb #types #automation #tooling #debugging
 
 # 1 Objective
 
-As mentioned in [[003 Reading and Writing to memory as a struct Incomplete]],
+As mentioned in [003 Reading and Writing to memory as a struct Incomplete](../000%20Setup%20project%20&%20tools%20and%20build%20on%20a%20new%20Linux%20machine/tasks/003%20Reading%20and%20Writing%20to%20memory%20as%20a%20struct%20Incomplete.md),
 
 We are unable to modify memory using C type information because although we document structs they are not present in a format gdb understands.
 
-- [x] Setup a toy gba asm project with ldscript memory mapping
-- [x] Successfully map EWRAM and ROM Structs to specific regions
-- [x] Investigate using these types for read/write/watch in gdb
-- [x] Able to import these symbols in addition to bn6f.elf for enhanced debugging
-- [ ] Parse all structs from bn6f repo using bn_repo_editor
-- [ ] Create a docker container for bn_repo_editor with the ability to generate a final elf to read symbols off of for bn6f.elf
-- [ ] Setup a script that breaks in a function, and writes to memory via a type for persistent intervention
+* [x] Setup a toy gba asm project with ldscript memory mapping
+* [x] Successfully map EWRAM and ROM Structs to specific regions
+* [x] Investigate using these types for read/write/watch in gdb
+* [x] Able to import these symbols in addition to bn6f.elf for enhanced debugging
+* [ ] Parse all structs from bn6f repo using bn_repo_editor
+* [ ] Create a docker container for bn_repo_editor with the ability to generate a final elf to read symbols off of for bn6f.elf
+* [ ] Setup a script that breaks in a function, and writes to memory via a type for persistent intervention
 
 # 2 Journal
 
 2025-06-13 Wk 24 Fri - 07:37
 
-Spawn [[000 Some resources found while building gdb memory automation]] ^spawn-entry-8655cc
+Spawn [000 Some resources found while building gdb memory automation](entries/000%20Some%20resources%20found%20while%20building%20gdb%20memory%20automation.md) <a name="spawn-entry-8655cc" />^spawn-entry-8655cc
 
-Spawn [[000 Setting up basic gba project for debug symbol injection]] ^spawn-task-27a403
+Spawn [000 Setting up basic gba project for debug symbol injection](tasks/000%20Setting%20up%20basic%20gba%20project%20for%20debug%20symbol%20injection.md) <a name="spawn-task-27a403" />^spawn-task-27a403
 
-Spawn [[000 Investigating adding debug struct types and usage]] ^spawn-invst-0eea84
+Spawn [000 Investigating adding debug struct types and usage](investigations/000%20Investigating%20adding%20debug%20struct%20types%20and%20usage.md) <a name="spawn-invst-0eea84" />^spawn-invst-0eea84
 
 2025-06-13 Wk 24 Fri - 12:40
 
-Spawn [[001 Setting up workflow for debug type injection]] ^spawn-task-0bfa3f
+Spawn [001 Setting up workflow for debug type injection](tasks/001%20Setting%20up%20workflow%20for%20debug%20type%20injection.md) <a name="spawn-task-0bfa3f" />^spawn-task-0bfa3f
 
 2025-06-13 Wk 24 Fri - 14:03
 
-Spawn [[002 Continuing impl for bn_repo_editor to parse struct info from the repo]] ^spawn-task-63442a
+Spawn [002 Continuing impl for bn_repo_editor to parse struct info from the repo](tasks/002%20Continuing%20impl%20for%20bn_repo_editor%20to%20parse%20struct%20info%20from%20the%20repo.md) <a name="spawn-task-63442a" />^spawn-task-63442a
 
 2025-07-18 Wk 29 Fri - 23:27
 
-Spawn [[002 Multiline String in Rust]] ^spawn-howto-6df57b
+Spawn [002 Multiline String in Rust](howtos/002%20Multiline%20String%20in%20Rust.md) <a name="spawn-howto-6df57b" />^spawn-howto-6df57b
 
 # 3 Tasks
 
@@ -45,25 +46,25 @@ Spawn [[002 Multiline String in Rust]] ^spawn-howto-6df57b
 
 ## 4.1 Installing visidata gives an error on run
 
-```sh
+````sh
 sudo apt-get install visidata
 vd
-```
+````
 
-```
+````
 Traceback (most recent call last):
   File "/usr/bin/vd", line 6, in <module>
     visidata.main.vd_cli()
     ^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'function' object has no attribute 'vd_cli'
-```
+````
 
 Try to install it through python3 instead.
 
-```sh
+````sh
 sudo apt-get remove visidata
 python3 -m pip install visidata
-```
+````
 
 This works.
 
@@ -75,7 +76,7 @@ I need this for graph data types, graph search, logging, and parallelism with pi
 
 There's on `cargo build`:
 
-```
+````
    Compiling crossbeam-utils v0.8.21                                                                                                                                                          
 error: failed to run custom build command for `yeslogic-fontconfig-sys v6.0.0`
 
@@ -112,27 +113,28 @@ Caused by:
   note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 warning: build failed, waiting for other jobs to finish...
 
-```
-^errorlog1
+````
+
+<a name="errorlog1" />^errorlog1
 
 Distilled,
 
-```
+````
 The system library `fontconfig` required by crate `yeslogic-fontconfig-sys` was not found.
-```
+````
 
 Solution:
 
-```sh
+````sh
 sudo apt-get install fontconfig # probably not needed. only the dev below.
 sudo apt install libfontconfig1-dev
-```
+````
 
 ## 4.3 Perf Paranoid Setting
 
 2025-06-14 Wk 24 Sat - 21:50
 
-```sh
+````sh
 $ CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph --bin bn_repo_editor
 Error:
 Access to performance monitoring and observability operations is limited.
@@ -151,15 +153,15 @@ To make the adjusted perf_event_paranoid setting permanent preserve it
 in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
 failed to sample program, exited with code: Some(255)
 
-```
+````
 
-Currently `/proc/sys/kernel/perf_event_paranoid` is set to `4`. 
+Currently `/proc/sys/kernel/perf_event_paranoid` is set to `4`.
 
 Temporarily set to 1, and reset to 4 later:
 
-```sh
+````sh
 sudo sysctl -w kernel.perf_event_paranoid=1
-```
+````
 
 ## 4.4 pprof Report::write_options error
 
@@ -169,7 +171,7 @@ sudo sysctl -w kernel.perf_event_paranoid=1
 
 In trying to use pprof:
 
-```sh
+````sh
 cargo add pprof
 
 # In your code
@@ -194,12 +196,11 @@ cargo run --release
 
 # Then analyze with pprof
 pprof -http=localhost:8080 profile.pb
-```
+````
 
+Based on instructions in [<a name="tut1" />^tut1](001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#tut1) we encounter the following error:
 
-Based on instructions in [[#^tut1]] we encounter the following error:
-
-```
+````
 error[E0599]: no method named `write_options` found for struct `pprof::Report` in the current scope
    --> src/main.rs:280:34
     |
@@ -207,28 +208,28 @@ error[E0599]: no method named `write_options` found for struct `pprof::Report` i
     |                                  ^^^^^^^^^^^^^ method not found in `Report`
 
 
-```
+````
 
-[[#^docs1|pprof documentation]] offers different instructions, maybe due to version changes.
+[pprof documentation](001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#docs1) offers different instructions, maybe due to version changes.
 
-For the official documentation [[#3.4.2 Pprof Rust setup to create profile.pb|code]] , some changes were necessary:
+For the official documentation [code](001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#342-pprof-rust-setup-to-create-profilepb) , some changes were necessary:
 
-```rust
+````rust
         println!("report: {}", &report);
-```
+````
 
 Seems to give errors. Had to change it to `{:?}`
 
-and 
+and
 
-```
+````
 no method named `pprof` found for struct `pprof::Report` in the current scope  
 method not found in `Report`
-```
+````
 
 Checking the features to see if there are any that bring pprof:
 
-```sh
+````sh
 $ cargo install cargo-feature --locked
 $ cargo feature pprof                 
    Avaliable features for `pprof`
@@ -255,11 +256,11 @@ prost-derive (optional)
 protobuf (optional)
 protobuf-codegen (optional)
 sha2 (optional)
-```
+````
 
 Adding `protobuf-codec` feature fixed pprof missing in Report. Next we get
 
-```
+````
 error[E0599]: no method named `encode` found for struct `Profile` in the current scope
    --> src/main.rs:285:21
     |
@@ -267,57 +268,61 @@ error[E0599]: no method named `encode` found for struct `Profile` in the current
     |                     ^^^^^^ method not found in `Profile`
 
 
-```
+````
 
-Via [[001 General Assist Archive#1 No method pprof in Report|this diagnostic log]], we need to issue the following corrections:
+Via [this diagnostic log](../../../llm/2025/001%20General%20Assist%20Archive.md#1-no-method-pprof-in-report), we need to issue the following corrections:
 
 Include the feature `prost-codec` only instead of protobuf:
-```toml
+
+````toml
 pprof = { version = "0.15.0", features = ["prost-codec"] }
-```
+````
 
 Then include
-```rust
+
+````rust
 use pprof::protos::Message;
-```
+````
 
 This runs, but then we also run into an issue trying to convert it to svg:
 
-```sh
+````sh
 $ ~/go/bin/pprof -svg profile.pb
 Main binary filename not available.
 pprof: failed to execute dot. Is Graphviz installed? Error: exec: "dot": executable file not found in $PATH
-```
+````
 
 Do this:
 
-```sh
+````sh
 sudo apt-get install graphviz
-```
+````
 
 And try again but with the executable as well this time:
 
-```sh
+````sh
 ~/go/bin/pprof -svg target/debug/bn_repo_editor profile.pb
-```
-### 4.4.2 Github issue report on broken pprof example
+````
 
+### 4.4.2 Github issue report on broken pprof example
 
 2025-06-16 Wk 25 Mon - 08:00
 
-- [x] Since this was in the official documentation, we need to report this via a github issue. 
+* [x] Since this was in the official documentation, we need to report this via a github issue.
 
-[[#^issue1|Issue]] submitted
+[Issue](001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#issue1) submitted
+
 ### 4.4.3 Pprof Rust setup to create profile.pb
 
 First, we need to enable the `prost-codec` instead of `protobuf` feature in Cargo.toml:
-```toml
+
+````toml
 pprof = { version = "0.15.0", features = ["prost-codec"] }
-```
+````
 
 Then in the code,
 
-```rust
+````rust
 use pprof::protos::Message;
 use std::fs::File;
 use std::io::Write;
@@ -343,23 +348,25 @@ match guard.report().build() {
     }
     Err(_) => {}
 };
-```
+````
 
-In order to visualize `prof.pb`, we need [[#^link4|pprof]]. Here are the [[#3.5 pprof and Go installation|Installation instructions]].
+In order to visualize `prof.pb`, we need [pprof](001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#link4). Here are the [Installation instructions](001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#35-pprof-and-go-installation).
 
 ## 4.5 pprof and Go installation
 
-To install [[#^link4|pprof]]:
+To install [pprof](001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#link4):
 
-- Get Go. https://go.dev/dl/
+* Get Go. https://go.dev/dl/
 
 (As of this time...)
-```sh
+
+````sh
 wget https://go.dev/dl/go1.24.4.linux-amd64.tar.gz
-```
+````
 
 Then install
-```sh
+
+````sh
 sudo rm -rf /usr/local/go
 sudo tar -C /usr/local -xzf go1.24.4.linux-amd64.tar.gz
 
@@ -367,15 +374,18 @@ sudo tar -C /usr/local -xzf go1.24.4.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
-```
+````
 
 Then get pprof:
-```sh
+
+````sh
 go install github.com/google/pprof@latest
-```
+````
 
 # 5 HowTos
+
 # 6 Investigations
 
 # 7 Ideas
+
 # 8 Side notes

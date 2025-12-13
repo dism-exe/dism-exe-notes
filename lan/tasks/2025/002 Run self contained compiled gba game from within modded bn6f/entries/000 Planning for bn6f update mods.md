@@ -1,14 +1,14 @@
 ---
-parent: "[[002 Run self contained compiled gba game from within modded bn6f]]"
-spawned_by: "[[002 Run self contained compiled gba game from within modded bn6f]]"
+parent: '[[002 Run self contained compiled gba game from within modded bn6f]]'
+spawned_by: '[[002 Run self contained compiled gba game from within modded bn6f]]'
 context_type: entry
 ---
 
-Parent: [[002 Run self contained compiled gba game from within modded bn6f]]
+Parent: [002 Run self contained compiled gba game from within modded bn6f](../002%20Run%20self%20contained%20compiled%20gba%20game%20from%20within%20modded%20bn6f.md)
 
-Spawned by: [[002 Run self contained compiled gba game from within modded bn6f]] 
+Spawned by: [002 Run self contained compiled gba game from within modded bn6f](../002%20Run%20self%20contained%20compiled%20gba%20game%20from%20within%20modded%20bn6f.md)
 
-Spawned in: [[002 Run self contained compiled gba game from within modded bn6f#^spawn-entry-119ebd|^spawn-entry-119ebd]]
+Spawned in: [<a name="spawn-entry-119ebd" />^spawn-entry-119ebd](../002%20Run%20self%20contained%20compiled%20gba%20game%20from%20within%20modded%20bn6f.md#spawn-entry-119ebd)
 
 # 1 Journal
 
@@ -16,7 +16,7 @@ Spawned in: [[002 Run self contained compiled gba game from within modded bn6f#^
 
 2025-09-20 Wk 38 Sat - 06:08
 
-Our data model can constantly get outdated as new developments happen in bn6f. Update mods are self-contained, and so they should be able to update their symbol and type dependencies based on the latest project. But this is currently tied with progress in [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]].
+Our data model can constantly get outdated as new developments happen in bn6f. Update mods are self-contained, and so they should be able to update their symbol and type dependencies based on the latest project. But this is currently tied with progress in [001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation](../../001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md).
 
 We want to be able to parse all repository information, then we can use it in this effort.
 
@@ -24,7 +24,7 @@ We want to be able to parse all repository information, then we can use it in th
 
 2025-09-20 Wk 38 Sat - 06:11
 
-Even though we can't shift the ROM yet, we should be able to re-implement functions of interest by having them `bx` into the address of our mod code, given the function has enough room to be modified in-place without shifting anything. This should allow us to disable or reimplement certain functions. More generally, we could create hooks and they do not have to map to functions but could patch the binary. 
+Even though we can't shift the ROM yet, we should be able to re-implement functions of interest by having them `bx` into the address of our mod code, given the function has enough room to be modified in-place without shifting anything. This should allow us to disable or reimplement certain functions. More generally, we could create hooks and they do not have to map to functions but could patch the binary.
 
 (3)
 

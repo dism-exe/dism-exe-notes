@@ -1,15 +1,15 @@
 ---
-parent: "[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]"
-spawned_by: "[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]"
+parent: '[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]'
+spawned_by: '[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]'
 context_type: howto
 status: done
 ---
 
-Parent: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]
+Parent: [001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation](../001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md)
 
-Spawned by: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]] 
+Spawned by: [001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation](../001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md)
 
-Spawned in: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#^spawn-howto-6df57b|^spawn-howto-6df57b]]
+Spawned in: [<a name="spawn-howto-6df57b" />^spawn-howto-6df57b](../001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#spawn-howto-6df57b)
 
 # 1 Journal
 
@@ -23,7 +23,7 @@ Yes! In my dbmint work.
 
 Like this:
 
-```rust
+````rust
 r#"
     @   thumb_func_start call_m4aSoundMain
     call_m4aSoundMain:
@@ -40,6 +40,6 @@ r#"
 "#//_
 	.replace("    ", "")
 	.replace("@", " "),
-```
+````
 
 This way indentation is preserved how I want it, and the code itself is hygienic and doesn't  mess around with the indent level of the function content.

@@ -1,14 +1,14 @@
 ---
-parent: "[[001 Idea Stream]]"
-spawned_by: "[[001 Idea Stream]]"
+parent: '[[001 Idea Stream]]'
+spawned_by: '[[001 Idea Stream]]'
 context_type: idea
 ---
 
-Parent: [[001 Idea Stream]]
+Parent: [001 Idea Stream](../001%20Idea%20Stream.md)
 
-Spawned by: [[001 Idea Stream]]
+Spawned by: [001 Idea Stream](../001%20Idea%20Stream.md)
 
-Spawned in: [[001 Idea Stream#^spawn-idea-63169a|^spawn-idea-63169a]]
+Spawned in: [<a name="spawn-idea-63169a" />^spawn-idea-63169a](../001%20Idea%20Stream.md#spawn-idea-63169a)
 
 # 1 Journal
 

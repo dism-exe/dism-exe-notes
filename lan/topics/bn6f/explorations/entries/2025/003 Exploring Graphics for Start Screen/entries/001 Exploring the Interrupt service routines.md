@@ -1,23 +1,23 @@
 ---
-parent: "[[003 Exploring Graphics for Start Screen]]"
-spawned_by: "[[000 Wk 42 Exploring Graphics for Start Screen]]"
+parent: '[[003 Exploring Graphics for Start Screen]]'
+spawned_by: '[[000 Wk 42 Exploring Graphics for Start Screen]]'
 context_type: entry
 ---
 
-Parent: [[003 Exploring Graphics for Start Screen]]
+Parent: [003 Exploring Graphics for Start Screen](../003%20Exploring%20Graphics%20for%20Start%20Screen.md)
 
-Spawned by: [[000 Wk 42 Exploring Graphics for Start Screen]]
+Spawned by: [000 Wk 42 Exploring Graphics for Start Screen](000%20Wk%2042%20Exploring%20Graphics%20for%20Start%20Screen.md)
 
-Spawned in: [[000 Wk 42 Exploring Graphics for Start Screen#^spawn-entry-542aac|^spawn-entry-542aac]]
+Spawned in: [<a name="spawn-entry-542aac" />^spawn-entry-542aac](000%20Wk%2042%20Exploring%20Graphics%20for%20Start%20Screen.md#spawn-entry-542aac)
 
 # 1 Journal
 
 2025-10-19 Wk 42 Sun - 09:30 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig.sh "_SetInterruptCallback" "(interrupt_idx: u8, callback: *const ()) -> ()"
-```
+````
 
 So what's `interrupt_idx` in this case? Can we find it in the documentation?
 

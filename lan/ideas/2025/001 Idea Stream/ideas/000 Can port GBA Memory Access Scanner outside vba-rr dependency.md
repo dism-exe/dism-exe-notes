@@ -1,14 +1,14 @@
 ---
-parent: "[[001 Idea Stream]]"
-spawned_by: "[[001 Idea Stream]]"
+parent: '[[001 Idea Stream]]'
+spawned_by: '[[001 Idea Stream]]'
 context_type: idea
 ---
 
-Parent: [[001 Idea Stream]]
+Parent: [001 Idea Stream](../001%20Idea%20Stream.md)
 
-Spawned by: [[001 Idea Stream]]
+Spawned by: [001 Idea Stream](../001%20Idea%20Stream.md)
 
-Spawned in: [[001 Idea Stream#^spawn-idea-a738ef|^spawn-idea-a738ef]]
+Spawned in: [<a name="spawn-idea-a738ef" />^spawn-idea-a738ef](../001%20Idea%20Stream.md#spawn-idea-a738ef)
 
 # 1 Idea
 
@@ -20,4 +20,4 @@ mgba itself has [lua scripting](https://mgba.io/docs/scripting.html) now, but un
 
 # 2 Related
 
-[[003 Explore mgba lua scripting]]
+[003 Explore mgba lua scripting](../../../../tasks/2025/003%20Explore%20mgba%20lua%20scripting/003%20Explore%20mgba%20lua%20scripting.md)

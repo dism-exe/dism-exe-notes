@@ -1,15 +1,15 @@
 ---
-parent: "[[004 Impl dumping for map npc and cutscene scripts]]"
-spawned_by: "[[004 Impl dumping for map npc and cutscene scripts]]"
+parent: '[[004 Impl dumping for map npc and cutscene scripts]]'
+spawned_by: '[[004 Impl dumping for map npc and cutscene scripts]]'
 context_type: task
 status: done
 ---
 
-Parent: [[004 Impl dumping for map npc and cutscene scripts]]
+Parent: [004 Impl dumping for map npc and cutscene scripts](../004%20Impl%20dumping%20for%20map%20npc%20and%20cutscene%20scripts.md)
 
-Spawned by: [[004 Impl dumping for map npc and cutscene scripts]]
+Spawned by: [004 Impl dumping for map npc and cutscene scripts](../004%20Impl%20dumping%20for%20map%20npc%20and%20cutscene%20scripts.md)
 
-Spawned in: [[004 Impl dumping for map npc and cutscene scripts#^spawn-task-2b4257|^spawn-task-2b4257]]
+Spawned in: [<a name="spawn-task-2b4257" />^spawn-task-2b4257](../004%20Impl%20dumping%20for%20map%20npc%20and%20cutscene%20scripts.md#spawn-task-2b4257)
 
 # 1 Journal
 
@@ -21,18 +21,18 @@ We can process those symbols and their sizes from `bn6f.map`, and then read `bn6
 
 2025-10-18 Wk 42 Sat - 12:01 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
 cargo run --bin expt000_read_symbol_data byte_804EA41
 
 # out (error, relevant)
 thread 'main' panicked at src/drivers/symbols.rs:277:18:
 Failed to convert symbol to ea: SymbolNotInMap("byte_804EA41")
-```
+````
 
 It is there.
 
-```rust
+````rust
 // in fn read_map_file_for_symbol_addresses
 content
 	.lines()
@@ -42,17 +42,17 @@ content
 		println!("Helloooo {x:?}");
 		x
 	})
-```
+````
 
 This does not trigger any logs, but putting the map x before that filter, you would see many.
 
-We resolve this by removing the "0x" in eas. But we also have to handle some invalid exceptions: `Helloooo ["0x00000000", "0x1f"]` 
+We resolve this by removing the "0x" in eas. But we also have to handle some invalid exceptions: `Helloooo ["0x00000000", "0x1f"]`
 
 We filter for the invariants that the first token is a hex and not 0, and the second one is not a hex.
 
 2025-10-18 Wk 42 Sat - 12:12 +03:00o
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
 cargo run --bin expt000_read_symbol_data byte_804EA41
 
@@ -60,13 +60,13 @@ cargo run --bin expt000_read_symbol_data byte_804EA41
 mut_buf_len1: 107
 mut_buf_len2: 107
 SymbolData { ea: RomEa { ea: 134539841 }, label: Identifier { s: "byte_804EA41" }, size: 107, data: [5, 255, 58, 0, 82, 234, 4, 8, 38, 233, 187, 9, 8, 0, 0, 0, 0, 2, 0, 15, 136, 234, 4, 8, 2, 16, 31, 45, 235, 4, 8, 2, 32, 47, 219, 235, 4, 8, 2, 48, 63, 59, 236, 4, 8, 2, 64, 79, 141, 236, 4, 8, 2, 80, 95, 214, 236, 4, 8, 2, 96, 111, 225, 237, 4, 8, 1, 246, 238, 4, 8, 31, 255, 244, 22, 41, 180, 30, 1, 2, 2, 4, 5, 8, 31, 255, 245, 22, 2, 0, 0, 172, 234, 4, 8, 2, 1, 1, 198, 234, 4, 8, 1, 246, 238, 4, 8] }
-```
+````
 
 These are harder to read when they're not hex.
 
 The `mut_buf_len` are to check that this fills the buffer, which it does:
 
-```rust
+````rust
 pub fn read_bin_file_at_offset_and_size(path: &Path, size: usize, offset: usize) -> Result<Vec<u8>, std::io::Error> {
     let file = File::open(path)?;
 
@@ -80,16 +80,15 @@ pub fn read_bin_file_at_offset_and_size(path: &Path, size: usize, offset: usize)
 
     Ok(mut_buf)
 }
-```
+````
 
 2025-10-18 Wk 42 Sat - 12:17 +03:00
 
-(HowTo) Checked [rust-by-example display](https://doc.rust-lang.org/rust-by-example/hello/print/print_display.html) for how to `write!` usage with `fmt::Formatter` 
-
+(HowTo) Checked [rust-by-example display](https://doc.rust-lang.org/rust-by-example/hello/print/print_display.html) for how to `write!` usage with `fmt::Formatter`
 
 2025-10-18 Wk 42 Sat - 12:34 +03:00
 
-```
+````
 # in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
 cargo run --bin expt000_read_symbol_data byte_804EA41
 
@@ -110,7 +109,7 @@ SymbolData {
          00, ac, ea, 04, 08, 02, 01, 01, c6, ea, 
          04, 08, 01, f6, ee, 04, 08, ]
 }
-```
+````
 
 Better!
 

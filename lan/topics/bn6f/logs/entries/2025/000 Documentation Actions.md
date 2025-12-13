@@ -1,9 +1,10 @@
 2025-09-27 Wk 39 Sat - 08:27
+
 # 1 Journal
 
 2025-09-25 Wk 39 Thu - 06:15
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig.sh "CopyWords" "(src: *const u32, mut_dest: *mut u32, size: u32) -> ()"
 tools/doc_scripts/replacesig.sh "CopyByEightWords" "(src: *const u32, mut_dest: *mut u32, size: u32) -> ()"
@@ -26,13 +27,13 @@ tools/doc_scripts/replacesig.sh "sub_8123360" "() -> bool"
 ./replacep.sh "main_static_8000454" "main_static_screen_fade_8000454"
 ./replacep.sh "saveMenu_8132CB8" "saveMenu_config_textscript_8132CB8"
 ./replacep.sh "sub_802F756" "load_game_802F756"
-```
+````
 
 Commited `ddc1c1e3`,
 
 2025-09-27 Wk 39 Sat - 08:27
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 
 tools/doc_scripts/replacesig.sh "sub_803F838" "() -> \!zf"
@@ -45,13 +46,13 @@ tools/doc_scripts/replacesig.sh "GetTitleScreenIconCount" "() -> (u8, u16)"
 ./replacep.sh "sub_803E978" "anim_803E978"
 ./replacep.sh "anim_803E978" "startScreen_AnimatePressStart_803E978"
 ./replacep.sh "startScreen_802F574" "startScreen_initGfx_802F574"
-```
+````
 
 2025-10-08 Wk 41 Wed - 03:50 +03:00
 
-From [[000 What writes for startscreen_render_802F544 jumptable?]],
+From [000 What writes for startscreen_render_802F544 jumptable?](../../../functions/entries/2025/002%20startscreen_render_802F544/investigations/000%20What%20writes%20for%20startscreen_render_802F544%20jumptable%3F.md),
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/symbol_list_replacesig_same.sh "startScreen_initGfx_802F574 ho_802F63C load_game_802F756 startscreen_802F60C" "(self: * StartScreen \$r5) -> ()" tools/doc_scripts/symbol_list_replacesig_same.sh "startScreen_initGfx_802F574" "(self: *mut StartScreen \$r5) -> ()"
 
@@ -72,7 +73,7 @@ tools/doc_scripts/replacesig.sh "sub_802F710" "(self: *mut StartScreen \$r5) -> 
 tools/doc_scripts/replacesig.sh "music_80005F2" "(bg_music_indicator: u8) -> ()"
 
 ./replacep.sh "sub_802FD3C" "copyBGTiles_802FD3C" 
-```
+````
 
 2025-10-08 Wk 41 Wed - 04:45 +03:00
 
@@ -80,7 +81,7 @@ Added `ctags -R ewram.s *.s asm/* data/dat* docs/decomp/*.c include/* maps/*` to
 
 2025-10-08 Wk 41 Wed - 06:33 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig.sh "sub_802F8D8" "(self: *mut StartScreen \$r5) -> ()"
 tools/doc_scripts/replacesig.sh "sub_802FC9C" "(self: *const StartScreen \$r5) -> ()"
@@ -107,15 +108,15 @@ tools/doc_scripts/replacesig.sh "sub_803D298" "(self: *mut S2011800 \$r5) -> ()"
 tools/doc_scripts/replacesig.sh "sub_803D2A6" "(self: *const S2011800 \$r5) -> ()"
 
 
-```
+````
 
 Commited `a8ff8d2b`
 
 2025-10-08 Wk 41 Wed - 10:29 +03:00
 
-Added `replacep_rev.sh` for undoing `replacep.sh`. 
+Added `replacep_rev.sh` for undoing `replacep.sh`.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 ./replacep.sh "sub_8005C04" "map_triggerEnterMapOnWarp_8005C04"
 
@@ -134,7 +135,7 @@ tools/doc_scripts/replacesig.sh "sub_8005A50" "(self: * GameState \$r5) -> ()"
 ./replacep.sh "loc_8034C2C" ".ret"
 
 tools/doc_scripts/replacesig.sh "IsCutsceneScriptNonNull" "() -> \!zf"
-```
+````
 
 2025-10-08 Wk 41 Wed - 12:09 +03:00
 
@@ -142,7 +143,7 @@ This `IsCutsceneScriptNonNull` does a `tst r0, r0` which does a logical AND chec
 
 2025-10-08 Wk 41 Wed - 12:17 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 ./replacep.sh "sub_8034BB8" "cutscene_8034BB8"
 
@@ -164,11 +165,11 @@ tools/doc_scripts/replacesig.sh "sub_800585A" "(self: * GameState \$r5) -> ()"
 
 ./replacep.sh "gamestate_8005268" "gamestate_on_map_update_8005268"
 ./replacep.sh "off_8005948" "JumpTable8005948"
-```
+````
 
 2025-10-08 Wk 41 Wed - 15:37 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "doc map update loop and related"
 
@@ -176,9 +177,9 @@ git commit -m "doc map update loop and related"
 [master 69bd59bb] doc map update loop and related
  14 files changed, 363 insertions(+), 115 deletions(-)
  create mode 100755 replacep_rev.sh
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/dism-exe-notes
 git commit
 
@@ -186,11 +187,11 @@ git commit
 [main 62f5228] notes on map trigger & cutscene tracing
  Date: Wed Oct 8 15:37:10 2025 +0300
  6 files changed, 337 insertions(+), 41 deletions(-)
-```
+````
 
 2025-10-11 Wk 41 Sat - 06:51 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 
 tools/doc_scripts/replacesig.sh "SetRenderInfoLCDControl" "(a_00: u16) -> ()"
@@ -271,19 +272,19 @@ tools/doc_scripts/replacesig.sh "gfxTransfer_8033978" "() -> ()"
 ./replacep.sh "sub_8033B08" "noop_8033B08"
 ./replacep.sh "sub_8033B1E" "onUpdate_8033B1E"
 ./replacep.sh "sub_8033A96" "onUpdate_8033A96"
-```
+````
 
 2025-10-11 Wk 41 Sat - 12:11 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 make clean && make -j$(nproc) assets && make -j$(nproc);
 
 # out (relevant)
 bn6f.gba: OK
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "doc map related functions and structs"
 
@@ -291,9 +292,9 @@ git commit -m "doc map related functions and structs"
 [master 0b30a62f] doc map related functions and structs
  85 files changed, 1398 insertions(+), 1180 deletions(-)
  create mode 100644 include/structs/S2011E30.inc
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/dism-exe-notes
 git commit -m "doc map related functions and structs"
 
@@ -304,11 +305,11 @@ git commit -m "doc map related functions and structs"
  create mode 100644 lan/topics/bn6f/explorations/entries/2025/001 Exploring bn6f CentralArea Map/tasks/001 Create Struct S2011E30 used in dispatch_80339CC.md
  create mode 100644 lan/topics/bn6f/explorations/entries/2025/001 Exploring bn6f CentralArea Map/tasks/002 Find what triggers via dispatch_80339CC.md
  create mode 100644 scripts/templater/data/lan/daily/2025/Summary-2025-10-11.md
-```
+````
 
 2025-10-12 Wk 41 Sun - 06:23 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 
 ./replacep.sh "sub_8033948" "sub_8033948"
@@ -325,22 +326,22 @@ tools/doc_scripts/replacesig.sh "ClearEventFlagFromImmediate" "(flag: u16) -> ()
 tools/doc_scripts/replacesig.sh "TestEventFlagFromImmediate" "(flag: u16) -> \!zf"
 tools/doc_scripts/replacesig.sh "TestEventFlag" "(flag: u16) -> \!zf"
 tools/doc_scripts/replacesig.sh "chatbox_runScript" "(archive: *const TextScriptArchive, script_idx: u8) -> ()"
-```
+````
 
 2025-10-14 Wk 42 Tue - 06:17 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "doc map related functions and structs"
 
 # out
 [master c609f71a] doc map related functions and structs
  41 files changed, 820 insertions(+), 803 deletions(-)
-```
+````
 
 2025-10-15 Wk 42 Wed - 07:58 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig_data.sh "byte_804E6AC" "SpriteLoadData[8]"
 tools/doc_scripts/replacesig_data.sh "dword_804E6BE" "SpriteLoadData[1]"
@@ -406,20 +407,20 @@ tools/doc_scripts/replacesig_data.sh "byte_804EDFB" "MapScript"
 tools/doc_scripts/replacesig_data.sh "byte_804EED1" "MapScript"
 tools/doc_scripts/replacesig_data.sh "byte_804EEF6" "MapScript"
 
-```
+````
 
 2025-10-15 Wk 42 Wed - 12:37 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "map doc and partial dump of a mapscript"                                     
 [master be0f03b2] map doc and partial dump of a mapscript
  47 files changed, 488 insertions(+), 317 deletions(-)
-```
+````
 
 2025-10-15 Wk 42 Wed - 13:59 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig.sh "StartCutscene" "(script: *const CutsceneScript, param: u32) -> ()"
 tools/doc_scripts/replacesig_data.sh "byte_80893CC" "CutsceneScript"
@@ -539,22 +540,22 @@ tools/doc_scripts/replacesig_data.sh "NPCScriptsForCentralTown_804F9D8" "(*const
 tools/doc_scripts/replacesig_data.sh "NPCScriptsForLanRoom_8051B5C"     "(*const NPCScript)[1]"         
 tools/doc_scripts/replacesig_data.sh "NPCScriptsForBathroom_8051F48"    "(*const NPCScript)[2]"        
 tools/doc_scripts/replacesig_data.sh "NPCScriptsForAsterland_8051FB0"   "(*const NPCScript)[9]"       
-```
+````
 
 2025-10-15 Wk 42 Wed - 19:32 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit
 
 # out
 [master b74a9507] doc types for NPC and Map scripts for all maps
  49 files changed, 635 insertions(+), 406 deletions(-)
-```
+````
 
 2025-10-16 Wk 42 Thu - 06:20 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 
 tools/doc_scripts/symbol_list_replacesig_data_same.sh \
@@ -570,13 +571,13 @@ tools/doc_scripts/replacesig_data.sh "off_8143078" "(*const CutsceneScript)[2]"
 # after dword_8089128, byte_80893CC is already labeled
 # after byte_8089DD8, byte_8086678+32 is not formed yet
 # after byte_8086678+32, `sub_8086FD8`, `sub_808FE74`, `sub_808CB0C` start cutscenes generally
-```
+````
 
 2025-10-18 Wk 42 Sat - 15:29 +03:00
 
 Retyping array types to be consistent with Rust-style `[T; N]`. It is also to make pointers to arrays unambiguous `*const [T; N]`. Arrays are strictly contiguous memory here, and are not doubling as pointers as is done with C.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig_data.sh "dword_8143B1C" "[*const CutsceneScript; 2]"         
 tools/doc_scripts/replacesig_data.sh "off_8143078" "[*const CutsceneScript; 2]"         
@@ -660,21 +661,21 @@ tools/doc_scripts/replacesig_data.sh "BathroomObjectSpawns" "[MapObjectSpawnData
 tools/doc_scripts/replacesig_data.sh "AsterLandObjectSpawns" "[MapObjectSpawnData; 4]"
 tools/doc_scripts/replacesig_data.sh "off_804E738" "[*const MapObjectSpawnData; CENTRAL_TOWN_NUM_MAPS]"
 tools/doc_scripts/replacesig_data.sh "ChipDataArr_8021DA8" "[*const ChipData; 206]"
-```
+````
 
 2025-10-19 Wk 42 Sun - 08:47 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git lg
 
 # out (relevant)
 * 9de65bf2 (HEAD -> master) retype array types
-```
+````
 
 2025-10-19 Wk 42 Sun - 09:26 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig.sh "_SetInterruptCallback" "(interrupt_idx: u8, callback: *const ()) -> ()"
 
@@ -714,13 +715,13 @@ tools/doc_scripts/replacesig.sh "removed_8007FEA" "(self: * BattleState \$r5) ->
 ./replacep.sh "eS2011800" "eLogoScreenState" 
 ./replace.sh "oS2011800" "oLogoScreenState" # Won't change individual instances
 mv include/structs/S2011800.inc include/structs/LogoScreenState.inc
-```
+````
 
 Oops, I replaced `eS2011800` to `LogoScreenState`, so gotta replace where they are used, which is luckily not many.G
 
 2025-10-19 Wk 42 Sun - 22:53 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "doc logo screen module"
 
@@ -731,19 +732,19 @@ git commit -m "doc logo screen module"
  create mode 100644 include/structs/S200A290.inc
  create mode 100644 include/structs/S200F348.inc
  delete mode 100644 include/structs/S2011800.inc
-```
+````
 
 2025-10-19 Wk 42 Sun - 23:42 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 
 tools/doc_scripts/replacesig.sh "CopyBackgroundTiles" "(j: u32, i: u32, which_tile_block_32x32: u32, tile_ids: *const u16, j_size: u32, i_size: u32 ) -> ()"
-```
+````
 
 2025-10-23 Wk 43 Thu - 15:31 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 ./replacep.sh "copyTileData_803D2B8" "logoScreen_loadLogoTiles_803D2B8"
 ./replacep.sh "unk_2014A00" "eDecompBuffer2014A00"
@@ -757,11 +758,11 @@ tools/doc_scripts/replacesig.sh "CopyBackgroundTiles" "(j: u32, i: u32, which_ti
 ./replacep.sh "comp_86C3E94" "CompCapcomLogoTilemap_86C3E94"
 mv data/compressed/comp_86C3528.lz77 data/compressed/CompCapcomLogoTileset_86C3528.lz77
 mv data/compressed/comp_86C3E94.lz77 data/compressed/CompCapcomLogoTilemap_86C3E94.lz77
-```
+````
 
 2025-10-23 Wk 43 Thu - 23:13 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "doc logo screen tiles" 
 
@@ -770,11 +771,11 @@ git commit -m "doc logo screen tiles"
  28 files changed, 396 insertions(+), 271 deletions(-)
  rename data/compressed/{comp_86C3E94.lz77 => CompCapcomLogoTilemap_86C3E94.lz77} (100%)
  rename data/compressed/{comp_86C3528.lz77 => CompCapcomLogoTileset_86C3528.lz77} (100%)
-```
+````
 
 2025-10-25 Wk 43 Sat - 19:00 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig_data.sh "off_8032A20" "[MapBGDescriptor; ACDC_TOWN_NUM_MAPS]"
 tools/doc_scripts/replacesig_data.sh "off_8032A38" "[MapBGDescriptor; CENTRAL_TOWN_NUM_MAPS]"
@@ -907,35 +908,134 @@ tools/doc_scripts/replacesig_data.sh "dword_803393E" "[u8; UNDERNET_NUM_MAPS]"
 tools/doc_scripts/replacesig_data.sh "byte_8033942" "[u8; GRAVEYARD_NUM_MAPS]"
 
 ./replacep.sh "unk_2027A00" "DecompBuf_2027A00"
-```
+````
 
 2025-10-26 Wk 43 Sun - 06:43 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit -m "doc map distributed graphics data"
 
 # out
 [master 77ed9e64] doc map distributed graphics data
  11 files changed, 1184 insertions(+), 679 deletions(-)
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 ./replacep.sh "byte_86D372C" "comp_86D372C"
 ./replacep.sh "byte_86DB014" "comp_86DB014"
-```
+````
 
-A lot of changes were done in [[004 Marking pointers to data passed to decompAndCopyData]]
+A lot of changes were done in [004 Marking pointers to data passed to decompAndCopyData](../../../explorations/entries/2025/001%20Exploring%20bn6f%20CentralArea%20Map/tasks/004%20Marking%20pointers%20to%20data%20passed%20to%20decompAndCopyData.md)
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit
 
 # out
 [master 1785d754] mark all compressed and other pointers used by decompAndCopyData
  28 files changed, 1486 insertions(+), 1818 deletions(-)
-```
+````
 
+2025-11-06 Wk 45 Thu - 14:15 +03:00
 
+From [007 Look into dumping gfx_anim_script](../../../../../tasks/2025/004%20Impl%20dumping%20for%20map%20npc%20and%20cutscene%20scripts/tasks/007%20Look%20into%20dumping%20gfx_anim_script.md),
 
+````sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig.sh "sub_8001C44" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8001C94" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8001C52" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8002310" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_800232A" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8002338" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8001CFC" "(self: * GFXAnimState \$r7, params: * GFXAnimDataNext) -> ()"
+tools/doc_scripts/replacesig.sh "LoadGFXAnim" "(script: * GFXAnimScript) -> ()"
+tools/doc_scripts/replacesig.sh "LoadGFXAnims" "(gfx_anim_data_arr: * FFStop32<[GFXAnimScript]>) -> ()"
+````
+
+2025-12-11 Wk 50 Thu - 08:33 +03:00
+
+From [011 Trace and Range dump through ACDC Real world scripts and others](../../../../../tasks/2025/004%20Impl%20dumping%20for%20map%20npc%20and%20cutscene%20scripts/tasks/011%20Trace%20and%20Range%20dump%20through%20ACDC%20Real%20world%20scripts%20and%20others.md),
+
+````sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig_data.sh "map00_ACDC_804D0A4"   "[*const MapScript; ACDC_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_804D0AC"          "[*const MapScript; ACDC_TOWN_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_804E92C"          "[*const MapScript; CENTRAL_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_804E940"          "[*const MapScript; CENTRAL_TOWN_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8052D88"          "[*const MapScript; CYBER_ACADEMY_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_8052DB4"          "[*const MapScript; CYBER_ACADEMY_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8059D48"          "[*const MapScript; SEASIDE_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_8059D5C"          "[*const MapScript; SEASIDE_TOWN_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_805E15C"          "[*const MapScript; GREEN_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_805E170"          "[*const MapScript; GREEN_TOWN_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_806063C"          "[*const MapScript; SKY_TOWN_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_806064C"          "[*const MapScript; SKY_TOWN_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8062F48"          "[*const MapScript; EXPO_SITE_NUM_MAPS]"  
+tools/doc_scripts/replacesig_data.sh "off_8062F60"          "[*const MapScript; EXPO_SITE_NUM_MAPS]"  
+````
+
+````sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+tools/doc_scripts/replacesig_data.sh "off_80665A4"          "[*const MapScript; ROBOT_CONTROL_COMP_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_80665AC"          "[*const MapScript; ROBOT_CONTROL_COMP_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8067DC8"          "[*const MapScript; AQUARIUM_COMP_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_8067DD4"          "[*const MapScript; AQUARIUM_COMP_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_80692F8"          "[*const MapScript; JUDGETREE_COMP_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_8069304"          "[*const MapScript; JUDGETREE_COMP_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_806A260"          "[*const MapScript; MR_WEATHER_COMP_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_806A26C"          "[*const MapScript; MR_WEATHER_COMP_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_806AE08"          "[*const MapScript; PAVILION_COMP_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_806AE1C"          "[*const MapScript; PAVILION_COMP_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_806C7B0"          "[*const MapScript; HOMEPAGES_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_806C7CC"          "[*const MapScript; HOMEPAGES_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_806DFB0"          "[*const MapScript; COMPS_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_806DFF0"          "[*const MapScript; COMPS_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_807022C"          "[*const MapScript; COMPS_2_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_807026C"          "[*const MapScript; COMPS_2_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8071EB0"          "[*const MapScript; CENTRAL_AREA_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_8071EBC"          "[*const MapScript; CENTRAL_AREA_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_80758A0"          "[*const MapScript; SEASIDE_AREA_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_80758AC"          "[*const MapScript; SEASIDE_AREA_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_8078104"          "[*const MapScript; GREEN_AREA_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_807810C"          "[*const MapScript; GREEN_AREA_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_807952C"          "[*const MapScript; UNDERGROUND_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_8079534"          "[*const MapScript; UNDERGROUND_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_807ADEC"          "[*const MapScript; SKY_ACDC_AREA_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_807ADF8"          "[*const MapScript; SKY_ACDC_AREA_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "off_807D2F0"          "[*const MapScript; UNDERNET_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "off_807D300"          "[*const MapScript; UNDERNET_NUM_MAPS]"  
+
+tools/doc_scripts/replacesig_data.sh "dword_807F1F8"          "[*const MapScript; GRAVEYARD_NUM_MAPS]" 
+tools/doc_scripts/replacesig_data.sh "dword_807F204"          "[*const MapScript; GRAVEYARD_NUM_MAPS]"  
+````
+
+````sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+git commit -m "doc sig of all starting init and update map scripts"
+
+# out
+[master 2343100b] doc sig of all starting init and update map scripts
+ 23 files changed, 88 insertions(+), 88 deletions(-)
+````

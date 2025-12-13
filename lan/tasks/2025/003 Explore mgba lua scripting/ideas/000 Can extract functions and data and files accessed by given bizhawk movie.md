@@ -1,18 +1,18 @@
 ---
-parent: "[[003 Explore mgba lua scripting]]"
-spawned_by: "[[000 Create bn6f TAS movie for reproducible debugging using bizhawk]]"
+parent: '[[003 Explore mgba lua scripting]]'
+spawned_by: '[[000 Create bn6f TAS movie for reproducible debugging using bizhawk]]'
 context_type: idea
 ---
 
-Parent: [[003 Explore mgba lua scripting]]
+Parent: [003 Explore mgba lua scripting](../003%20Explore%20mgba%20lua%20scripting.md)
 
-Spawned by: [[000 Create bn6f TAS movie for reproducible debugging using bizhawk]]
+Spawned by: [000 Create bn6f TAS movie for reproducible debugging using bizhawk](../tasks/000%20Create%20bn6f%20TAS%20movie%20for%20reproducible%20debugging%20using%20bizhawk.md)
 
-Spawned in: [[000 Create bn6f TAS movie for reproducible debugging using bizhawk#^spawn-idea-ed4f94|^spawn-idea-ed4f94]]
+Spawned in: [<a name="spawn-idea-ed4f94" />^spawn-idea-ed4f94](../tasks/000%20Create%20bn6f%20TAS%20movie%20for%20reproducible%20debugging%20using%20bizhawk.md#spawn-idea-ed4f94)
 
 # 1 Related
 
-[[001 Idea Stream]]
+[001 Idea Stream](../../../../ideas/2025/001%20Idea%20Stream/001%20Idea%20Stream.md)
 
 # 2 Journal
 
@@ -22,6 +22,5 @@ So a [bizhawk](https://github.com/TASEmulators/BizHawk) movie allows us to have 
 
 Some ideas:
 
-- We can get all functions accessed. Given a symbol map we can know where the functions are and we can trace log them whenever we find ourselves in their first instruction. We can generate a log of functions accessed as a sequence which can be processed to give distinct functions accessed.
-- Given an optonal folder path of C-struct definitions, and a CSV detailing Type + address, we can get a log of structs written and read. We should support also no struct but just a buffer size at some address, and we can give a log of sized reads and writes to it. 
-
+* We can get all functions accessed. Given a symbol map we can know where the functions are and we can trace log them whenever we find ourselves in their first instruction. We can generate a log of functions accessed as a sequence which can be processed to give distinct functions accessed.
+* Given an optonal folder path of C-struct definitions, and a CSV detailing Type + address, we can get a log of structs written and read. We should support also no struct but just a buffer size at some address, and we can give a log of sized reads and writes to it.

@@ -1,19 +1,19 @@
 ---
-parent: "[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]"
-spawned_by: "[[000 Panics when processing Lexer files]]"
+parent: '[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]'
+spawned_by: '[[000 Panics when processing Lexer files]]'
 context_type: issue
 status: todo
 ---
 
-Parent: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]
+Parent: [001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation](../001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md)
 
-Spawned by: [[000 Panics when processing Lexer files]] 
+Spawned by: [000 Panics when processing Lexer files](000%20Panics%20when%20processing%20Lexer%20files.md)
 
-Spawned in: [[000 Panics when processing Lexer files#^spawn-issue-64d4c9|^spawn-issue-64d4c9]]
+Spawned in: [<a name="spawn-issue-64d4c9" />^spawn-issue-64d4c9](000%20Panics%20when%20processing%20Lexer%20files.md#spawn-issue-64d4c9)
 
 # 1 Journal
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/rs_repro
 regex=$(cat <<'EOF'
 (?x)\\ (
@@ -50,9 +50,9 @@ regex parse error:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 error: repetition quantifier expects a valid decimal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/rs_repro
 regex=$(cat <<'EOF'
 (?x)\\\\ (\n\\\\\t\t\t |\n[abefnprtv'\"?]   |\n[0-3]\\d{,2}\t |\n[4-7]\\d?\t\t|\nx[a-fA-F0-9]{,2} |\nu[a-fA-F0-9]{,4} |\nU[a-fA-F0-9]{,8} )
@@ -74,5 +74,4 @@ error: repetition quantifier expects a valid decimal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 )
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
-
+````

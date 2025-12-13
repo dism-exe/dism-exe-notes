@@ -1,4 +1,3 @@
-
 # 1 No method pprof in Report
 
 2025-06-16 Wk 25 Mon - 07:24
@@ -8,13 +7,14 @@
 ### 1.1.1 role::user
 
 First, we need to enable the `protobuf` feature in Cargo.toml:
-```
+
+````
 pprof = { version = "0.15.0", features = ["protobuf"] }
-```
+````
 
 Then in the code,
 
-```rust
+````rust
 use pprof::ProfilerGuard;
 use std::fs::File;
 use std::io::Write;
@@ -40,16 +40,16 @@ match guard.report().build() {
     }
     Err(_) => {}
 };
-```
+````
 
-```
+````
 no method named `pprof` found for struct `pprof::Report` in the current scope  
 method not found in `Report`
-```
+````
 
 Checking the features to see if there are any that bring pprof:
 
-```sh
+````sh
 $ cargo install cargo-feature --locked
 $ cargo feature pprof                 
    Avaliable features for `pprof`
@@ -76,8 +76,7 @@ prost-derive (optional)
 protobuf (optional)
 protobuf-codegen (optional)
 sha2 (optional)
-```
-
+````
 
 <hr class="__chatgpt_plugin">
 
@@ -87,24 +86,23 @@ Distilled,
 
 Add feature protobuf-codec
 
-
 <hr class="__chatgpt_plugin">
 
 ### 1.1.3 role::user
 
 That worked, new error:
 
-```
+````
 error[E0599]: no method named `encode` found for struct `Profile` in the current scope
    --> src/main.rs:285:21
     |
 285 |             profile.encode(&mut content).unwrap();
     |                     ^^^^^^ method not found in `Profile`
-```
+````
 
 Edit:
-- This is the code suggested by the official documentation so I expect it to work.
 
+* This is the code suggested by the official documentation so I expect it to work.
 
 <hr class="__chatgpt_plugin">
 
@@ -112,15 +110,13 @@ Edit:
 
 Distilled,
 
-- Use prost-codec feature instead of protobuf-codec.
-
-
+* Use prost-codec feature instead of protobuf-codec.
 
 <hr class="__chatgpt_plugin">
 
 ### 1.1.5 role::user
 
-```
+````
 error[E0599]: no method named `encode` found for struct `Profile` in the current scope
    --> src/main.rs:285:21
     |
@@ -142,11 +138,11 @@ help: there is a method `encode_raw` with a similar name
 285 |             profile.encode_raw(&mut content).unwrap();
     |                           ++++
 
-```
+````
 
 On `cargo add prost` and `use prost::Message` you get:
 
-```
+````
 error[E0599]: no method named `encode` found for struct `Profile` in the current scope
    --> src/main.rs:286:21
     |
@@ -190,8 +186,7 @@ help: there is a method `encode_raw` with a similar name
 286 |             profile.encode_raw(&mut content).unwrap();
     |                           ++++
 
-```
-
+````
 
 <hr class="__chatgpt_plugin">
 
@@ -201,12 +196,11 @@ Distilled,
 
 You don’t need to import your own version of `prost` — `pprof`'s version should be used.
 
-
 <hr class="__chatgpt_plugin">
 
 ### 1.1.7 role::user
 
-```
+````
 error[E0432]: unresolved import `prost`
   --> src/main.rs:16:5
    |
@@ -215,9 +209,9 @@ error[E0432]: unresolved import `prost`
    |
    = help: if you wanted to use a crate named `prost`, use `cargo add prost` to add it to your `Cargo.toml`
 
-```
+````
 
-```
+````
 error[E0599]: no method named `encode` found for struct `Profile` in the current scope
    --> src/main.rs:286:21
     |
@@ -238,20 +232,23 @@ help: there is a method `encode_raw` with a similar name
     |
 286 |             profile.encode_raw(&mut content).unwrap();
     |                           ++++
-```
+````
 
 Again what set of features to include? This is official documentation. I expect this to work.
 
 This is what I have so far:
-```toml
+
+````toml
 pprof = { version = "0.15.0", features = ["protobuf", "prost-codec"] }
-```
+````
 
 Edit:
-- Why do you recommend to remove protobuf? That's literally recommended by the [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#^docs1|documentation]]. Let's reset, what I should be needing is only protobuf, so diagnose again:
-```toml
+
+* Why do you recommend to remove protobuf? That's literally recommended by the [documentation](../../tasks/2025/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#docs1). Let's reset, what I should be needing is only protobuf, so diagnose again:
+
+````toml
 pprof = { version = "0.15.0", features = ["protobuf"] }
-```
+````
 
 <hr class="__chatgpt_plugin">
 
@@ -259,17 +256,17 @@ pprof = { version = "0.15.0", features = ["protobuf"] }
 
 Distilled,
 
-- `protobuf` and `prost-codec` are incompatible
+* `protobuf` and `prost-codec` are incompatible
 
-```toml
+````toml
 pprof = { version = "0.15.0", features = ["prost-codec"] }
-```
+````
 
 Then include
-```rust
-use pprof::protos::Message;
-```
 
+````rust
+use pprof::protos::Message;
+````
 
 <hr class="__chatgpt_plugin">
 
@@ -279,14 +276,13 @@ OK
 
 # 2 Finding ~/go/bin/pprof for profile.proto format
 
-
-
 <hr class="__chatgpt_plugin">
 
 ### 2.1.1 role::user
 
-The documentation in [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#^docs1|pprof]] points out:
-```
+The documentation in [pprof](../../tasks/2025/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#docs1) points out:
+
+````
 With `protobuf` feature enabled, `pprof-rs` can also output [`profile.proto`](https://github.com/google/pprof/blob/master/proto/profile.proto) format.
 
 ```rust
@@ -303,13 +299,13 @@ match guard.report().build() {
     }
     Err(_) => {}
 };
-```
+````
 
 Then you can use `pprof` command with `profile.pb`. For example:
 
-```shell
+````shell
 ~/go/bin/pprof -svg profile.pb
-```
+````
 
 But I am unsure how to get this ~/go/bin/pprof tool. Is it this?
 
@@ -327,15 +323,17 @@ No, not runtime/pprof. It's https://github.com/google/pprof
 
 Installation:
 
-- Get Go. https://go.dev/dl/
+* Get Go. https://go.dev/dl/
 
 (As of this time...)
-```sh
+
+````sh
 wget https://go.dev/dl/go1.24.4.linux-amd64.tar.gz
-```
+````
 
 Then install
-```sh
+
+````sh
 sudo rm -rf /usr/local/go
 sudo tar -C /usr/local -xzf go1.24.4.linux-amd64.tar.gz
 
@@ -343,32 +341,33 @@ sudo tar -C /usr/local -xzf go1.24.4.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
-```
+````
 
 Then get pprof:
-```sh
+
+````sh
 go install github.com/google/pprof@latest
-```
+````
 
 Once you have a `profile.pb` file generated from your Rust app using `pprof-rs`, you can visualize it with:
-```sh
+
+````sh
 pprof -svg profile.pb > out.svg
-```
+````
 
 Or open it in interactive mode:
-```
+
+````
 pprof -http=:8080 profile.pb
-```
+````
 
 # 3 Disable openblas dependencies from building
-
-
 
 <hr class="__chatgpt_plugin">
 
 ### 3.1.1 role::user
 
-```
+````
 ndarray = { version = "0.16.1", optional = true}
 ndarray-linalg = { version = "0.16", features = ["openblas"], optional = true}
 
@@ -376,55 +375,52 @@ ndarray-linalg = { version = "0.16", features = ["openblas"], optional = true}
 version = "0.9"
 default-features = false
 features = ["openblas"]
-```
+````
 
 ndarray and ndarray-linalg are optional. They only build if this feature is used:
 
-```
+````
 [features]
 default = []
 use_ndarray = ["ndarray", "ndarray-linalg"]
-```
+````
 
 But the `[dependencies.blas-src]` bit seems to be building. I see in the build openblas. How do you disable this?
-
-
 
 <hr class="__chatgpt_plugin">
 
 ### 3.1.2 role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
 
-
-```toml
+````toml
 # Remove this section entirely
 #[dependencies.blas-src]
 #version = "0.9"
 #default-features = false
 #features = ["openblas"]
-```
+````
 
-```toml
+````toml
 [features]
 default = []
 use_ndarray = ["ndarray", "ndarray-linalg", "blas-src"]
-```
+````
 
-And add the blas-src` dependency conditionally:
+And add the blas-src\` dependency conditionally:
 
-```toml
+````toml
 [dependencies]
 blas-src = { version = "0.9", optional = true }
-```
-
+````
 
 <hr class="__chatgpt_plugin">
 
 ### 3.1.3 role::user
 
-I see. So the `#[dependencies.blas-src]` was just alternative syntax for 
-```
+I see. So the `#[dependencies.blas-src]` was just alternative syntax for
+
+````
 blas-src = { version = "0.9", default-features = false, features = ["openblas"], optional = true }
-```
+````
 
 without the optional.
 
@@ -432,31 +428,33 @@ without the optional.
 
 ### 3.1.4 role::assistant<span style="font-size: small;"> (gemma3:27b-it-qat)</span>
 
-Yes, that's correct. 
+Yes, that's correct.
 
 # 4 Cargo build error on fontconfig
 
 ### 4.1.1 Distilled
 
 Missing:
+
 1. yeslogic-fontconfig-sys
-2. fontconfig
+1. fontconfig
 
 <hr class="__chatgpt_plugin">
 
 ### 4.1.2 role::user
 
-
-Hi. What to do about [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation#^errorlog1|log]]
+Hi. What to do about [log](../../tasks/2025/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation/001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md#errorlog1)
 
 Edit:
+
 1. The error persists even after installing fontconfig
-	1. The system library `fontconfig` required by crate `yeslogic-fontconfig-sys` was not found.
-	2. fontconfig is already the newest version (2.15.0-2.2ubuntu1).
+   1. The system library `fontconfig` required by crate `yeslogic-fontconfig-sys` was not found.
+   1. fontconfig is already the newest version (2.15.0-2.2ubuntu1).
 
 (Attempt 1)
 LLM Query Response:
-```sh
+
+````sh
 $ pkg-config --libs --cflags fontconfig
 Package fontconfig was not found in the pkg-config search path.
 Perhaps you should add the directory containing `fontconfig.pc'
@@ -466,30 +464,29 @@ $ ls -al /usr/lib/pkgconfig
 total 8
 drwxr-xr-x   2 root root 4096 Oct 20  2024 .
 drwxr-xr-x 111 root root 4096 Jun 13 15:12 ..
-```
+````
 
 Rectification
-```sh
+
+````sh
 # Add to config
 export PKG_CONFIG_PATH="/usr/lib/pkgconfig:$PKG_CONFIG_PATH" 
-```
+````
 
 Problem Persists.
 
 (Attempt 2)
 
 LLM Query Response
-```sh
+
+````sh
 $ sudo find /usr -name fontconfig.pc
 [empty output]
 $ ls /usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc                           
 ls: cannot access '/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc': No such file or directory
 $ ls /usr/local/lib/pkgconfig/fontconfig.pc
 ls: cannot access '/usr/local/lib/pkgconfig/fontconfig.pc': No such file or directory
-```
-
-
-
+````
 
 <hr class="__chatgpt_plugin">
 
@@ -497,22 +494,17 @@ ls: cannot access '/usr/local/lib/pkgconfig/fontconfig.pc': No such file or dire
 
 Distilled
 
-```sh
+````sh
 sudo apt install libfontconfig1-dev
-```
-
+````
 
 # 5 Rust test project structure
-
-
 
 <hr class="__chatgpt_plugin">
 
 ### 5.1.1 role::user
 
 Give a Rust project template with tests the way it is conventionally done.
-
-
 
 <hr class="__chatgpt_plugin">
 
@@ -522,7 +514,7 @@ Distilled
 
 ### 5.1.3 📁 Project Structure
 
-```
+````
 my_project/
 ├── Cargo.toml
 ├── src/
@@ -532,10 +524,11 @@ my_project/
 │   └── integration_test.rs
 └── README.md
 
-```
+````
 
-- In Rust, **unit tests** are usually placed **inline within the same file as the code they test**
-```rust
+* In Rust, **unit tests** are usually placed **inline within the same file as the code they test**
+
+````rust
 // src/lib.rs
 
 /// Adds two numbers together.
@@ -553,57 +546,59 @@ mod tests {
         assert_eq!(add(2, 3), 5);
     }
 }
-```
+````
 
-- Integration tests do end-to-end behavior. Unit tests are exposed to private internals so are in the same file.
+* Integration tests do end-to-end behavior. Unit tests are exposed to private internals so are in the same file.
 
 📄 `tests/integration_test.rs`
-```rust
+
+````rust
 use my_project::add;
 
 #[test]
 fn integration_add() {
     assert_eq!(add(10, 20), 30);
 }
-```
+````
 
-- These crates are **only compiled and run during `cargo test`**, so there's no need to guard them with `#[cfg(test)]`.
-
+* These crates are **only compiled and run during `cargo test`**, so there's no need to guard them with `#[cfg(test)]`.
 
 # 6 Get Vscode rust-analyzer to acknowledge enabled feature
-
 
 <hr class="__chatgpt_plugin">
 
 ### 6.1.1 role::user
 
+So I used
 
-So I used 
-
-```sh
+````sh
 cargo build --features use_serde
-```
+````
 
-In accordance with the [docs](<https://doc.rust-lang.org/cargo/reference/features.html>)
+In accordance with the [docs](https://doc.rust-lang.org/cargo/reference/features.html)
 
 But vscode rust-analyzer still grays out anything that has
-```
-#[cfg(feature = "use_serde")]
-```
 
-And says 
-```
+````
+#[cfg(feature = "use_serde")]
+````
+
+And says
+
+````
 code is inactive due to #[cfg] directives: feature = "use_serde" is disabledrust-analyzer[inactive-code](https://rust-analyzer.github.io/book/diagnostics.html#inactive-code)
-```
+````
 
 Based on LLM Queries:
 Issue persists despite:
-1.  Ctrl+Shift+P "Reload Window"
-2. cargo clean before running `cargo build --features use_serde`
-3. Restarting vscode
 
-- Cargo.toml is correctly configured:
-```toml
+1. Ctrl+Shift+P "Reload Window"
+1. cargo clean before running `cargo build --features use_serde`
+1. Restarting vscode
+
+* Cargo.toml is correctly configured:
+
+````toml
 [features]
 default = []
 use_serde = ["csv", "serde"]
@@ -611,8 +606,7 @@ use_serde = ["csv", "serde"]
 [dependencies]
 serde = { version = "1.0.219", features = ["derive"], optional = true}
 csv = { version = "1.3.1", optional = true }
-```
-
+````
 
 <hr class="__chatgpt_plugin">
 
@@ -622,8 +616,8 @@ Distilled,
 
 This must be explicitly configured in global vscode settings or local (`.vscode/settings.json` in your project folder)
 
-```json
+````json
 "rust-analyzer.cargo.features": ["use_serde"]
-```
+````
 
 Then reload the window.

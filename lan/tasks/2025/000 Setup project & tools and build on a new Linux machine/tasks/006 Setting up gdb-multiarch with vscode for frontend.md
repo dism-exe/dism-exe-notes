@@ -1,15 +1,15 @@
 ---
-parent: "[[000 Setup project & tools and build on a new Linux machine]]"
-spawned_by: "[[004 Setting up a different gdb frontend]]"
+parent: '[[000 Setup project & tools and build on a new Linux machine]]'
+spawned_by: '[[004 Setting up a different gdb frontend]]'
 context_type: task
 status: todo
 ---
 
-Parent: [[000 Setup project & tools and build on a new Linux machine]]
+Parent: [000 Setup project & tools and build on a new Linux machine](../000%20Setup%20project%20&%20tools%20and%20build%20on%20a%20new%20Linux%20machine.md)
 
-Spawned by: [[004 Setting up a different gdb frontend]] 
+Spawned by: [004 Setting up a different gdb frontend](004%20Setting%20up%20a%20different%20gdb%20frontend.md)
 
-Spawned in: [[004 Setting up a different gdb frontend#^spawn-task-411c54|^spawn-task-411c54]]
+Spawned in: [<a name="spawn-task-411c54" />^spawn-task-411c54](004%20Setting%20up%20a%20different%20gdb%20frontend.md#spawn-task-411c54)
 
 # 1 Journal
 
@@ -17,15 +17,15 @@ Spawned in: [[004 Setting up a different gdb frontend#^spawn-task-411c54|^spawn-
 
 Open vscode in the bn6f root directory (the one with bn6f.elf)
 
-```sh
+````sh
 code . &
-```
+````
 
 Enter the `Run and Debug` (for example with Ctrl+Shift+D) and click `create a launch.json file`
 
 paste the following there (for linux, assuming gdb-multiarch exists):
 
-```json
+````json
 {
   "version": "0.2.0",
   "configurations": [
@@ -51,14 +51,14 @@ paste the following there (for linux, assuming gdb-multiarch exists):
     }
   ]
 }
-```
+````
 
 Now make sure the terminal gdb-multiarch is down. Restart the gdb server in mGBA, and then press `Start Debugging` in vscode under the `mgba Debug` config
 
-Spawn [[000 Installed gdb-multiarch, but is it limited compared to arm-none-eabi-gdb?]] ^spawn-invst-ea3561
+Spawn [000 Installed gdb-multiarch, but is it limited compared to arm-none-eabi-gdb?](../investigations/000%20Installed%20gdb-multiarch,%20but%20is%20it%20limited%20compared%20to%20arm-none-eabi-gdb%3F.md) <a name="spawn-invst-ea3561" />^spawn-invst-ea3561
 
-Spawn [[000 arm-none-eabi-gdb requiring libncurses.so.5]] ^spawn-issue-748850
+Spawn [000 arm-none-eabi-gdb requiring libncurses.so.5](../issues/000%20arm-none-eabi-gdb%20requiring%20libncurses.so.5.md) <a name="spawn-issue-748850" />^spawn-issue-748850
 
 2025-06-12 Wk 24 Thu - 08:30
 
-Spawn [[001 On Running debugging in vscode, I encounter a vMustReplyEmpty error]] ^spawn-issue-74ec13
+Spawn [001 On Running debugging in vscode, I encounter a vMustReplyEmpty error](../issues/001%20On%20Running%20debugging%20in%20vscode,%20I%20encounter%20a%20vMustReplyEmpty%20error.md) <a name="spawn-issue-74ec13" />^spawn-issue-74ec13

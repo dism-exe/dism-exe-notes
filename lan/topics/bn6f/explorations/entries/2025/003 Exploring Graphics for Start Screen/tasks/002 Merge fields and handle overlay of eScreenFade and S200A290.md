@@ -1,15 +1,15 @@
 ---
-parent: "[[003 Exploring Graphics for Start Screen]]"
-spawned_by: "[[001 Create Struct S200A290]]"
+parent: '[[003 Exploring Graphics for Start Screen]]'
+spawned_by: '[[001 Create Struct S200A290]]'
 context_type: task
 status: todo
 ---
 
-Parent: [[003 Exploring Graphics for Start Screen]]
+Parent: [003 Exploring Graphics for Start Screen](../003%20Exploring%20Graphics%20for%20Start%20Screen.md)
 
-Spawned by: [[001 Create Struct S200A290]]
+Spawned by: [001 Create Struct S200A290](001%20Create%20Struct%20S200A290.md)
 
-Spawned in: [[001 Create Struct S200A290#^spawn-task-750757|^spawn-task-750757]]
+Spawned in: [<a name="spawn-task-750757" />^spawn-task-750757](001%20Create%20Struct%20S200A290.md#spawn-task-750757)
 
 # 1 Journal
 
@@ -17,7 +17,7 @@ Spawned in: [[001 Create Struct S200A290#^spawn-task-750757|^spawn-task-750757]]
 
 `S200A290` is of size `0x1b0` or 432, this would include exactly all of those:
 
-```C
+````C
 // in ewram.s
 eS200A290:: // 0x200a290
 	.space 1
@@ -55,13 +55,13 @@ unk_200A420:: // 0x200a420
 eScreenFade:: // 0x200a440
 	screen_fade_struct eScreenFade
 eScreenFadeEnd:: // 0x200a460
-```
+````
 
-But there is evidence that `eScreenFade` is its own struct. 
+But there is evidence that `eScreenFade` is its own struct.
 
 It seems to be an array indexed from one of two structs:
 
-```
+````
 eScreenFade:: // 0x200a440
 	screen_fade_struct eScreenFade
 eScreenFadeEnd:: // 0x200a460
@@ -69,13 +69,13 @@ eScreenFadeEnd:: // 0x200a460
 eScreenFade2:: // 0x200a460
 	screen_fade_struct eScreenFade2
 eScreenFade2End:: // 0x200a480
-```
+````
 
-and it's zero'd to its size of `0x20` by `sub_80062D0`. 
+and it's zero'd to its size of `0x20` by `sub_80062D0`.
 
 Does anything use index 0x190 or beyond for `S200A290`? It might not be a struct given how big it is.
 
-```C
+````C
 // in ewram.s
 unk_200A3C0:: // 0x200a3c0
 	.space 32
@@ -85,13 +85,13 @@ unk_200A400:: // 0x200a400
 	.space 32
 unk_200A420:: // 0x200a420
 	.space 32
-```
+````
 
 Also all of these are of size `0x20` also...
 
 A bunch of them are copied in `sub_803C2AA`. It copied precisely
 
-```C
+````C
 // in ewram.s
 unk_200A3A0:: // 0x200a3a0
 	.space 16
@@ -102,11 +102,11 @@ unk_200A400:: // 0x200a400
 	.space 32
 unk_200A420:: // 0x200a420
 	.space 32
-```
+````
 
 2025-10-19 Wk 42 Sun - 11:36 +03:00
 
-Grepping for `size 0x1b0`, `OWPlayer.h` mentions `0x1b0`, although it's corrected to be a struct of size `0xc8` in `include/structs/OverworldPlayerObject.inc`. 
+Grepping for `size 0x1b0`, `OWPlayer.h` mentions `0x1b0`, although it's corrected to be a struct of size `0xc8` in `include/structs/OverworldPlayerObject.inc`.
 
 2025-10-19 Wk 42 Sun - 11:45 +03:00
 

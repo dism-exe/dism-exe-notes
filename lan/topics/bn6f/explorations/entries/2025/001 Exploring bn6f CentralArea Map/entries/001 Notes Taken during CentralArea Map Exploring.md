@@ -1,14 +1,14 @@
 ---
-parent: "[[001 Exploring bn6f CentralArea Map]]"
-spawned_by: "[[001 Exploring bn6f CentralArea Map]]"
+parent: '[[001 Exploring bn6f CentralArea Map]]'
+spawned_by: '[[001 Exploring bn6f CentralArea Map]]'
 context_type: entry
 ---
 
-Parent: [[001 Exploring bn6f CentralArea Map]]
+Parent: [001 Exploring bn6f CentralArea Map](../001%20Exploring%20bn6f%20CentralArea%20Map.md)
 
-Spawned by: [[001 Exploring bn6f CentralArea Map]]
+Spawned by: [001 Exploring bn6f CentralArea Map](../001%20Exploring%20bn6f%20CentralArea%20Map.md)
 
-Spawned in: [[001 Exploring bn6f CentralArea Map#^spawn-entry-5d6116|^spawn-entry-5d6116]]
+Spawned in: [<a name="spawn-entry-5d6116" />^spawn-entry-5d6116](../001%20Exploring%20bn6f%20CentralArea%20Map.md#spawn-entry-5d6116)
 
 # 1 Journal
 

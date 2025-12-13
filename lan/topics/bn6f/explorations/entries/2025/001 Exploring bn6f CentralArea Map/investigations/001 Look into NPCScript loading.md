@@ -1,15 +1,15 @@
 ---
-parent: "[[001 Exploring bn6f CentralArea Map]]"
-spawned_by: "[[000 Wk 41 Exploring bn6f CentralArea Map]]"
+parent: '[[001 Exploring bn6f CentralArea Map]]'
+spawned_by: '[[000 Wk 41 Exploring bn6f CentralArea Map]]'
 context_type: investigation
 status: done
 ---
 
-Parent: [[001 Exploring bn6f CentralArea Map]]
+Parent: [001 Exploring bn6f CentralArea Map](../001%20Exploring%20bn6f%20CentralArea%20Map.md)
 
-Spawned by: [[000 Wk 41 Exploring bn6f CentralArea Map]]
+Spawned by: [000 Wk 41 Exploring bn6f CentralArea Map](../entries/000%20Wk%2041%20Exploring%20bn6f%20CentralArea%20Map.md)
 
-Spawned in: [[000 Wk 41 Exploring bn6f CentralArea Map#^spawn-invst-762452|^spawn-invst-762452]]
+Spawned in: [<a name="spawn-invst-762452" />^spawn-invst-762452](../entries/000%20Wk%2041%20Exploring%20bn6f%20CentralArea%20Map.md#spawn-invst-762452)
 
 # 1 Journal
 
@@ -25,17 +25,17 @@ It should be set in `oOverworldNPCObject_AnimationScriptPtr`.
 
 2025-10-15 Wk 42 Wed - 16:06 +03:00
 
-```C
+````C
 // in fn npc_init_809E590
 ldr r0, [r5,#oOverworldNPCObject_UnkFlags_60]
 bl setNPCScript_809F506 // (self: *mut OverworldNPCObject $r5, script: *const NPCScript) -> ()
-```
+````
 
 Not sure why this is called `UnkFlags`, but it seems it needs to be a `*const NPCScript`.  But yet grepping it, you can see there are flag tests being done against it.
 
 2025-10-15 Wk 42 Wed - 16:17 +03:00
 
-```C
+````C
 // in include/structs/OverworldNPCObject.inc
 ptr AnimationScriptPtr // loc=0x4c
 
@@ -46,14 +46,14 @@ eOverworldMapObjects:: // 0x2011ee0
 	overworld_map_object_struct eOverworldMapObject2
 	overworld_map_object_struct eOverworldMapObject3
 	[...]
-```
+````
 
-```sh
+````sh
 python3 -c "print(hex(0x2011ee0 + 0x4c))"
 
 # out
 0x2011f2c
-```
+````
 
 Gdb Watching `watch *0x2011f2c`,
 
@@ -67,7 +67,7 @@ Breaking on `npc_init_809E590`,
 
 Lan's Room $\to$ Lan's House breaks. `x/1wx 0x2011f2c` yields `0x00000000`
 
-It triggers 5 times, 
+It triggers 5 times,
 
 Breaking on `npc_runPrimaryScript_809ebdc`,
 
@@ -75,13 +75,13 @@ Lan's Room $\to$ Lan's House breaks. `x/1wx 0x2011f2c` yields `0x00000000`
 
 I think because we're triggering off of `eOverworldMapObject0` which is not necesarily being used.
 
-```C
+````C
 // in fn npc_runPrimaryScript_809ebdc
 ldr r6, [r5,#oOverworldNPCObject_AnimationScriptPtr]
 ==> ldrb r0, [r6]
-```
+````
 
-```
+````
 info reg
 
 # out
@@ -102,20 +102,20 @@ sp             0x3007db0           0x3007db0
 lr             0x809e5f5           134866421
 pc             0x809ebe6           0x809ebe6 <npc_runPrimaryScript_809ebdc+10>
 cpsr           0x4000003f          1073741887
-```
+````
 
-`805163c` points to `byte_805163C` which is of type `NPCScript`. 
+`805163c` points to `byte_805163C` which is of type `NPCScript`.
 
 Iterating, we also get `0x805176f`, `0x805183c`, `0x8051935`, `0x805191a`, `0x809f6ce`, and continues in `0x809f6ce` for a while.
 
 Not finding `805176f`, but there is a `byte_805174C+0x23`
 
-```
+````
 python3 -c "print(hex(0x805174C + 0x23))"
 
 # out
 0x805176f
-```
+````
 
 This is a script of its own, let's make it `npc_script_805176f`
 
@@ -127,13 +127,13 @@ Also, `npc_runPrimaryScript_809ebdc` is always running in Lan's Home.
 
 When Jacking in to Lan's HP:
 
-```C
+````C
 // in fn npc_runPrimaryScript_809ebdc
 ldr r6, [r5,#oOverworldNPCObject_AnimationScriptPtr]
 ==> ldrb r0, [r6]
-```
+````
 
-```
+````
 info reg
 
 # out
@@ -154,7 +154,7 @@ sp             0x3007db0           0x3007db0
 lr             0x809e5f5           134866421
 pc             0x809ebe6           0x809ebe6 <npc_runPrimaryScript_809ebdc+10>
 cpsr           0x4000003f          1073741887
-```
+````
 
 `806cb04` points to `byte_806CB04` which is of type `NPCScript`.
 
@@ -164,12 +164,13 @@ Iterating, we get for `r6`: `0x806cb17`, `0x809f6ce`, then it repeats `0x809f6ce
 
 When we wrote,
 
-> `805163c` points to `byte_805163C` which is of type `NPCScript`. 
-> Iterating, we also get `0x805176f`, `0x805183c`, `0x8051935`, `0x805191a`, `0x809f6ce`, and continues in `0x809f6ce` for a while.
+ > 
+ > `805163c` points to `byte_805163C` which is of type `NPCScript`.
+ > Iterating, we also get `0x805176f`, `0x805183c`, `0x8051935`, `0x805191a`, `0x809f6ce`, and continues in `0x809f6ce` for a while.
 
 `805163c`, `0x805176f`, `0x805183c`, `0x8051935`, `0x805191a` are exactly in order from `off_8051624`, and then `0x809f6ce` is from somewhere else.
 
-`off_8051624` is referenced by `npc_map00_804E954` 
+`off_8051624` is referenced by `npc_map00_804E954`
 
 2025-10-15 Wk 42 Wed - 17:05 +03:00
 
@@ -177,46 +178,46 @@ When we wrote,
 
 2025-10-15 Wk 42 Wed - 17:17 +03:00
 
-```sh
+````sh
 // in fn npc_spawnObjectThenSetUnk10_TempAnimScriptPtr_8030a8c
 git blame "asm/asm03_0.s"
 
 # out (relevant)
 926529257 (luckytyphlosion   2019-05-26 13:36:52 -0400 20774)   str r2, [r5,#oOverworldNPCObject_UnkFlags_60] // this is actually temp storage for the animation script pointer
-```
+````
 
 Right.
 
 2025-10-15 Wk 42 Wed - 17:20 +03:00
 
-```
+````
 tools/doc_scripts/replacesig.sh "npc_freeAllObjectsThenSpawnObjectsFromList" "(ptr: * ?) -> ()"
-```
+````
 
 We still need proof this is `NPCScript` or related.
 
-```C
+````C
 // in npc_freeAllObjectsThenSpawnObjectsFromList
 ldr r2, [r0]
 cmp r2, #0xff
 beq .done
-```
+````
 
-This is proof it is still not `NPCScript`. So 
+This is proof it is still not `NPCScript`. So
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig_data.sh "NPCList_maps00" "(* ?)[][][REAL_WORLD_NUM_GROUPS]"
 tools/doc_scripts/replacesig_data.sh "NPCList_maps80" "(* ?)[][][INTERNET_NUM_GROUPS]"
 tools/doc_scripts/replacesig.sh "npc_freeAllObjectsThenSpawnObjectsFromList" "(ptr: (* ?)[]) -> ()"
 tools/doc_scripts/replacesig.sh "npc_spawnObjectThenSetUnk10_TempAnimScriptPtr_8030a8c" "(l: (* ?)[], which: isize, ptr: * ?) -> ()"
-```
+````
 
 2025-10-15 Wk 42 Wed - 17:34 +03:00
 
 This is it, the proof:
 
-```C
+````C
 // in fn npc_spawnObjectThenSetUnk10_TempAnimScriptPtr_8030a8c
 
 // This gets set by npc_init_809E590
@@ -227,24 +228,24 @@ str r2, [r5,#oOverworldNPCObject_UnkFlags_60] // this is actually temp storage f
 // This gets written by npc_spawnObjectThenSetUnk10_TempAnimScriptPtr_8030a8c
 ldr r0, [r5,#oOverworldNPCObject_UnkFlags_60]
 bl setNPCScript_809F506 // (self: *mut OverworldNPCObject $r5, script: *const NPCScript) -> ()
-```
+````
 
 This means that `?` is `*const NPCScript` and we can propagate that!
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig_data.sh "NPCList_maps00" "(*const NPCScript)[][][REAL_WORLD_NUM_GROUPS]"
 tools/doc_scripts/replacesig_data.sh "NPCList_maps80" "(*const NPCScript)[][][INTERNET_NUM_GROUPS]"
 tools/doc_scripts/replacesig.sh "npc_freeAllObjectsThenSpawnObjectsFromList" "(ptr: (*const NPCScript)[]) -> ()"
 tools/doc_scripts/replacesig.sh "npc_spawnObjectThenSetUnk10_TempAnimScriptPtr_8030a8c" "(_l: (*const NPCScript)[], which: isize, script: *const NPCScript) -> ()"
-```
+````
 
 We also know what this field is:
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 ./replacep.sh "oOverworldNPCObject_Unk_10"  "oOverworldNPCObject_WhichNPCScript" # and change in OverworldNPCObject.inc too
-```
+````
 
 2025-10-15 Wk 42 Wed - 17:44 +03:00
 
@@ -252,10 +253,10 @@ Now we can work our way backwards
 
 2025-10-15 Wk 42 Wed - 17:53 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 tools/doc_scripts/replacesig_data.sh "NPCList_maps80" "Nullable<(*const NPCScript)[][]>[INTERNET_NUM_GROUPS]"
-```
+````
 
 This has NULLs in it. Some invariant would need to be maintained elsewhere to not dereference null.
 
@@ -263,7 +264,7 @@ This has NULLs in it. Some invariant would need to be maintained elsewhere to no
 
 The invariant may have to do with unused map groups.
 
-```C
+````C
 # in constants/enums/GameAreas.inc
 	new_group PAVILION_COMP // 0x85
 	map_enum PAVILION_COMP1 // 0x00
@@ -274,20 +275,20 @@ The invariant may have to do with unused map groups.
   .equiv PAVILION_COMP_NUM_MAPS, 5
 
 	new_group UNUSED_85 // 0x85
-```
+````
 
 This is wrong, how can they both be `0x85`?  Let's use `NPCList_maps80` as the ground truth.
 
-We added `UNUSED_8F` and removed `UNUSED_85` in accordance with the gaps in `NPCList_maps80`. 
+We added `UNUSED_8F` and removed `UNUSED_85` in accordance with the gaps in `NPCList_maps80`.
 
-```C
+````C
 # in constants/enums/GameAreas.inc
 new_group UNUSED_8F // 0x8F
-```
+````
 
 2025-10-15 Wk 42 Wed - 18:15 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 ./replace.sh "off_80665B4"   "NPCScriptsRobotControlComp_80665B4"                                                    
 ./replace.sh "off_8067DE0"   "NPCScriptsAquariumComp_8067DE0"                                                         
@@ -312,11 +313,11 @@ new_group UNUSED_8F // 0x8F
 ./replace.sh "off_807AE04"   "NPCScriptsSkyACDCArea_807AE04"                                                      
 ./replace.sh "off_807D310"   "NPCScriptsUndernet_807D310"                                                      
 ./replace.sh "dword_807F210" "NPCScriptsGraveyardImmortalArea_807F210"                                                      
-```
+````
 
 2025-10-15 Wk 42 Wed - 18:20 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 ./replacep.sh "npc_map00_ACDC_804D0B4" "NPCScriptsACDC_804D0B4"      
 ./replacep.sh "npc_map00_804E954"      "NPCScriptsCentralTown_804E954"                
@@ -349,42 +350,42 @@ tools/doc_scripts/replacesig_data.sh "NPCScriptsUnderground_807953C"           "
 tools/doc_scripts/replacesig_data.sh "NPCScriptsSkyACDCArea_807AE04"           "(*const NPCScript)[][SKY_ACDC_AREA_NUM_MAPS]"                                          
 tools/doc_scripts/replacesig_data.sh "NPCScriptsUndernet_807D310"              "(*const NPCScript)[][UNDERNET_NUM_MAPS]"                                       
 tools/doc_scripts/replacesig_data.sh "NPCScriptsGraveyardImmortalArea_807F210" "(*const NPCScript)[][GRAVEYARD_NUM_MAPS]"                                                    
-```
+````
 
 2025-10-15 Wk 42 Wed - 18:40 +03:00
 
 Some are nullable:
 
-```C
+````C
 NPCScriptsUndernet_807D310:: // (*const NPCScript)[][UNDERNET_NUM_MAPS]
   .word off_807D918
 	.word off_807DF40
 	.word off_807E19C
 	.word NULL
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 
 tools/doc_scripts/replacesig_data.sh "NPCScriptsHomePages_806C7E8"             "Nullable<(*const NPCScript)[]>[HOMEPAGES_NUM_MAPS]"                                        
 tools/doc_scripts/replacesig_data.sh "NPCScriptsUndernet_807D310"              "Nullable<(*const NPCScript)[]>[UNDERNET_NUM_MAPS]"                                       
 tools/doc_scripts/replacesig_data.sh "NPCScriptsGraveyardImmortalArea_807F210" "Nullable<(*const NPCScript)[]>[GRAVEYARD_NUM_MAPS]"                                                    
-```
+````
 
-Spawn [[002 Look into where the null dereference invariants for NPC group and maps are maintained]] ^spawn-invst-0c5179
+Spawn [002 Look into where the null dereference invariants for NPC group and maps are maintained](002%20Look%20into%20where%20the%20null%20dereference%20invariants%20for%20NPC%20group%20and%20maps%20are%20maintained.md) <a name="spawn-invst-0c5179" />^spawn-invst-0c5179
 
 2025-10-15 Wk 42 Wed - 18:49 +03:00
 
 Let's rename the script labels for CentralTown for now,
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 ./replace.sh "off_804F9D8" "NPCScriptsForCentralTown_804F9D8"
 ./replace.sh "off_8051624" "NPCScriptsForLanHouse_8051624"
 ./replace.sh "off_8051B5C" "NPCScriptsForLanRoom_8051B5C"
 ./replace.sh "off_8051F48" "NPCScriptsForBathroom_8051F48"
 ./replace.sh "off_8051FB0" "NPCScriptsForAsterland_8051FB0"
-```
+````
 
 2025-10-15 Wk 42 Wed - 19:05 +03:00
 
@@ -392,9 +393,9 @@ We need to define `NPCScript`s `byte_8051F54+0x23`, `byte_805209D+0x42`, `byte_8
 
 And replace for `npc_script_8051F77`, `npc_script_80520DF`, `npc_script_8052177`, `npc_script_8052227`
 
-Corresponding to 
+Corresponding to
 
-```
+````
 python3 -c "print(hex(0x8051F54 + 0x23))"
 python3 -c "print(hex(0x805209D + 0x42))"
 python3 -c "print(hex(0x8052134 + 0x43))"
@@ -415,7 +416,7 @@ python3 -c "print(0x33)"
 66
 67
 51
-```
+````
 
 `npc_script_8051F77` is failing checksum, let's check it. It's off by 3.
 
@@ -423,6 +424,6 @@ Okay. This stuff should be done automatically since it's just aligning pointers 
 
 Next would be to dump the NPC Scripts corresponding to Central Town here.
 
-We already have [[004 Impl dumping for map npc and cutscene scripts]], we will also need `dump_npcscript`.  We generalized the note cluster from just concerning with map script to all mapscript, npcscript, and cutscene scripts. They are all documented bytecodes, so there should be a lot of shared internal work, besides configured bytecode commands.
+We already have [004 Impl dumping for map npc and cutscene scripts](../../../../../../../tasks/2025/004%20Impl%20dumping%20for%20map%20npc%20and%20cutscene%20scripts/004%20Impl%20dumping%20for%20map%20npc%20and%20cutscene%20scripts.md), we will also need `dump_npcscript`.  We generalized the note cluster from just concerning with map script to all mapscript, npcscript, and cutscene scripts. They are all documented bytecodes, so there should be a lot of shared internal work, besides configured bytecode commands.
 
-All those commands are also documented in [[000 Documentation Actions]].
+All those commands are also documented in [000 Documentation Actions](../../../../../logs/entries/2025/000%20Documentation%20Actions.md).
