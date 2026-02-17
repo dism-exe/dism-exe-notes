@@ -49,7 +49,10 @@ Spawn [[003 Look into how the map data is loaded for central town]] ^spawn-invst
     - entry [[003 Encountered compressed data that's not yet extracted]]
     - entry [[004 Encountered undumped textscripts]]
     - entry [[005 Reminders noted during bn6f CentralArea Map Exploration]]
+        - entry [[006 Dumped code in 25 Wk 50]]
     - task [[004 Marking pointers to data passed to decompAndCopyData]]
+    - todo investigation [[003 Look into how the map data is loaded for central town]]
+        - todo task [[005 Attempt loading CapcomLogoTilemap with PixelPet]]
 
 # 3 Index
 
@@ -67,6 +70,8 @@ Spawn [[003 Look into how the map data is loaded for central town]] ^spawn-invst
 
 [[005 Reminders noted during bn6f CentralArea Map Exploration]]
 
+[[006 Dumped code in 25 Wk 50]]
+
 **task**
 
 blocked [[000 Document fields for S2001c04]]
@@ -75,15 +80,19 @@ blocked [[000 Document fields for S2001c04]]
 
 todo [[003 Find how general cutscene functions encode cutscenes]]
 
+[[004 Marking pointers to data passed to decompAndCopyData]]
+
 [[001 Create Struct S2011E30 used in dispatch_80339CC]]
 
-[[004 Marking pointers to data passed to decompAndCopyData]]
+todo [[005 Attempt loading CapcomLogoTilemap with PixelPet]]
 
 **investigation**
 
 [[001 Look into NPCScript loading]]
 
 todo [[002 Look into where the null dereference invariants for NPC group and maps are maintained]]
+
+todo [[003 Look into how the map data is loaded for central town]]
 
 todo [[000 Look into RunContinuousMapScript with relation to CentralArea]]
 

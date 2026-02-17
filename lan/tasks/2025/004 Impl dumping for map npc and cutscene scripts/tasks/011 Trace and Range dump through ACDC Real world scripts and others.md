@@ -983,6 +983,10 @@ To fix, just select all uses of `ms_call_native_function` in quickfix in vim and
 :cdo :%s/ptr5=NULL/word5=0x00000000/g
 ```
 
+2025-12-18 Wk 51 Thu - 09:47 +03:00
+
+(Warning: This command is doing something unintended, for example with `byte` replace, it will replace more than what is in quickfix.)
+
 2025-12-13 Wk 50 Sat - 01:57 +03:00
 
 ```

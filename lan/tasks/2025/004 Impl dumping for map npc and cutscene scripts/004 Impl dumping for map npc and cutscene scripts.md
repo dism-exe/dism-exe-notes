@@ -1,3 +1,6 @@
+---
+status: done
+---
 # 1 Journal
 
 2025-10-15 Wk 42 Wed - 12:27 +03:00

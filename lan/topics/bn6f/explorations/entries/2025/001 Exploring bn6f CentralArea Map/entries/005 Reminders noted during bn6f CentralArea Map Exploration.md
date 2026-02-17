@@ -55,6 +55,12 @@ byte_8127D38:
 	.word CompText86D0544
 ```
 
+2025-12-23 Wk 52 Tue - 08:30 +03:00
+
+- [ ] Resolved
+
+Dump all gfx anim scripts referenced directly through `LoadGFXAnim`
+
 2025-12-11 Wk 50 Thu - 00:27 +03:00
 
 - [ ] Resolved
@@ -71,5 +77,33 @@ There can be other cases we will need to handle and dump the disassembly of.
 
 2025-12-13 Wk 50 Sat - 03:04 +03:00
 
-There's also disassembled code in: 
-- `undumped_code_8061B6C`, `undumped_code_8061B84`, `undumped_code_8061BE6`,  `undumped_code_80652A0`
+Spawn [[006 Dumped code in 25 Wk 50]] ^spawn-entry-014d1f
+
+2025-12-25 Wk 52 Thu - 14:06 +03:00
+
+- [ ] Resolved
+
+Investigate `off_8039308` which seems to using invalid pointers into a compressed asset.
+
+See [[004 Investigate use of off_8039308 which seems to be invalidly pointing inside a compressed asset]].
+
+2025-12-27 Wk 52 Sat - 17:00 +03:00
+
+Notes on big indexed data to investigate
+
+```
+sub_8108F74 via off_8109050 indexes large ai data
+```
+
+2026-01-22 Wk 4 Thu - 03:01 +03:00
+
+- [ ] Resolved
+
+Spawn [[007 Scripts that need redumping]] ^spawn-entry-6193b9
+
+2026-01-22 Wk 4 Thu - 05:17 +03:00
+
+- [ ] Resolved
+
+Spawn [[008 Look into cutscene param for CutsceneScriptEntranceInteract_8098384]] ^spawn-entry-3dc09d
+

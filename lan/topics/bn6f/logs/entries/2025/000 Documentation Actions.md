@@ -1040,3 +1040,101 @@ git commit -m "doc sig of all starting init and update map scripts"
  23 files changed, 88 insertions(+), 88 deletions(-)
 ```
 
+2025-12-30 Wk 1 Tue - 16:13 +03:00
+
+```
+tools/doc_scripts/replacesig.sh "sub_8026B04" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8026CCC" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8026BF4" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8026D06" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8026DB0" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8026DC4" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8026E4C" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8026E98" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8026FC0" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8027044" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80271F8" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_802728C" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80273A4" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80273EC" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8027406" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_802753E" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8027548" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80275EC" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_802770C" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8027834" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_802790C" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_802794A" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8026E78" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8027A58" "(self: * S20364C0 \$r5) -> ()"
+
+tools/doc_scripts/replacesig.sh "sub_8026A50" "(self: * S20364C0 \$r5) -> u8"
+tools/doc_scripts/replacesig.sh "custMenuMainMaybe_8026A88" "(self: * S20364C0 \$r5) -> u8"
+tools/doc_scripts/replacesig.sh "sub_8026A6C" "(self: * S20364C0 \$r5) -> u8"
+
+tools/doc_scripts/replacesig.sh "sub_802A2B0" "(self: * S20364C0 \$r5) -> ()"
+
+tools/doc_scripts/replacesig.sh "sub_802A2E8" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_802A30C" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_802A33E" "(self: * S20364C0 \$r5) -> ()"
+tools/doc_scripts/replacesig.sh "sub_802A362" "(self: * S20364C0 \$r5) -> ()"
+
+tools/doc_scripts/replacesig.sh "sub_8029C08" "(self: * S20364C0 \$r5) -> ()"
+
+tools/doc_scripts/replacesig.sh "custMenuSomeHandler_8028B74" "(self: * S20364C0 \$r5) -> ()"
+```
+
+2026-01-03 Wk 1 Sat - 16:43 +03:00
+
+```
+tools/doc_scripts/replacesig.sh "dispatch_803C620" "() -> (u32?, bool)"
+
+tools/doc_scripts/replacesig.sh "sub_803C6A8" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C6C0" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C6D8" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C6F4" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "dispatch_803C702" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C76C" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C790" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C83A" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C842" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C84A" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C85C" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C86A" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C94C" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C97C" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C9A4" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C9B6" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C9BE" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803CA2C" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C94C" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C94C" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+tools/doc_scripts/replacesig.sh "sub_803C754" "(self: * S200BC50 \$r7) -> (u32?, bool)"
+```
+
+2026-01-05 Wk 2 Mon - 01:53 +03:00
+
+```
+tools/doc_scripts/replacesig.sh "byte_80B4C5C" "FFStop32<[BattleSettings; 20]>"
+tools/doc_scripts/replacesig.sh "off_80B4AB8" "[*const FFStop32<[BattleSettings]>; 16]"
+tools/doc_scripts/replacesig.sh "off_80B1B7C" "[*const FFStop32<[BattleSettings]>; 16]"
+tools/doc_scripts/replacesig.sh "off_80B1ED8" "[*const FFStop32<[BattleSettings]>; 16]"
+tools/doc_scripts/replacesig.sh "off_80B23C8" "[*const FFStop32<[BattleSettings]>; 16]"
+tools/doc_scripts/replacesig.sh "pt_802029C" "[*const [*const FFStop32<[BattleSettings]>; 16]; INTERNET_NUM_GROUPS]"
+tools/doc_scripts/replacesig.sh "off_8020190" "[*const [*const FFStop32<[BattleSettings]>; 16]; 21]"
+tools/doc_scripts/replacesig.sh "off_8020180" "[*const [*const [*const FFStop32<[BattleSettings]>; 16]]; 2]"
+tools/doc_scripts/replacesig.sh "off_80201E4" "[*const [*const FFStop32<[BattleSettings]>; 16]; INTERNET_NUM_GROUPS]"
+
+tools/doc_scripts/replacesig.sh "dispatch_8007368" "(arr: * MagicStop8<0xF0, [EnemySetup]> \$r6) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80073CC" "(self: * EnemySetup \$r6) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80073E2" "(self: * EnemySetup \$r6) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8007424" "(self: * EnemySetup \$r6) -> ()"
+tools/doc_scripts/replacesig.sh "sub_8007450" "(self: * EnemySetup \$r6) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80074C8" "(self: * EnemySetup \$r6) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80074DE" "(self: * EnemySetup \$r6) -> ()"
+tools/doc_scripts/replacesig.sh "sub_80074FA" "(self: * EnemySetup \$r6) -> ()"
+tools/doc_scripts/replacesig.sh "sub_800751C" "(self: * EnemySetup \$r6) -> ()"
+tools/doc_scripts/replacesig.sh "sub_800748A" "(self: * EnemySetup \$r6) -> ()"
+
+tools/doc_scripts/replacesig.sh "byte_80B546E" "MagicStop8<0xF0, [EnemySetup]>"
+```

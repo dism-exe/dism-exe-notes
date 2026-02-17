@@ -39,3 +39,44 @@ So there's the collision information, and then there's just the graphical repres
 	- $\leftarrow$ `EnterMap_RealWorldMapGroupJumptable` 
 		- $\leftarrow$ `EnterMap_RunMapGroupAsmFunction_8030A00` 
 			- $\leftarrow$ `EnterMap`
+
+2025-12-25 Wk 52 Thu - 08:47 +03:00
+
+Can see already discovered `ACDCTown_Map0_Tileset`, `ACDCTown_Map0_Palette`, `ACDCTown_Map0_Tilemap`
+
+2025-12-25 Wk 52 Thu - 09:28 +03:00
+
+Before, we visualized `CompCapcomLogoTileset_86C3528` and `CompCapcomLogoTilemap_86C3E94` in [[003 Use a tool to visualize Capcom Logo tile graphics]]:
+
+```sh
+# in /home/lan/src/cloned/gh/dism-exe/bn6f
+cp data/compressed/CompCapcomLogoTileset_86C3528.lz77 a.lz
+tools/gbagfx/gbagfx a.lz a.bin
+dd skip=$(python3 -c "print(0x4)") if=a.bin of=a.4bpp bs=1
+rm a.lz a.bin
+
+cp data/compressed/CompCapcomLogoTilemap_86C3E94.lz77 a.lz
+tools/gbagfx/gbagfx a.lz a.bin
+dd skip=$(python3 -c "print(0x4)") if=a.bin of=a.tilemap bs=1
+rm a.lz a.bin
+```
+
+Then we can view it with
+
+```sh
+wine ~/Downloads/tilemapstudio.exe
+```
+
+`File > Tilemap`, select `a.tilemap`, Format `GBA tiles + 4bpp palettes`
+
+`Tileset > Load...` (might have to unload first), select `a.4bpp`
+
+If you do `Shift Tileset... (Ctrl + K)` and select `1`, then a lot of the noise from our previous attempt goes away and we see just the logo.
+
+2025-12-25 Wk 52 Thu - 10:06 +03:00
+
+As for palettes, they explained in this [issue reply](https://github.com/Rangi42/tilemap-studio/issues/68#issuecomment-1111393651) explains that the feature to add palettes is not planned.
+
+We can try to load `CapcomLogoTilemap` with [gh Prof9/PixelPet](https://github.com/Prof9/PixelPet). 
+
+Spawn [[005 Attempt loading CapcomLogoTilemap with PixelPet]] ^spawn-task-d75b30

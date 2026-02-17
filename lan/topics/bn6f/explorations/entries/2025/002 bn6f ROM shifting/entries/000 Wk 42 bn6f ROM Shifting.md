@@ -1,14 +1,14 @@
 ---
-parent: "[[002 bn6f ROM Shifting]]"
-spawned_by: "[[002 bn6f ROM Shifting]]"
+parent: "[[002 bn6f ROM shifting]]"
+spawned_by: "[[002 bn6f ROM shifting]]"
 context_type: entry
 ---
 
-Parent: [[002 bn6f ROM Shifting]]
+Parent: [[002 bn6f ROM shifting]]
 
-Spawned by: [[002 bn6f ROM Shifting]]
+Spawned by: [[002 bn6f ROM shifting]]
 
-Spawned in: [[002 bn6f ROM Shifting#^spawn-entry-cdd243|^spawn-entry-cdd243]]
+Spawned in: [[002 bn6f ROM shifting#^spawn-entry-cdd243|^spawn-entry-cdd243]]
 
 # 1 Journal
 

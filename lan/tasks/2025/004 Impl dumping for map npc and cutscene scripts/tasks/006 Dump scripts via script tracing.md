@@ -2,7 +2,7 @@
 parent: "[[004 Impl dumping for map npc and cutscene scripts]]"
 spawned_by: "[[001 Model mapscript bytecode and dump once]]"
 context_type: task
-status: todo
+status: done
 ---
 
 Parent: [[004 Impl dumping for map npc and cutscene scripts]]
@@ -191,3 +191,7 @@ Spawn [[011 Trace and Range dump through ACDC Real world scripts and others]] ^s
 2025-12-13 Wk 50 Sat - 02:31 +03:00
 
 Spawn [[012 Trace and range dump remaining maps]] ^spawn-task-c8e433
+
+2025-12-17 Wk 51 Wed - 09:42 +03:00
+
+All mapscripts and npc scripts are traced in the game!
