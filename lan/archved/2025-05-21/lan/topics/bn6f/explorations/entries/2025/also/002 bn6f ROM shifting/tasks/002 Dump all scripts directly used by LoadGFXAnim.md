@@ -493,7 +493,7 @@ unk_6005AC0:: // 0x6005AC0
 
 ```
 tools/binutils/bin/arm-none-eabi-ld: data.o: in function `byte_854D410':
-(.data+0x375720): undefined reference to `off_8000700'
+(.data+0x375720): undefined reference to `off_8000701'
 ```
 
 Gonna have to blacklist `off_8000700` in `display_symbol_data_as_directives_with_labels`. Also `0x02020201`. 
