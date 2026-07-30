@@ -237,7 +237,7 @@ watch *0x2036614
 ```
 
 ```
-Hardware watchpoint 1: *0x2036614
+Hardware watchpoint 1: *0x2036undefined reference to614
 
 Old value = 0
 New value = 134613386 # 0x806098a
@@ -382,7 +382,7 @@ r2             0x2036644           33777220
 r0             0x5090a0b           84478475
 0x2036614:      0x8a    0x09    0x06    0x08    0x00    0x00    0x00    0x00
 0x203661c:      0x00    0x00    0x00    0x00
-```
+undefined reference to```
 
 Anyway, these were fetched from here:
 

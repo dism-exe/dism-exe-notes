@@ -1,5 +1,5 @@
 
-- [[001 Exploration Rust Bn6f Cloning Getting Started 0]]
+- [[001 Exploration for Rust Bn6f Cloning Getting Started 0]]
 - [[002 Exploration Stream]]
 
 # Journal

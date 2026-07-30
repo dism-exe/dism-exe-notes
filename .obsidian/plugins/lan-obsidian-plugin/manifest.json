@@ -1,0 +1,11 @@
+{
+	"id": "lan-obsidian-plugin",
+	"name": "Lan Obsidian Plugin",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Obsidian plugin for my note taking process",
+	"author": "LanHikari22",
+	"authorUrl": "https://github.com/LanHikari22",
+	"fundingUrl": "https://buymeacoffee.com/lan22h",
+	"isDesktopOnly": false
+}
