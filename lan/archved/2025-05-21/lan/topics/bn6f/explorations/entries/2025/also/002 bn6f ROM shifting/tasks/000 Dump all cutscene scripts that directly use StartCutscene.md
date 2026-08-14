@@ -1,15 +1,15 @@
 ---
-parent: "[[002 bn6f ROM shifting]]"
-spawned_by: "[[001 Investigate jacking in causing crash due to jump to invalid address]]"
+parent: '[[002 bn6f ROM shifting]]'
+spawned_by: '[[001 Investigate jacking in causing crash due to jump to invalid address]]'
 context_type: task
 status: todo
 ---
 
-Parent: [[002 bn6f ROM shifting]]
+Parent: [002 bn6f ROM shifting](../002%20bn6f%20ROM%20shifting.md)
 
-Spawned by: [[001 Investigate jacking in causing crash due to jump to invalid address]]
+Spawned by: [001 Investigate jacking in causing crash due to jump to invalid address](../investigations/001%20Investigate%20jacking%20in%20causing%20crash%20due%20to%20jump%20to%20invalid%20address.md)
 
-Spawned in: [[001 Investigate jacking in causing crash due to jump to invalid address#^spawn-task-f72885|^spawn-task-f72885]]
+Spawned in: [^spawn-task-f72885](../investigations/001%20Investigate%20jacking%20in%20causing%20crash%20due%20to%20jump%20to%20invalid%20address.md#spawn-task-f72885)
 
 # 1 Journal
 
@@ -17,7 +17,7 @@ Spawned in: [[001 Investigate jacking in causing crash due to jump to invalid ad
 
 We dumped all mapscripts, but not direct cutscenes. We need to trace all data that is passed to `StartCutscene`.
 
-```
+````
 byte_80990B8
 byte_8099DC0
 byte_8099E04
@@ -80,7 +80,7 @@ byte_808C930
 byte_808CA48
 byte_808C428
 byte_808C74C
-```
+````
 
 2025-12-17 Wk 51 Wed - 17:02 +03:00
 
@@ -88,23 +88,23 @@ Be aware of scripts labeled `CutsceneScript` since I marked many of these before
 
 We need to cut some of those labels:
 
-```
+````
 0x8092C78
 byte_8086678+32 # 0x8086698
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
 cargo run --bin expt000_read_symbol_data 8092C78 -M "cutscenescript_8092C78"  
 cargo run --bin expt000_read_symbol_data 8086698 -M "cutscenescript_8086698"  
-```
+````
 
-```
+````
 # got turned into data after cutting cutscenescript_8092C78
 cargo run --release --bin dump_script trace cutscene cutscenescript_8092C6F
-```
+````
 
-```sh
+````sh
 #cargo run --release --bin dump_script trace cutscene byte_80990B8 &&
 cargo run --release --bin dump_script trace cutscene byte_8099DC0 &&
 cargo run --release --bin dump_script trace cutscene byte_8099E04 &&
@@ -163,13 +163,13 @@ cargo run --release --bin dump_script trace cutscene byte_808C428 &&
 cargo run --release --bin dump_script trace cutscene byte_808C74C &&
 
 cargo run --release --bin dump_script trace cutscene byte_80989C1 &&
-```
+````
 
 2025-12-18 Wk 51 Thu - 03:31 +03:00
 
 Reached an infinite recursion.
 
-```
+````
 Running `target/release/dump_script trace cutscene byte_809AA34`
 Tracing cutscenescript Identifier { s: "byte_809AA34" }
 Tracing cutscenescript Identifier { s: "byte_809AA5F" }
@@ -182,9 +182,9 @@ Tracing cutscenescript Identifier { s: "cutscenescript_809AA44" }
 Tracing cutscenescript Identifier { s: "byte_809AA5F" }
 Tracing cutscenescript Identifier { s: "cutscenescript_809AA44" }
 // ...
-```
+````
 
-```
+````
 byte_809AA34:
 	cs_lock_player_for_non_npc_dialogue_809e0b0
 	cs_nop_80377d0
@@ -194,16 +194,16 @@ byte_809AA34:
 
 cutscenescript_809AA44:
 	.word 0x09AADD4B, 0x01081C08, byte_809AA5F
-```
+````
 
-These used to be merged, so it started tracing `byte_809AA5F`. 
+These used to be merged, so it started tracing `byte_809AA5F`.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
 cargo run --release --bin dump_script trace cutscene cutscenescript_809AA44
-```
+````
 
-```
+````
 Tracing cutscenescript Identifier { s: "cutscenescript_809AA44" }
 0 new_inst: Inst { name: "cs_call_native_with_return_value", cmd: 75, opt_subcmd: None, fields: [Ptr("ptr1", Rom(RomEa { ea: 0x0809AADD }))] }
 5 new_inst: Inst { name: "cs_jump_if_var_equal", cmd: 28, opt_subcmd: None, fields: [U8("byte1", 8), U8("byte2", 1), Dest("destination3", RomEa { ea: 0x0809AA5F })] }
@@ -220,9 +220,9 @@ Tracing cutscenescript Identifier { s: "byte_809AA5F" }
 
 Tracing cutscenescript Identifier { s: "cutscenescript_809AA44" }
 // ...
-```
+````
 
-```
+````
 Tracing cutscenescript Identifier { s: "byte_809AA5F" }
 [src/bin/dump_script.rs:340:5] processed_items = [
     ScriptTraceRecord {
@@ -254,11 +254,11 @@ Tracing cutscenescript Identifier { s: "cutscenescript_809AA44" }
 		/*...*/
     },
 ]
-```
+````
 
 We're failing to see the recursion because neither appears in the processed items of the other.
 
-```rust
+````rust
 // in fn trace_read_insts_recur_or_cut_or_merge_or_fail(
     let mut mut_out = vec![ScriptTraceRecord {
         insts,
@@ -289,11 +289,11 @@ We're failing to see the recursion because neither appears in the processed item
             &mut_out,
         ));
     }
-```
+````
 
 Yeah we're not combining the processed items of our ancestors when we create `mut_out`.
 
-```rust
+````rust
 // in fn trace_read_insts_recur_or_cut_or_merge_or_fail(
     let mut mut_processed_items_vec = processed_items.to_vec();
 
@@ -318,13 +318,13 @@ Yeah we're not combining the processed items of our ancestors when we create `mu
             &cur_processed_items,
         ));
     }
-```
+````
 
 This way we take account of what's already been processed more completely.
 
 2025-12-18 Wk 51 Thu - 04:45 +03:00
 
-```
+````
 cargo run --release --bin dump_script trace cutscene cutscenescript_809AA44
 
 # out
@@ -340,30 +340,30 @@ Tracing cutscenescript Identifier { s: "cutscenescript_809AA50" }
 Tracing cutscenescript Identifier { s: "cutscenescript_809AA50" }
 Dumping Identifier { s: "cutscenescript_809AA50" }
 
-```
+````
 
 But we ran into a different problem. We're tracing all these scripts but only dumping the last now.
 
-```
+````
 [src/bin/dump_script.rs:803:5] &records = [
     ScriptTraceRecord { /*... for cutscenescript_809AA50*/ },
 ]
 Dumping Identifier { s: "cutscenescript_809AA50" }
-```
+````
 
 From the docs of `append`,
 
-```rust
+````rust
 let mut vec = vec![1, 2, 3];
 let mut vec2 = vec![4, 5, 6];
 vec.append(&mut vec2);
 assert_eq!(vec, [1, 2, 3, 4, 5, 6]);
 assert_eq!(vec2, []);
-```
+````
 
 It's a move operation. This is why it's `&mut`. We were emptying `mut_out` in the process to populate the processed items! So let's clone instead to not move the original items.
 
-```rust
+````rust
 let cur_processed_items = {
 	let mut mut_vec = vec![];
 
@@ -372,48 +372,48 @@ let cur_processed_items = {
 
 	mut_vec
 };
-```
+````
 
 2025-12-18 Wk 51 Thu - 09:35 +03:00
 
-```
+````
      Running `target/release/dump_script trace cutscene byte_809B16C`
 Tracing cutscenescript Identifier { s: "byte_809B16C" }
 
 thread 'main' panicked at src/bin/dump_script.rs:383:25:
 No instructions read, and yet we fail to read cutscenescript instructions at Identifier { s: "byte_809B16C" }: Partial read Error. Original error: Failed to route the command: No instruction schema found for position 0 and byte 0x84. Parsed Instructions: [].
 
-```
+````
 
 `cutscenescript_8098AFC` also seems suspect with all these ends.
 
-`byte_809B16C` is not a `CutsceneScript`. 
+`byte_809B16C` is not a `CutsceneScript`.
 
-```
+````
 byte_809B16C: // CutsceneScript
   .byte 0x84, 0x83, 0x9, 0x8, 0x2, 0x0, 0x1, 0x8
-```
+````
 
-```
+````
 	ldr r0, byte_809B16C // =0x84
 	ldr r1, byte_809B16C+4 // =0x2
 	bl StartCutscene // (script: *const CutsceneScript, param: u32) -> ()
 
-```
+````
 
 Its usage show it's a 2-tuple of a pointer to the script and a u32 parameter.
 
-```
+````
 byte_809B16C:
   .word byte_8098384
   .word 0x08010002
-```
+````
 
 This is already dumped.
 
 2025-12-18 Wk 51 Thu - 13:41 +03:00
 
-```
+````
      Running `target/release/dump_script trace cutscene byte_808F788`
 Tracing cutscenescript Identifier { s: "byte_808F788" }
 0 new_inst: Inst { name: "cs_lock_player_for_non_npc_dialogue_809e0b0", cmd: 63, opt_subcmd: Some(U8(0)), fields: [] }
@@ -425,11 +425,11 @@ Tracing cutscenescript Identifier { s: "byte_808F788" }
 
 thread 'main' panicked at src/bin/dump_script.rs:446:21:
 No terminating command before failing to read cutscenescript instructions at Identifier { s: "byte_808F788" }: Partial read Error. Original error: Inst InstSchema { name: "cs_disable_cutscene_skip_script", cmd: 20, opt_subcmd: Some(U8(0)), fields: [Unused24("unused2")] } Failed to read fields at position 19: line 625: Unused parameter must be 0 but instead was 0x808F8 for field Unused24("unused2").. Parsed Instructions: /*...*/
-```
+````
 
-`0x14 ptr1=0x0`  is supposed to be a helper macro. 
+`0x14 ptr1=0x0`  is supposed to be a helper macro.
 
-```C
+````C
 // in include/bytecode/cutscene_script.inc
 	enum cs_set_cutscene_skip_script_cmd // 0x14
 // 0x14 ptr1
@@ -448,24 +448,24 @@ No terminating command before failing to read cutscenescript instructions at Ide
 	.byte cs_set_cutscene_skip_script_cmd
 	.word NULL
 	.endm
-```
+````
 
 Of the 472 instances detected so far of `cs_set_cutscene_skip_script`, none of them had an address that ended with `00`.
 
-```
+````
 byte_808F788::
 	.byte 0x3F, 0x0, 0x6, 0x29, 0xFF, 0x31, 0x17, 0x29, 0xFF, 0xEF
 	.byte 0xB, 0x3E, 0x18, 0x17, 0x7E, 0x8, 0x2, 0xFF, 0x1E
 	
 	.byte 0x14
 	.word byte_808F800
-```
+````
 
 But here we do. `byte_808F800` has the first byte of `0x00`. So technically the command of `0x14` and the subcommand of `0x00` match.
 
 This was a cheat:
 
-```rust
+````rust
         InstSchema {
             name: "cs_disable_cutscene_skip_script".to_owned(),
             cmd: 0x14,
@@ -474,11 +474,11 @@ This was a cheat:
                 FieldSchema::Unused24("unused2".to_owned()) // remaining of NULL word
             ],
         },
-```
+````
 
 Let's add a `SubCmd::U32` variant. The entire word is necessary for the routing after all:
 
-```rust
+````rust
         InstSchema {
             name: "cs_disable_cutscene_skip_script".to_owned(),
             cmd: 0x14,
@@ -486,6 +486,6 @@ Let's add a `SubCmd::U32` variant. The entire word is necessary for the routing 
             fields: vec![
             ],
         },
-```
+````
 
-This is also a bit of a hack since `cs_disable_cutscene_skip_script` is strictly just a different presentation of `cs_set_cutscene_skip_script` on `NULL`, but we wanted a way to favor a special variants of commands on `NULL`. 
+This is also a bit of a hack since `cs_disable_cutscene_skip_script` is strictly just a different presentation of `cs_set_cutscene_skip_script` on `NULL`, but we wanted a way to favor a special variants of commands on `NULL`.

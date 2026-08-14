@@ -1,20 +1,20 @@
 ---
-parent: "[[002 bn6f ROM shifting]]"
-spawned_by: "[[006 Attempt to modify mgba to get information on save corruption gunner issue]]"
+parent: '[[002 bn6f ROM shifting]]'
+spawned_by: '[[006 Attempt to modify mgba to get information on save corruption gunner issue]]'
 context_type: entry
 ---
 
-Parent: [[002 bn6f ROM shifting]]
+Parent: [002 bn6f ROM shifting](../002%20bn6f%20ROM%20shifting.md)
 
-Spawned by: [[006 Attempt to modify mgba to get information on save corruption gunner issue]]
+Spawned by: [006 Attempt to modify mgba to get information on save corruption gunner issue](../investigations/006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md)
 
-Spawned in: [[006 Attempt to modify mgba to get information on save corruption gunner issue#^spawn-entry-0e0040|^spawn-entry-0e0040]]
+Spawned in: [^spawn-entry-0e0040](../investigations/006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md#spawn-entry-0e0040)
 
 # 1 Journal
 
 This is temporarily put in `/home/lan/src/cloned/gh/dism-exe/bn6f/tools/misc_scripts/dump_code/a.py `
 
-```python
+````python
 import sys
 from typing import Dict, List, Tuple
 
@@ -142,4 +142,4 @@ if __name__ == '__main__':
     if filter == 'keep_lines_identical_up_to_val_but_then_different':
         keep_lines_identical_up_to_val_but_then_different(orig_file, shifted_file)
     
-```
+````

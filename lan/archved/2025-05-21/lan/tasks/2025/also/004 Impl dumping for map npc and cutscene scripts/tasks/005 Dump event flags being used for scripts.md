@@ -1,46 +1,46 @@
 ---
-parent: "[[004 Impl dumping for map npc and cutscene scripts]]"
-spawned_by: "[[001 Model mapscript bytecode and dump once]]"
+parent: '[[004 Impl dumping for map npc and cutscene scripts]]'
+spawned_by: '[[001 Model mapscript bytecode and dump once]]'
 context_type: task
 status: done
 ---
 
-Parent: [[004 Impl dumping for map npc and cutscene scripts]]
+Parent: [004 Impl dumping for map npc and cutscene scripts](../004%20Impl%20dumping%20for%20map%20npc%20and%20cutscene%20scripts.md)
 
-Spawned by: [[001 Model mapscript bytecode and dump once]]
+Spawned by: [001 Model mapscript bytecode and dump once](001%20Model%20mapscript%20bytecode%20and%20dump%20once.md)
 
-Spawned in: [[001 Model mapscript bytecode and dump once#^spawn-task-59c92c|^spawn-task-59c92c]]
+Spawned in: [^spawn-task-59c92c](001%20Model%20mapscript%20bytecode%20and%20dump%20once.md#spawn-task-59c92c)
 
 # 1 Journal
 
 2025-10-30 Wk 44 Thu - 19:58 +03:00
 
-We need to include events instead of hwords. Let's introduce a new field type `event16_`. 
+We need to include events instead of hwords. Let's introduce a new field type `event16_`.
 
 We need to correct any `hwordN` to `event16_N`
 
 For NPC Scripts, `0x04-0x07`
 
-All of the events are documented in `constants/enums/ewram_flags.inc`. 
+All of the events are documented in `constants/enums/ewram_flags.inc`.
 
 2025-10-30 Wk 44 Thu - 22:32 +03:00
 
 Wrote the new logic for dumping enums. Testing.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
 cargo run --bin dump_script map once byte_804EA41
 
 # out (error, relevant)
 thread 'main' panicked at src/bin/dump_script.rs:28:10:
 Failed to read event flags: EnumLineMustHaveOneToken("\tenum EVENT_1716 // constantly written")
-```
+````
 
 Need to strip comments
 
 2025-10-30 Wk 44 Thu - 22:41 +03:00
 
-Continuing to change `hwordN` to `event16_N`, 
+Continuing to change `hwordN` to `event16_N`,
 
 Seems we have to also update textscript eventually with event flags and also mutshot constants...
 
@@ -54,7 +54,7 @@ For Cutscene Camera Scripts, `0x40, 0x44, `
 
 Now we dump events!
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
 cargo run --bin dump_script map once MapScriptOnInitCentralTown_804EA28
 
@@ -62,9 +62,9 @@ cargo run --bin dump_script map once MapScriptOnInitCentralTown_804EA28
         ms_set_event_flag byte1=0xFF event16_2=EVENT_16D0
         ms_jump_if_flag_clear byte1=0xFF event16_2=EVENT_A9B destination4=byte_804EA41
         ms_init_eStruct200a6a0 ptr1=sub_804C700+1 ptr5=sub_804C71C+1 ptr9=NULL
-```
+````
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
 cargo run --bin dump_script map once byte_804EA41
 
@@ -87,6 +87,6 @@ mapscript_804EA88:
         ms_jump_if_progress_in_range byte1=0x00 byte2=0x00 destination3=byte_804EAAC
         ms_jump_if_progress_in_range byte1=0x01 byte2=0x01 destination3=mapscript_804EAC6
         ms_jump destination1=byte_804EEF6
-```
+````
 
 OK

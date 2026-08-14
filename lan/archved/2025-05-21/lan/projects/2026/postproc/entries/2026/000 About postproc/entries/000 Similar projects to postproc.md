@@ -1,14 +1,14 @@
 ---
-parent: "[[000 About postproc]]"
-spawned_by: "[[000 About postproc]]"
+parent: '[[000 About postproc]]'
+spawned_by: '[[000 About postproc]]'
 context_type: entry
 ---
 
-Parent: [[000 About postproc]]
+Parent: [000 About postproc](../000%20About%20postproc.md)
 
-Spawned by: [[000 About postproc]]
+Spawned by: [000 About postproc](../000%20About%20postproc.md)
 
-Spawned in: [[000 About postproc#^spawn-entry-d5e9b9|^spawn-entry-d5e9b9]]
+Spawned in: [^spawn-entry-d5e9b9](../000%20About%20postproc.md#spawn-entry-d5e9b9)
 
 # 1 Journal
 

@@ -1,15 +1,15 @@
 ---
-parent: "[[002 bn6f ROM shifting]]"
-spawned_by: "[[001 Wk 51 bn6f ROM Shifting]]"
+parent: '[[002 bn6f ROM shifting]]'
+spawned_by: '[[001 Wk 51 bn6f ROM Shifting]]'
 context_type: investigation
 status: todo
 ---
 
-Parent: [[002 bn6f ROM shifting]]
+Parent: [002 bn6f ROM shifting](../002%20bn6f%20ROM%20shifting.md)
 
-Spawned by: [[001 Wk 51 bn6f ROM Shifting]]
+Spawned by: [001 Wk 51 bn6f ROM Shifting](../entries/001%20Wk%2051%20bn6f%20ROM%20Shifting.md)
 
-Spawned in: [[001 Wk 51 bn6f ROM Shifting#^spawn-invst-94bd41|^spawn-invst-94bd41]]
+Spawned in: [^spawn-invst-94bd41](../entries/001%20Wk%2051%20bn6f%20ROM%20Shifting.md#spawn-invst-94bd41)
 
 # 1 Journal
 
@@ -17,24 +17,24 @@ Spawned in: [[001 Wk 51 bn6f ROM Shifting#^spawn-invst-94bd41|^spawn-invst-94bd4
 
 Jacking in to Lan's PC gives the error:
 
-```
+````
 The game has crashed with the following error:
 
 Jumped to invalid address: FC10F7FE
-```
+````
 
 I also get the error with `5011801C`
 
 2025-12-17 Wk 51 Wed - 14:01 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/branches/bn6f@tmp
 mgba bn6f.elf -g &; gdb-multiarch bn6f.elf -ex "target remote localhost:2345"
-```
+````
 
 2025-12-17 Wk 51 Wed - 14:22 +03:00
 
-```
+````
 (gdb) bt
 #0  0x310c7ca8 in ?? ()
 #1  0x08038544 in RunCutscene () at ./asm/map_script_cutscene.s:6181
@@ -57,11 +57,11 @@ sp             0x3007dac           0x3007dac
 lr             0x8038544           134448452
 pc             0x310c7ca8          0x310c7ca8
 cpsr           0x3f                63
-```
+````
 
 Breaking at `RunCutscene` when trying to jack in to Lan's PC, and pressing `n` continuously after the break to reach the point of crash:
 
-```
+````
 RunCutscene () at ./asm/map_script_cutscene.s:6184
 6184            bne .cutsceneCommandLoop
 (gdb)
@@ -78,19 +78,19 @@ RunCutscene () at ./asm/map_script_cutscene.s:6184
 6181            bx r0
 (gdb)
 0x310c7ca8 in ?? ()
-```
+````
 
-This is `bx r0` for `RunCutscene`. 
+This is `bx r0` for `RunCutscene`.
 
-```
+````
 (gdb) b asm/map_script_cutscene.s:6181
-```
+````
 
 9 continues to crash.
 
 After 8 continues:
 
-```
+````
 (gdb) info reg
 r0             0x310c7ca9          822901929
 r1             0x0                 0
@@ -115,11 +115,11 @@ cpsr           0x3f                63
 #1  0x08034c0c in cutscene_8034BB8 () at ./asm/asm03_1_0.s:1916
 #2  0x08005272 in gamestate_OnMapUpdate_8005268 () at ./asm/asm00_1.s:4253
 #3  0x080050fc in cbGameState_80050EC () at ./asm/asm00_1.s:4082
-```
+````
 
 Before the 9th encounter:
 
-```
+````
 # 2nd encounter
 (gdb) info reg
 r0             0x8037b09           134445833
@@ -266,33 +266,32 @@ cpsr           0x3f                63
 #2  0x08005272 in gamestate_OnMapUpdate_8005268 () at ./asm/asm00_1.s:4253
 #3  0x080050fc in cbGameState_80050EC () at ./asm/asm00_1.s:4082
 Backtrace stopped: previous frame identical to this frame (corrupt stack?)
-```
+````
 
-```
+````
 	// read command pointer and execute
 	ldr r0, [r6,r0]
 	mov lr, pc
 	bx r0
-```
-
+````
 
 Notice that `r6` is consistent across all encounters:
 
-```
+````
 r6             0x803749c           134444188
-```
+````
 
 This is
 
-```
+````
 0803749c l 00000000 CutsceneCommandJumptable
-```
+````
 
 No issue with this. So the problem probably happens right at that ldr, to the index `r0`, and not the indexed command.
 
-via [stackoverflow post](https://stackoverflow.com/questions/6517423/how-to-do-an-specific-action-when-a-certain-breakpoint-is-hit-in-gdb), 
+via [stackoverflow post](https://stackoverflow.com/questions/6517423/how-to-do-an-specific-action-when-a-certain-breakpoint-is-hit-in-gdb),
 
-```
+````
 (gdb) b asm/map_script_cutscene.s:6179
 (gdb) commands
 
@@ -300,9 +299,9 @@ via [stackoverflow post](https://stackoverflow.com/questions/6517423/how-to-do-a
 info reg
 cont
 end 
-```
+````
 
-```
+````
 # encounter 1
 Breakpoint 1, RunCutscene () at ./asm/map_script_cutscene.s:6179
 6179            ldr r0, [r6,r0]
@@ -491,29 +490,29 @@ sp             0x3007dac           0x3007dac
 lr             0x80377a1           134444961
 pc             0x803853e           0x803853e <RunCutscene+34>
 cpsr           0x3f                63
-```
+````
 
-```
+````
 # encounter 8
 r7             0x0                 0
-```
+````
 
 This is bad. `r0` for the command index comes from r7:
 
-```
+````
 	// read current command byte
 	ldrb r0, [r7]
 	lsl r0, r0, #2
-```
+````
 
-but it is NULL there. 
+but it is NULL there.
 
 We need to check `r5` since it we are loading the data from there and it is always `0x2011c50` (`eCutsceneState`)
 
-```
-```
+````
+````
 
-```
+````
 .executeCutsceneScriptsLoop
 	ldr r6, =CutsceneCommandJumptable
 	mov r12, r6
@@ -527,9 +526,9 @@ We need to check `r5` since it we are loading the data from there and it is alwa
 info reg r7
 cont
 end 
-```
+````
 
-```
+````
 Breakpoint 1, RunCutscene () at ./asm/map_script_cutscene.s:6168
 6168            ldr r7, [r5,r7]
 r7             0x1c                28
@@ -537,15 +536,15 @@ r7             0x1c                28
 Breakpoint 1, RunCutscene () at ./asm/map_script_cutscene.s:6168
 6168            ldr r7, [r5,r7]
 r7             0x20                32
-```
+````
 
-```C
+````C
 // in include/structs/CutsceneState.inc
 	ptr CutsceneScriptPos // loc=0x1c
 	ptr CutsceneScriptPos2 // loc=0x20
-```
+````
 
-```
+````
 .executeCutsceneScriptsLoop
 	ldr r6, =CutsceneCommandJumptable
 	mov r12, r6
@@ -560,9 +559,9 @@ x/1w 0x2011c50+0x1c
 x/1w 0x2011c50+0x20
 cont
 end 
-```
+````
 
-```
+````
 Breakpoint 1, RunCutscene () at ./asm/map_script_cutscene.s:6168
 6168            ldr r7, [r5,r7]
 0x2011c6c:      134842404
@@ -572,19 +571,19 @@ Breakpoint 1, RunCutscene () at ./asm/map_script_cutscene.s:6168
 6168            ldr r7, [r5,r7]
 0x2011c6c:      134842423
 0x2011c70:      0
-```
+````
 
-It already had NULL at `CutsceneScriptPos2`. 
+It already had NULL at `CutsceneScriptPos2`.
 
 This is set by `cutscene_8036EFE`, `cutscene_8036ED4` and `StartCutscene`. Let's see which one breaks here.
 
-```
+````
 b cutscene_8036EFE
 b cutscene_8036ED4
 b StartCutscene
-```
+````
 
-```
+````
 Breakpoint 3, StartCutscene () at ./asm/map_script_cutscene.s:2433
 2433            push {r5,lr}
 (gdb) info reg
@@ -605,16 +604,16 @@ sp             0x3007db4           0x3007db4
 lr             0x8034d41           134434113
 pc             0x8036e90           0x8036e90 <StartCutscene>
 cpsr           0x3f                63
-```
+````
 
 It's not set to NULL here and it's only called once. The others aren't being referenced during Jack in, though they appear before on game reset and load.
 
-```
+````
 (gdb) watch *(0x2011c50+0x20)
 Hardware watchpoint 1: *(0x2011c50+0x20)
-```
+````
 
-```
+````
 Old value = 134444688
 New value = 0
 0x0000023c in ?? ()
@@ -641,9 +640,9 @@ lr             0xa4                164
 pc             0x23c               0x23c
 cpsr           0x8000001f          -2147483617
 
-```
+````
 
-```
+````
 Hardware watchpoint 1: *(0x2011c50+0x20)
 
 Old value = 0
@@ -651,20 +650,20 @@ New value = 134444688
 StartCutscene () at ./asm/map_script_cutscene.s:2447
 2447            str r0, [r5,#oCutsceneState_CutsceneScriptPos4] // s_02011C50.ptr_28
 
-```
+````
 
 Then it crashes? Why wasn't there a watchpoint trigger back to NULL?
 
-```
+````
 (gdb) x/1wx 0x2011c50+0x20
 0x2011c70:      0x00000000
-```
+````
 
 But it is set to zero somehow...
 
 2025-12-17 Wk 51 Wed - 15:54 +03:00
 
-```
+````
 CutsceneCmd_decomp_text_archive () at ./asm/map_script_cutscene.s:4455
 
 (gdb)
@@ -676,18 +675,18 @@ x/1wx 0x2011c50+0x204463                str r0, [r5,#oCutsceneState_TextArchiveP
 (gdb) x/1wx 0x2011c50+0x20
 0x2011c70:      0x00000000
 (gdb)
-```
+````
 
-```
+````
 (gdb) x/10x 0x2011c50
 0x2011c50:      0x00000000      0x00000000      0x00000000      0x00000000
 0x2011c60:      0x00000000      0x00000000      0x00000000      0x00000000
 0x2011c70:      0x00000000      0x00000000
-```
+````
 
 So something weird happened at this `DecompressTextArchiveForCutscene`.
 
-```
+````
 (gdb) b DecompressTextArchiveForCutscene
 
 # On jack in
@@ -712,15 +711,15 @@ sp             0x3007da8           0x3007da8
 lr             0x8037ac9           134445769
 pc             0x8037ad0           0x8037ad0 <DecompressTextArchiveForCutscene>
 cpsr           0xa000003f          -1610612673
-```
+````
 
-```
+````
 087385cc g 00000000 CompText87385CC
-```
+````
 
 This has
 
-```
+````
 	def_text_script CompText87385CC_unk9
 	ts_control_lock
 	ts_text_speed delay=0x1
@@ -736,11 +735,11 @@ This has
 	ts_wait frames=0x1E
 	ts_control_unlock
 	ts_end
-```
+````
 
 And other Jack in related text.
 
-```
+````
 4478            bl SWI_LZ77UnCompReadNormalWrite8bit // (src: *const LZ77Compressed<T>, mut_dest: *mut T -> ()
 (gdb) x/1wx 0x2011c50+0x20
 0x2011c70:      0x08037690
@@ -748,42 +747,42 @@ And other Jack in related text.
 4479            ldr r0, =eDecompressionBuf2034A00
 (gdb) x/1wx 0x2011c50+0x20
 0x2011c70:      0x00000000
-```
+````
 
-```
+````
 (gdb)
 4478            bl SWI_LZ77UnCompReadNormalWrite8bit // (src: *const LZ77Compressed<T>, mut_dest: *mut T -> ()
 (gdb) info reg
 r0             0x87385cc           141788620
 r1             0x2034a00           33769984
-```
+````
 
-```
+````
 eDecompressionBuf2034A00:: // 0x2034a00
     .space 4
-```
+````
 
-```
+````
 (gdb) x/1wx 0x2034a00
 0x2034a00:      0x00000000
-```
+````
 
 So the data at `0x2011c50` is somehow getting corrupted in
 
-```
+````
 x/10x 0x2011c50
-```
+````
 
-```
+````
 	ldr r1, =eDecompressionBuf2034A00
 	bl SWI_LZ77UnCompReadNormalWrite8bit // (src: *const LZ77Compressed<T>, mut_dest: *mut T -> ()
-```
+````
 
-Which is just `svc 0x11`. 
+Which is just `svc 0x11`.
 
 Let's see what happens in a matching ROM for this behvior.
 
-```
+````
 (gdb) b DecompressTextArchiveForCutscene
 
 # On JackIn
@@ -846,14 +845,13 @@ cpsr           0x3f                63
 (gdb) x/1wx 0x2011c50+0x20
 0x2011c70:      0x08037690
 
-```
-
+````
 
 We have not been building `bn6f.sym` due to `&&` and it a failed checksum fails that. This is the updated ea:
 
-```
+````
 08738d4c g 00000000 CompText87385CC
-```
+````
 
 But yet in both cases of the OK ROM and the failing ROM, we were accessing `0x87385CC`. Could be due to a formatting problem, `SWI_LZ77UnCompReadNormalWrite8bit` might be zeroing out RAM to signal error, or it ran off on accessing an invalid asset.
 
@@ -861,7 +859,7 @@ So we know we have a false negative on `CompText87385CC` somewhere. Since we cam
 
 Now back to shift2 added after dat37.s:
 
-```
+````
 (gdb) b CutsceneCmd_decomp_text_archive
 
 4456            mov r6, #1
@@ -871,17 +869,17 @@ Now back to shift2 added after dat37.s:
 4458            mov r0, r4
 (gdb) info reg r4
 r4             0x887385cc          2289272268
-```
+````
 
 This data is loaded from `r7`:
 
-```
+````
 r7             0x8098827           134842407
-```
+````
 
 This is undumped:
 
-```
+````
 byte_8098824:: // CutsceneScript
   .byte 0x3F, 0x0, 0x6, 0x3E, 0xCC, 0x85, 0x73, 0x88, 0x2A, 0xFF
 	.byte 0x1E, 0x17, 0x4B, 0xCD, 0x88, 0x9, 0x8, 0x3A, 0x5, 0x2
@@ -901,17 +899,17 @@ byte_8098824:: // CutsceneScript
 	.byte 0x81, 0x0, 0x0, 0x0, 0x0, 0x0, 0x15
 	.word byte_80988C4
 	.word 0x171EFF2A
-```
+````
 
-```
+````
 	ldr r0, off_8034D60 // =byte_8098824 // CutsceneScript
 	bl StartCutscene // (script: *const CutsceneScript, param: u32) -> ()
-```
+````
 
-We need to dump all direct uses of `StartCutscene`. 
+We need to dump all direct uses of `StartCutscene`.
 
-Spawn [[000 Dump all cutscene scripts that directly use StartCutscene]] ^spawn-task-f72885
+Spawn [000 Dump all cutscene scripts that directly use StartCutscene](../tasks/000%20Dump%20all%20cutscene%20scripts%20that%20directly%20use%20StartCutscene.md) ^spawn-task-f72885
 
 2025-12-18 Wk 51 Thu - 15:03 +03:00
 
-Spawn [[003 Look into dumping undumped code with methods outside IDA]] ^spawn-invst-85604d
+Spawn [003 Look into dumping undumped code with methods outside IDA](003%20Look%20into%20dumping%20undumped%20code%20with%20methods%20outside%20IDA.md) ^spawn-invst-85604d

@@ -3,11 +3,11 @@ context_type: investigation
 status: done
 ---
 
-Parent: [[lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/000 Provide a mod replacement for start screen]]
+Parent: [lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/000 Provide a mod replacement for start screen](../000%20Provide%20a%20mod%20replacement%20for%20start%20screen.md)
 
-Spawned by: [[lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/entry/001 Side notes for Impl struct layout parsing from bn6f inc and parse gdb memory xw log]]
+Spawned by: [lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/entry/001 Side notes for Impl struct layout parsing from bn6f inc and parse gdb memory xw log](../entry/001%20Side%20notes%20for%20Impl%20struct%20layout%20parsing%20from%20bn6f%20inc%20and%20parse%20gdb%20memory%20xw%20log.md)
 
-Spawned in: [[lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/entry/001 Side notes for Impl struct layout parsing from bn6f inc and parse gdb memory xw log#^spawn-invst-a5dbfd|^spawn-invst-a5dbfd]]
+Spawned in: [^spawn-invst-a5dbfd](../entry/001%20Side%20notes%20for%20Impl%20struct%20layout%20parsing%20from%20bn6f%20inc%20and%20parse%20gdb%20memory%20xw%20log.md#spawn-invst-a5dbfd)
 
 # Resolution
 
@@ -17,7 +17,7 @@ As this is a pure transformation from a given regex source, the corresponding re
 
 Source:
 
-```rust
+````rust
 use std::sync::Mutex;
 
 use im::HashMap;
@@ -45,7 +45,7 @@ pub fn compile_regex(regex_str: &'static str) -> &'static Regex {
         re_cache[regex_str]
     }
 }
-```
+````
 
 OK
 
@@ -67,7 +67,7 @@ We also want these on `T`, because we do not have the instances of it yet. These
 
 2026-08-08 Wk 32 Sat - 12:08 +03:00
 
-Even if we use `HashMapCached<T>` we could possibly run into usage conflicts because it's not clear what the cache is *for* and there could be multiple, so let's just localize it to `RegexCached<T>`. 
+Even if we use `HashMapCached<T>` we could possibly run into usage conflicts because it's not clear what the cache is *for* and there could be multiple, so let's just localize it to `RegexCached<T>`.
 
 But still in this case the function local side effect for caching was the simplest solution and exposed the least to the consumer. On the other hand, this allows the consumer to chose their caching solution.
 
@@ -83,11 +83,11 @@ We can try to provide `WithSelf` variants of traits. Ex: `CompileRegexWithSelf`.
 
 `RegexCached<T>` works for whatever the consumer initiates. They are in control of using `RegexCached<TheirEnumOfInterest>::new().exhaustive_scan` which will make use of the regex cache.
 
-But what about recursive scanners? 
+But what about recursive scanners?
 
 For example `StructIncInsts` for its `DefineMacro` instruction has a parameter list, with different variants for how they are parsed, it seeks to also exhaustively scan via the enum `MacroParam`.
 
-But it is providing its custom regex capture to type logic by implementing `FromRegexCaptures`, which does not allow it to additionally cache. compiled regex for `MacroParam`. 
+But it is providing its custom regex capture to type logic by implementing `FromRegexCaptures`, which does not allow it to additionally cache. compiled regex for `MacroParam`.
 
 --/ 2026-08-08 Wk 32 Sat - 19:35 +03:00
 
@@ -105,17 +105,17 @@ There is really large surface area impact on the rest of the design for this app
 
 2026-08-08 Wk 32 Sat - 20:45 +03:00
 
-```sh
+````sh
 # in /home/lan/src/cloned/cb/lan22h/bn-repo-editor/Cargo.toml
 [dependencies]
 lazy_static = "1.5.0"
-```
+````
 
 We need to turn out `Regex` into a `'static` reference. Let's leak it:
 
 https://rustbites.com/posts/bite-067/, [docs Box.leak](https://doc.rust-lang.org/1.54.0/std/boxed/struct.Box.html#method.leak)
 
-```rust
+````rust
 use std::sync::Mutex;
 
 use im::HashMap;
@@ -143,7 +143,7 @@ pub fn compile_regex(regex_str: &'static str) -> &'static Regex {
         re_cache[regex_str]
     }
 }
-```
+````
 
 2026-08-08 Wk 32 Sat - 21:29 +03:00
 

@@ -1,21 +1,21 @@
 ---
-parent: "[[002 bn6f ROM shifting]]"
-spawned_by: "[[003 Look into dumping undumped code with methods outside IDA]]"
+parent: '[[002 bn6f ROM shifting]]'
+spawned_by: '[[003 Look into dumping undumped code with methods outside IDA]]'
 context_type: task
 status: done
 ---
 
-Parent: [[002 bn6f ROM shifting]]
+Parent: [002 bn6f ROM shifting](../002%20bn6f%20ROM%20shifting.md)
 
-Spawned by: [[003 Look into dumping undumped code with methods outside IDA]]
+Spawned by: [003 Look into dumping undumped code with methods outside IDA](../investigations/003%20Look%20into%20dumping%20undumped%20code%20with%20methods%20outside%20IDA.md)
 
-Spawned in: [[003 Look into dumping undumped code with methods outside IDA#^spawn-task-249edd|^spawn-task-249edd]]
+Spawned in: [^spawn-task-249edd](../investigations/003%20Look%20into%20dumping%20undumped%20code%20with%20methods%20outside%20IDA.md#spawn-task-249edd)
 
 # 1 Journal
 
 2025-12-23 Wk 52 Tue - 13:33 +03:00
 
-```
+````
 # lists, LoadGFXAnims
 
 off_807ED8C
@@ -180,9 +180,9 @@ byte_8140BF0
 byte_8140BAC
 off_8084054
 off_8084040
-```
+````
 
-```
+````
 	thumb_local_start
 // 0x30 ptr1
 // call LoadGFXAnim with r0=ptr1
@@ -195,11 +195,11 @@ CutsceneCameraCmd_call_sub_8001B1C:
 	.byte ccs_call_sub_8001B1C_cmd
 	.word \ptr1
 	.endm
-```
+````
 
 No single use of `ccs_call_sub_8001B1C` though.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
 
 #cargo run --release --bin dump_script list_trace gfx_anim off_807ED8C &&
@@ -338,99 +338,99 @@ cargo run --release --bin dump_script trace gfx_anim byte_8140BF0 &&
 cargo run --release --bin dump_script trace gfx_anim byte_8140BAC &&
 cargo run --release --bin dump_script trace gfx_anim off_8084054 &&
 cargo run --release --bin dump_script trace gfx_anim off_8084040 &&
-```
+````
 
-```
+````
 speaker-test -t sine -f 1000 -l 1
-```
+````
 
 2025-12-23 Wk 52 Tue - 16:33 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "off_8066048" }
 
 thread 'main' panicked at src/bin/dump_script.rs:215:15:
 script RomEa { ea: 0x08066048 } "off_8066048": We can only cut in ROM EAs: Vram(VramEa { ea: 0x06008040 })
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
-```sh
+````sh
 python3 -c "print(hex(0x06008040 - 0x60079C0))" # 0x680
 python3 -c "print(hex(0x6640 - 0x680))" # 0x5fc0
-```
+````
 
-```C
+````C
 // in vram.s
 byte_60079C0:: // 0x60079C0
 	.space 0x680
 unk_6008040:: // 0x6008040
 	.space 0x5fc0
-```
+````
 
 2025-12-23 Wk 52 Tue - 17:17 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "byte_80524E8" }
 
 thread 'main' panicked at src/bin/dump_script.rs:457:21:
 Failed to read gfx_anim_script instructions at Identifier { s: "byte_80524E8" }: Other error: Failed to read gfx anim script data commands: line 402: Failed to read a u32 at position 12 for buffer of length 14 for data delay
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
 Removing unused pointer `byte_8052502`.
 
 2025-12-23 Wk 52 Tue - 17:20 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "off_8067914" }
 
 thread 'main' panicked at src/bin/dump_script.rs:215:15:
 script RomEa { ea: 0x08067914 } "off_8067914": We can only cut in ROM EAs: Vram(VramEa { ea: 0x06000020 })
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
-```C
+````C
 // in vram.s
 byte_6000000:: // 0x6000000
 	.space 0x20
 unk_6000020:: // 0x6000020
 	.space 0x79A0
-```
+````
 
 2025-12-23 Wk 52 Tue - 17:24 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "off_8067944" }
 
 thread 'main' panicked at src/bin/dump_script.rs:215:15:
 script RomEa { ea: 0x08067944 } "off_8067944": We can only cut in ROM EAs: Vram(VramEa { ea: 0x060000E0 })
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
-```C
+````C
 // in vram.s
 unk_6000020:: // 0x6000020
 	.space 0xC0
 unk_60000E0:: // 0x60000E0
 	.space 0x78E0
-```
+````
 
 2025-12-23 Wk 52 Tue - 17:59 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "byte_807A850" }
 
 thread 'main' panicked at src/bin/dump_script.rs:451:21:
 No terminating command before failing to read gfx_anim_script instructions at Identifier { s: "byte_807A850" }: Partial read Error. Original error: Failed to read gfx anim script data commands: Invalid data encountered at position 68: 0x000000C. Parsed commands: [Inst { name: "gfx_anim_data_ptr", cmd: 255, opt_subcmd: None, fields: [Ptr("ptr", Rom(RomEa { ea: 0x085DB0C0 })), U32("delay", 16)] }, Inst { name: "gfx_anim_data_ptr", cmd: 255, opt_subcmd: None, fields: [Ptr("ptr", Rom(RomEa { ea: 0x085DB0E0 })), U32("delay", 16)] }, Inst { name: "gfx_anim_data_ptr", cmd: 255, opt_subcmd: None, fields: [Ptr("ptr", Rom(RomEa { ea: 0x085DB100 })), U32("delay", 16)] }, Inst { name: "gfx_anim_data_ptr", cmd: 255, opt_subcmd: None, fields: [Ptr("ptr", Rom(RomEa { ea: 0x085DB120 })), U32("delay", 16)] }, Inst { name: "gfx_anim_data_ptr", cmd: 255, opt_subcmd: None, fields: [Ptr("ptr", Rom(RomEa { ea: 0x085DB140 })), U32("delay", 16)] }, Inst { name: "gfx_anim_data_ptr", cmd: 255, opt_subcmd: None, fields: [Ptr("ptr", Rom(RomEa { ea: 0x085DB120 })), U32("delay", 16)] }, Inst { name: "gfx_anim_data_ptr", cmd: 255, opt_subcmd: None, fields: [Ptr("ptr", Rom(RomEa { ea: 0x085DB100 })), U32("delay", 16)] }, Inst { name: "gfx_anim_data_ptr", cmd: 255, opt_subcmd: None, fields: [Ptr("ptr", Rom(RomEa { ea: 0x085DB0E0 })), U32("delay", 16)] }, Inst { name: "gfx_anim_loop", cmd: 1, opt_subcmd: None, fields: [Magic24("magic24_1", 0)] }]
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
 Added
 
-```
+````
 end_gfx_anim_807A8DD::
 	.balign 4, 0
-```
+````
 
 Had to also add `end_gfx_anim_807A89D` and `unk_807A8A0` though...
 
@@ -438,21 +438,21 @@ Well no need for `end_gfx_anim_807A89D`, that was part of the command. Let's try
 
 2025-12-23 Wk 52 Tue - 18:42 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "off_80790EC" }
 
 thread 'main' panicked at src/bin/dump_script.rs:215:15:
 script RomEa { ea: 0x080790EC } "off_80790EC": We can only cut in ROM EAs: Vram(VramEa { ea: 0x06008020 })
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
-```C
+````C
 // in vram.s
 byte_60079C0:: // 0x60079C0
 	.space 0x660
 unk_6008020:: // 0x6008020
 	.space 0x20
-```
+````
 
 There was also another gfx anim script `unk_807A8C0` right after `unk_807A8A0`. Neither of these have any reference, which might mean we have to process them range like...
 
@@ -460,47 +460,47 @@ Also would need to look at the kind of data `off_8079F74` points to.
 
 2025-12-24 Wk 52 Wed - 06:52 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "off_807C974" }
 
 thread 'main' panicked at src/bin/dump_script.rs:215:15:
 script RomEa { ea: 0x0807C974 } "off_807C974": We can only cut in ROM EAs: Vram(VramEa { ea: 0x06005AC0 })
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
-```C
+````C
 // in vram.s
 unk_60000E0:: // 0x60000E0
 	.space 0x78E0
 byte_60079C0:: // 0x60079C0
 	.space 0x660
-```
+````
 
-```sh
+````sh
 python3 -c "print(hex(0x6005AC0 - 0x60000E0))" # 0x59e0
 python3 -c "print(hex(0x78E0 - 0x59E0))" # 0x1f00
-```
+````
 
-```C
+````C
 // in vram.s
 unk_60000E0:: // 0x60000E0
 	.space 0x59E0
 unk_6005AC0:: // 0x6005AC0
 	.space 0x1F00
-```
+````
 
 2025-12-25 Wk 52 Thu - 08:34 +03:00
 
-```
+````
 tools/binutils/bin/arm-none-eabi-ld: data.o: in function `byte_854D410':
 (.data+0x375720): undefined reference to `off_8000701'
-```
+````
 
-Gonna have to blacklist `off_8000700` in `display_symbol_data_as_directives_with_labels`. Also `0x02020201`. 
+Gonna have to blacklist `off_8000700` in `display_symbol_data_as_directives_with_labels`. Also `0x02020201`.
 
 2025-12-25 Wk 52 Thu - 09:31 +03:00
 
-```
+````
 dat38_60::
 	.word 0x00000100
 
@@ -509,43 +509,43 @@ unk_857D870:
 	.word 0x04217C1F, 0x0FDF313F, 0x0C630FDF, 0x61467C1F, 0x75EB4106, 0x7C1F7C1F, 0x0078313F, 0x313F067E
 	.word 0x0C637C1F, 0x0FDF0C63, 0x0FDF0FDF, 0x41067C1F, 0x75EB75EB, 0x7C1F7C1F, 0x313F067E, 0x24950078
 "data/dat38_60.s"
-```
+````
 
 There should be a pointer at the start of `dat38_60`.
 
 2025-12-25 Wk 52 Thu - 12:11 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "off_807F690" }
 
 thread 'main' panicked at src/bin/dump_script.rs:215:15:
 script RomEa { ea: 0x0807F690 } "off_807F690": We can only cut in ROM EAs: Vram(VramEa { ea: 0x06000040 })
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
-```C
+````C
 // in vram.s
 unk_6000020:: // 0x6000020
 	.space 0xC0
-```
+````
 
-```C
+````C
 // in vram.s
 unk_6000020:: // 0x6000020
 	.space 0x20
 unk_6000040:: // 0x6000040
 	.space 0xA0
-```
+````
 
 2025-12-25 Wk 52 Thu - 12:16 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "off_80805C0" }
 
 thread 'main' panicked at src/bin/dump_script.rs:457:21:
 Failed to read gfx_anim_script instructions at Identifier { s: "off_80805C0" }: Other error: Failed to read gfx anim script data commands: line 402: Failed to read a u32 at position 60 for buffer of length 62 for data delay
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
 labels `off_8080684`, `byte_8080689`, `byte_808068A`, `byte_808068B`, `byte_80806B3`, all have no references. Removing.
 
@@ -555,16 +555,16 @@ Hmm `off_80805C0` seems to refer to many labels similar to the ones we removed.
 
 2025-12-25 Wk 52 Thu - 12:29 +03:00
 
-```
+````
      Running `target/release/dump_script trace gfx_anim byte_8039350`
 Tracing gfx_anim_script Identifier { s: "byte_8039350" }
 
 thread 'main' panicked at src/bin/dump_script.rs:457:21:
 Failed to read gfx_anim_script instructions at Identifier { s: "byte_8039350" }: Other error: Failed to read gfx anim script start command: line 319: Expected magic value 4294967295 but got 255: InstSchema { name: "gfx_anim_play_sound", cmd: 16, opt_subcmd: None, fields: [Magic32("magic32_0", 4294967295), Magic32("magic32_4", 4294967295), U8("index"), Magic8("magic8_10", 255), Magic8("magic8_11", 255)] } Magic32("magic32_0", 4294967295)
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
-```rust
+````rust
 // in src/bytecode/gfx_anim_script.rs
 // Parameters for this are guesses
 InstSchema {
@@ -579,16 +579,16 @@ InstSchema {
 		FieldSchema::Magic8("magic8_11".to_owned(), 0xFF),
 	],
 },
-```
+````
 
-```
+````
 byte_8039350:
 	.byte 0xFF, 0x0, 0x0, 0x0, 0xFF, 0x0, 0x0, 0x0, 0x10, 0x3, 0xFF, 0xFF
 	.byte 0xFF, 0xFF, 0xFF, 0xFF, 0x1E, 0x0, 0x0, 0x0, 0x8D, 0x0, 0x0, 0x0
 	.byte 0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0
-```
+````
 
-```
+````
 byte_8039350:
 		  0     1    2    3    4     5    6    7    8     9    10
 	.byte 0xFF, 0x0, 0x0, 0x0, 0xFF, 0x0, 0x0, 0x0, 0x10, 0x3, 0xFF, 0xFF
@@ -596,13 +596,13 @@ byte_8039350:
 		                                                       [ma]gic8_11
 	.byte 0xFF, 0xFF, 0xFF, 0xFF, 0x1E, 0x0, 0x0, 0x0, 0x8D, 0x0, 0x0, 0x0
 	.byte 0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0
-```
+````
 
-So there's some issues here. `magic8_10` is at index 9 (not 10), and `magic8_11` is at index 10 (not 11). `magic32_0` and `magic32_4` are `0x000000FF` instead of `0xFFFFFF`. 
+So there's some issues here. `magic8_10` is at index 9 (not 10), and `magic8_11` is at index 10 (not 11). `magic32_0` and `magic32_4` are `0x000000FF` instead of `0xFFFFFF`.
 
 The first mismatch is because we're annotating wrong. The command is known to be at byte 10 and is thus skipped. Thus:
 
-```
+````
 byte_8039350:
 		  0     1    2    3    4     5    6    7    8     9    10    11
 	.byte 0xFF, 0x0, 0x0, 0x0, 0xFF, 0x0, 0x0, 0x0, 0x10, 0x3, 0xFF, 0xFF
@@ -610,33 +610,33 @@ byte_8039350:
 		                                                             [ma]gic8_11
 	.byte 0xFF, 0xFF, 0xFF, 0xFF, 0x1E, 0x0, 0x0, 0x0, 0x8D, 0x0, 0x0, 0x0
 	.byte 0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0
-```
+````
 
 Now we can see that `magic8_10` and `magic8_11` are `0xFF` as expected, and we are indeed routed to command `0x10`.
 
-```C
+````C
 # in include/bytecode/gfx_anim_script.inc
 	enum GFX_ANIM_PLAY_SOUND // 0x10
 	// haven't actually seen an instance of this command, guessing values
 	.macro gfx_anim_play_sound index:req
 	gfx_anim_data_common_struct 0xffffffff, 0xffffffff, GFX_ANIM_PLAY_SOUND, \index
 	.endm
-```
+````
 
-So our guess of `0xffffffff` was wrong. This is the first instance we have encountered of this in `byte_8039350`. 
+So our guess of `0xffffffff` was wrong. This is the first instance we have encountered of this in `byte_8039350`.
 
 Updating:
 
-```C
+````C
 # in include/bytecode/gfx_anim_script.inc
 	enum GFX_ANIM_PLAY_SOUND // 0x10
   // encountered in byte_8039350
 	.macro gfx_anim_play_sound index:req
 	gfx_anim_data_common_struct 0x000000ff, 0x000000ff, GFX_ANIM_PLAY_SOUND, \index
 	.endm
-```
+````
 
-```rust
+````rust
 // in src/bytecode/gfx_anim_script.rs
 InstSchema {
 	name: "gfx_anim_play_sound".to_owned(),
@@ -650,24 +650,23 @@ InstSchema {
 		FieldSchema::Magic8("magic8_11".to_owned(), 0xFF),
 	],
 },
-```
-
+````
 
 2025-12-25 Wk 52 Thu - 12:56 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "byte_8039350" }
 
 thread 'main' panicked at src/bin/dump_script.rs:457:21:
 Failed to read gfx_anim_script instructions at Identifier { s: "byte_8039350" }: Other error: Failed to read gfx anim script data commands: Sound effect at position 0 must be a u8, but 4294967295 is not.
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
-It also gives value `0xFFFFFFFF` for sound effect... interpreting as `0xFF`. 
+It also gives value `0xFFFFFFFF` for sound effect... interpreting as `0xFF`.
 
 But then this means that what we have here is false:
 
-```rust
+````rust
 Inst {
 	name: "gfx_anim_data_sound".to_owned(),
 	cmd: 0x00, // it doesn't have a command
@@ -678,13 +677,13 @@ Inst {
 		Field::U32("delay".to_owned(), delay),
 	],
 }
-```
+````
 
-`magic4_1` would be `0xFFFFFF`.  Let's just interpret it as u32. 
+`magic4_1` would be `0xFFFFFF`.  Let's just interpret it as u32.
 
 We assume the value is always a u8, so let's make the magic `0xFFFFFF` just in case `sound_effect8` is `0xFF`.
 
-```
+````
 byte_8039350:
 		  0     1    2    3    4     5    6    7    8     9    10    11
 	.byte 0xFF, 0x0, 0x0, 0x0, 0xFF, 0x0, 0x0, 0x0, 0x10, 0x3, 0xFF, 0xFF
@@ -695,30 +694,30 @@ byte_8039350:
 		        [magic24_1     ]
 	.byte 0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0
 	      [delay           ]  [end             ]
-```
+````
 
 But this would not work either because it is also treated as magic in the repo:
 
-```
+````
   // This expects a sound effect index or FFs for command 0x10.
 	.macro gfx_anim_data_sound sound_effect8:req, delay:req
 	.byte \sound_effect8, 0x0, 0x0, 0x0
 	.word \delay
 	.endm
-```
+````
 
 It might be easiest to treat it as `sound_effect32` but we suspect the value can only be in range of a u8. Let's add another command
 
-```
+````
 	.macro gfx_anim_data_no_sound delay:req
 	.word 0xFFFFFFFF
 	.word \delay
 	.endm
-```
+````
 
-`0xFFFFFFFF` probably means disable which probably means no sound. 
+`0xFFFFFFFF` probably means disable which probably means no sound.
 
-```rust
+````rust
 if sound_effect8 == 0xFF {
 	Inst {
 		name: "gfx_anim_data_no_sound".to_owned(),
@@ -741,17 +740,17 @@ if sound_effect8 == 0xFF {
 		],
 	}
 }
-```
+````
 
 2025-12-25 Wk 52 Thu - 12:29 +03:00
 
-`off_8039308` right now looks strange, with indexed offsets to compressed data like `.word compSpriteWhiteDot_84E0C4C+0x20` to `.word compSpriteWhiteDot_84E0C4C+0xA0`. 
+`off_8039308` right now looks strange, with indexed offsets to compressed data like `.word compSpriteWhiteDot_84E0C4C+0x20` to `.word compSpriteWhiteDot_84E0C4C+0xA0`.
 
 2025-12-25 Wk 52 Thu - 13:26 +03:00
 
 It tried to cut there...
 
-```diff
+````diff
  off_8039308:
 -       .word unk_3001AE0
 -       .word 0x20
@@ -812,21 +811,21 @@ It tried to cut there...
 +       .word 0xF0FF0D00, 0xF00FF00F, 0xF00FF00F, 0xF00FF00F, 0xFF0FF00F, 0x0FF00FF0, 0x0FF00FF0, 0x0FF00FF0
 +       .word 0x0FF00FF0, 0xF00FF0FF, 0xF00FF00F, 0xF00FF00F, 0xF00FF00F, 0x0FF0E00F, 0x0FD00FF0
 +"data/sprites/compSpriteWhiteDot_84E0C4C.lz77"
-```
+````
 
-Let's try to decompress `compSpriteWhiteDot_84E0C4C`. 
+Let's try to decompress `compSpriteWhiteDot_84E0C4C`.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 cp data/sprites/compSpriteWhiteDot_84E0C4C.lz77 a.lz
 tools/gbagfx/gbagfx a.lz a.bin
 dd skip=$(python3 -c "print(0x4)") if=a.bin of=a.spr bs=1
 rm a.lz a.bin
-```
+````
 
 We are able to decompress it to `a.spr`, so we assume it is correct. Let's assume though we got the end boundary wrong.  Right now we have proof that `unk_84E0C6C` is the minimum end boundary we know for `compSpriteWhiteDot_84E0C4C`. Let's treat this region as the compressed asset and try to decompress it.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 dd skip=$(python3 -c "print(0x84E0C4C - 0x8000000)") count=$(python3 -c "print(0x84E0C6C - 0x84E0C4C)") if=bn6f.ign of=a.lz bs=1 2>/dev/null
 
@@ -834,28 +833,28 @@ tools/gbagfx/gbagfx a.lz a.bin
 
 # out (error)
 Fatal error while decompressing LZ file.
-```
+````
 
 So this new block is not a valid `LZ file`, while the previous one was.
 
-Let's try with the previous end boundary extracted at: `084e0e68`. 
+Let's try with the previous end boundary extracted at: `084e0e68`.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 dd skip=$(python3 -c "print(0x84E0C4C - 0x8000000)") count=$(python3 -c "print(0x84E0E68 - 0x84E0C4C)") if=bn6f.ign of=a.lz bs=1 2>/dev/null
 
 tools/gbagfx/gbagfx a.lz a.bin
 dd skip=$(python3 -c "print(0x4)") if=a.bin of=a.spr bs=1
 rm a.lz a.bin
-```
+````
 
-and this can generate `a.spr` just fine. If we are to trust that `084e0e68` is the true boundary for `compSpriteWhiteDot_84E0C4C` and that it is a compressed asset with no possible labels within (as verified by decompression), then there cannot be a `unk_84E0C6C`. 
+and this can generate `a.spr` just fine. If we are to trust that `084e0e68` is the true boundary for `compSpriteWhiteDot_84E0C4C` and that it is a compressed asset with no possible labels within (as verified by decompression), then there cannot be a `unk_84E0C6C`.
 
 We've also had 154 uses of `gfx_anim_pal_copy` which is also very trustworthy itself, yet we have a conflict here.
 
 For now I added it manually:
 
-```C
+````C
 // TODO This needs investigation. How is it indexing into a compressed asset?
 off_8039308:
 	gfx_anim_pal_copy dest=unk_3001AE0 size=0x00000020 index=0x01
@@ -867,51 +866,51 @@ off_8039308:
 	gfx_anim_data_ptr ptr=compSpriteWhiteDot_84E0C4C+0x80 delay=0x00000001
 	gfx_anim_data_ptr ptr=compSpriteWhiteDot_84E0C4C+0xA0 delay=0x00000001
 	gfx_anim_end
-```
+````
 
-Spawn [[004 Investigate use of off_8039308 which seems to be invalidly pointing inside a compressed asset]] ^spawn-invst-f89343
+Spawn [004 Investigate use of off_8039308 which seems to be invalidly pointing inside a compressed asset](../investigations/004%20Investigate%20use%20of%20off_8039308%20which%20seems%20to%20be%20invalidly%20pointing%20inside%20a%20compressed%20asset.md) ^spawn-invst-f89343
 
 2025-12-25 Wk 52 Thu - 14:12 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "byte_80392D8" }
 
 thread 'main' panicked at src/bin/dump_script.rs:215:15:
 script RomEa { ea: 0x080392D8 } "byte_80392D8": We can only cut in ROM EAs: IwRam(IwramEa { ea: 0x03001B80 })
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
-```C
+````C
 // in iwram_data.s
 iPalette3001B60:: // 0x3001b60
 	.space 0x120
 iPalette3001C80:: // 0x3001c80
 	.space 0xe0
-```
+````
 
-```C
+````C
 // in iwram_data.s
 iPalette3001B60:: // 0x3001b60
 	.space 0x20
 unk_3001B80:: // 0x3001b80
 	.space 0x100
-```
+````
 
 2025-12-25 Wk 52 Thu - 14:23 +03:00
 
-```
+````
 Tracing gfx_anim_script Identifier { s: "off_8084054" }
 
 thread 'main' panicked at src/bin/dump_script.rs:384:25:
 No instructions read, and yet we fail to read gfx_anim_script instructions at Identifier { s: "off_8084054" }: Partial read Error. Original error: Failed to read gfx anim script start command: Could not route command 52. Parsed instructions: [].
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+````
 
-Those are indexed wrong 
+Those are indexed wrong
 
 `off_8084054` and `off_8084040` are lists, and not scripts themselves. They point to:
 
-```
+````
 cargo run --release --bin dump_script trace gfx_anim dword_8140AA4 &&
 cargo run --release --bin dump_script trace gfx_anim dword_8140AD4 &&
 cargo run --release --bin dump_script trace gfx_anim dword_8140B1C &&
@@ -923,6 +922,6 @@ cargo run --release --bin dump_script trace gfx_anim dword_8140AEC &&
 cargo run --release --bin dump_script trace gfx_anim dword_8140B34 &&
 cargo run --release --bin dump_script trace gfx_anim dword_8140B64 &&
 cargo run --release --bin dump_script trace gfx_anim dword_8140B94 &&
-```
+````
 
 We're done!

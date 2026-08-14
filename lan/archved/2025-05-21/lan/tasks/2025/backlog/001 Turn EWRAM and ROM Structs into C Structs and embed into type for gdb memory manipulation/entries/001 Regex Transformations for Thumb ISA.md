@@ -1,20 +1,20 @@
 ---
-parent: "[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]"
-spawned_by: "[[009 Impl Lexon types for whole thumb instructions]]"
+parent: '[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]'
+spawned_by: '[[009 Impl Lexon types for whole thumb instructions]]'
 context_type: entry
 ---
 
-Parent: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]
+Parent: [001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation](../001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md)
 
-Spawned by: [[009 Impl Lexon types for whole thumb instructions]]
+Spawned by: [009 Impl Lexon types for whole thumb instructions](../tasks/009%20Impl%20Lexon%20types%20for%20whole%20thumb%20instructions.md)
 
-Spawned in: [[009 Impl Lexon types for whole thumb instructions#^spawn-entry-2f8763|^spawn-entry-2f8763]]
+Spawned in: [^spawn-entry-2f8763](../tasks/009%20Impl%20Lexon%20types%20for%20whole%20thumb%20instructions.md#spawn-entry-2f8763)
 
 # 1 Journal
 
 2025-11-04 Wk 45 Tue - 07:47 +03:00
 
-```python
+````python
 rhd_rhs_regex = re.compile(r"^(r[0-9]|r1[0-2]|sp|lr|pc), *(r1[0-2]|r[0-9]|sp|lr|pc)(?!,)$")
 rd_rs_regex = re.compile(r"^(r[0-7]), *(r[0-7])(?!,)$")
 rd_rs_imm_regex = re.compile(r"^(r[0-7]), *(r[0-7]), *(#[^,]+)(?!,)$")
@@ -31,9 +31,9 @@ rd_deref_sp_imm_regex = re.compile(r"^(r[0-7]), *\[ *sp((?= *\])|, *(#[^\]]+)) *
 rlist_regex = re.compile(r"^({[^}]+})$")
 rb_excl_rlist_regex = re.compile(r"^(r[0-7])!, *({[^}]+})$")
 label_or_imm_regex = re.compile(r"^(.+)$")
-```
+````
 
-```python
+````python
 lsl_imm_opcode = Opcode(rd_rs_imm_regex, lsl_imm_opcode_function)
 lsl_reg_opcode = Opcode(rd_rs_regex, lsl_reg_opcode_function)
 lsr_imm_opcode = Opcode(rd_rs_imm_regex, lsr_imm_opcode_function)
@@ -109,11 +109,11 @@ swi_opcode = Opcode(label_or_imm_regex, swi_opcode_function)
 b_opcode = Opcode(label_or_imm_regex, b_opcode_function)
 bl_opcode = Opcode(label_or_imm_regex, bl_opcode_function)
 movflag_pseudo_opcode = Opcode(label_or_imm_regex, movflag_pseudo_opcode_function)
-```
+````
 
 2025-11-04 Wk 45 Tue - 08:21 +03:00
 
-```rust
+````rust
 const RHD_RHS_REGEX: &'static str         = r"^(r[0-9]|r1[0-2]|sp|lr|pc), *(r1[0-2]|r[0-9]|sp|lr|pc)(?!,)";
 const RD_RS_REGEX: &'static str           = r"^(r[0-7]), *(r[0-7])(?!,)";
 const RD_RS_IMM_REGEX: &'static str       = r"^(r[0-7]), *(r[0-7]), *(#[^,]+)(?!,)";
@@ -130,11 +130,11 @@ const RD_DEREF_SP_IMM_REGEX: &'static str = r"^(r[0-7]), *\[ *sp((?= *\])|, *(#[
 const RLIST_REGEX: &'static str           = r"^({[^}]+})";
 const RB_EXCL_RLIST_REGEX: &'static str   = r"^(r[0-7])!, *({[^}]+})";
 const LABEL_OR_IMM_REGEX: &'static str    = r"^(.+)";
-```
+````
 
 2025-11-04 Wk 45 Tue - 08:55 +03:00
 
-```
+````
 Lsl_ImmThumbOpCode,                          RD_RS_IMM_REGEX
 Lsl_RegThumbOpCode,                          RD_RS_REGEX                                                       
 Lsr_ImmThumbOpCode,                          RD_RS_IMM_REGEX
@@ -210,21 +210,21 @@ Swi_ThumbOpCode,                             LABEL_OR_IMM_REGEX
 B_ThumbOpCode,                               LABEL_OR_IMM_REGEX                                             
 Bl_ThumbOpCode,                              LABEL_OR_IMM_REGEX                                              
 Mov_flagPseudoThumbOpCode,                   LABEL_OR_IMM_REGEX                                             
-```
+````
 
 *Listing 1: Mapping from instruction opcode to regex*
 
 2025-11-04 Wk 45 Tue - 09:03 +03:00
 
-Processing `Listing 1` snipped with 
+Processing `Listing 1` snipped with
 
-```
+````
 :'<,'>s/\([A-Za-z]*\)_\([A-Za-z_][A-Za-z0-9]*\),\s*\([A-Za-z_][A-Za-z0-9_]*\)\s*/LexonType::\1_\2 => format!("\1 \{\3\}"),
-```
+````
 
 yields
 
-```
+````
 LexonType::Lsl_ImmThumbOpCode => format!("Lsl {RD_RS_IMM_REGEX}"),
 LexonType::Lsl_RegThumbOpCode => format!("Lsl {RD_RS_REGEX}"),
 LexonType::Lsr_ImmThumbOpCode => format!("Lsr {RD_RS_IMM_REGEX}"),
@@ -300,7 +300,7 @@ LexonType::Swi_ThumbOpCode => format!("Swi {LABEL_OR_IMM_REGEX}"),
 LexonType::B_ThumbOpCode => format!("B {LABEL_OR_IMM_REGEX}"),
 LexonType::Bl_ThumbOpCode => format!("Bl {LABEL_OR_IMM_REGEX}"),
 LexonType::Mov_flagPseudoThumbOpCode => format!("Mov {LABEL_OR_IMM_REGEX}"),
-```
+````
 
 Now just make sure that each instruction is lower case in the format. Can be done with a macro.
 
@@ -310,7 +310,7 @@ We need to route each opcode to its data format.
 
 Apply to `Listing1` the following replaces:
 
-```
+````
 s/RHD_RHS_REGEX/RhdRhs/g
 s/RD_RS_REGEX/RdRs/g
 s/RD_RS_IMM_REGEX/RdRsImm/g
@@ -328,11 +328,11 @@ s/RLIST_REGEX/RList/g
 s/RB_EXCL_RLIST_REGEX/RbExclRList/g
 s/LABEL_OR_IMM_REGEX/LabelOrImm/g
 
-```
+````
 
-to create 
+to create
 
-```
+````
 Lsl_ImmThumbOpCode,                          RdRsImm
 Lsl_RegThumbOpCode,                          RdRs                                                       
 Lsr_ImmThumbOpCode,                          RdRsImm
@@ -408,7 +408,7 @@ Swi_ThumbOpCode,                             LabelOrImm
 B_ThumbOpCode,                               LabelOrImm                                             
 Bl_ThumbOpCode,                              LabelOrImm                                              
 Mov_flagPseudoThumbOpCode,                   LabelOrImm                                             
-```
+````
 
 *Listing 2: Mapping between opcode and data format*
 
@@ -416,13 +416,13 @@ This can be used for filling in for `to_lexon_data_type`:
 
 Apply
 
-```
+````
 :'<,'>s/\([A-Za-z_][A-Za-z0-9_]*\),\s*\([A-Za-z_][A-Za-z0-9_]*\).*/LexonType::\1 => LexonDataType::\2,/g
-```
+````
 
 to `Listing 2` to get:
 
-```
+````
 LexonType::Lsl_ImmThumbOpCode => LexonDataType::RdRsImm,
 LexonType::Lsl_RegThumbOpCode => LexonDataType::RdRs,
 LexonType::Lsr_ImmThumbOpCode => LexonDataType::RdRsImm,
@@ -498,6 +498,6 @@ LexonType::Swi_ThumbOpCode => LexonDataType::LabelOrImm,
 LexonType::B_ThumbOpCode => LexonDataType::LabelOrImm,
 LexonType::Bl_ThumbOpCode => LexonDataType::LabelOrImm,
 LexonType::Mov_flagPseudoThumbOpCode => LexonDataType::LabelOrImm,
-```
+````
 
 Fix `RB_EXCL_RList` manually to `RbExclRList`

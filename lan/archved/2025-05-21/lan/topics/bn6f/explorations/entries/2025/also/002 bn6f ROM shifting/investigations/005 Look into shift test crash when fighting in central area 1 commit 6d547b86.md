@@ -1,21 +1,21 @@
 ---
-parent: "[[002 bn6f ROM shifting]]"
-spawned_by: "[[001 Wk 51 bn6f ROM Shifting]]"
+parent: '[[002 bn6f ROM shifting]]'
+spawned_by: '[[001 Wk 51 bn6f ROM Shifting]]'
 context_type: investigation
 status: todo
 ---
 
-Parent: [[002 bn6f ROM shifting]]
+Parent: [002 bn6f ROM shifting](../002%20bn6f%20ROM%20shifting.md)
 
-Spawned by: [[001 Wk 51 bn6f ROM Shifting]]
+Spawned by: [001 Wk 51 bn6f ROM Shifting](../entries/001%20Wk%2051%20bn6f%20ROM%20Shifting.md)
 
-Spawned in: [[001 Wk 51 bn6f ROM Shifting#^spawn-invst-63eeeb|^spawn-invst-63eeeb]]
+Spawned in: [^spawn-invst-63eeeb](../entries/001%20Wk%2051%20bn6f%20ROM%20Shifting.md#spawn-invst-63eeeb)
 
 # 1 Journal
 
 2025-12-25 Wk 52 Thu - 15:36 +03:00
 
-```
+````
 main:
   .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
   .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
@@ -24,9 +24,9 @@ main:
   .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
   .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
   .include "asm/main.s"
-```
+````
 
-```
+````
 main:
   .include "asm/main.s"
   .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
@@ -35,26 +35,26 @@ main:
   .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
   .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
   .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-```
+````
 
 It happens in both cases.
 
 2025-12-25 Wk 52 Thu - 15:39 +03:00
 
-```
+````
 mgba bn6f.elf -g &; gdb-multiarch bn6f.elf -ex "target remote localhost:2345"
-```
+````
 
 When we start a battle in Central Area 1, we get a crash here:
 
-```
+````
 Program received signal SIGINT, Interrupt.
 0x493a1840 in ?? ()
 (gdb) bt
 #0  0x493a1840 in ?? ()
 #1  0x080289ec in sub_8028250 () at ./asm/asm03_0.s:3955
 Backtrace stopped: previous frame identical to this frame (corrupt stack?)
-```
+````
 
 Breaking at `sub_8028250`, and when triggered, we'll just do `n` until we crash.
 
@@ -62,7 +62,7 @@ We're crashing in the `bx` there, but no the first call. `asm/asm03_0.s:3955`
 
 Breaking there we get
 
-```
+````
 Breakpoint 1, sub_8028250 () at ./asm/asm03_0.s:3955
 3955            bx r0
 (gdb) info reg r0
@@ -74,11 +74,11 @@ r0             0x8028a05           134384133
 r0             0x8028a91           134384273
 r0             0x8028a91           134384273
 r0             0x493a1840          1228544064
-```
+````
 
-This is likely due to a false index from `getLocOfActiveChips_8027E1C`, which in this case just loads a value from `unk_20365C0`. 
+This is likely due to a false index from `getLocOfActiveChips_8027E1C`, which in this case just loads a value from `unk_20365C0`.
 
-```
+````
 (gdb) b asm/asm03_0.s:3955
 (gdb) commands
 
@@ -87,24 +87,24 @@ info reg r0
 x/10wx 0x20365C0
 cont
 end 
-```
+````
 
 The data there doesn't change at all. It's always
 
-```
+````
 (gdb) x/10wx 0x20365C0
 0x20365c0:      0x010aff00      0x00000000      0x0203cdb0      0x0200ff00
 0x20365d0:      0x00000000      0x0203cdb2      0x03010700      0x00000000
 0x20365e0:      0x0203cdb4      0x0402ff00
-```
+````
 
-Let's break at the `ldrb r0, [r4]` instead. This is the index that would be transformed then indexed by for the `bx`. 
+Let's break at the `ldrb r0, [r4]` instead. This is the index that would be transformed then indexed by for the `bx`.
 
 The line after it, `lsl r0, r0, #2`, is at `asm/asm03_0.s:3951`
 
 Let's look at the line just where it is about to be indexed, which has the multiplication by 4 transformation: `ldr r0, [r2,r0]` at `asm/asm03_0.s:3953`. Looking at the `ldrb r0, [r4]` line would be a bit early as we would see the value loaded. The break stops before executing the inst.
 
-```
+````
 (gdb) b asm/asm03_0.s:3953
 (gdb) commands
 
@@ -112,9 +112,9 @@ Let's look at the line just where it is about to be indexed, which has the multi
 info reg r0 r4
 cont
 end 
-```
+````
 
-```
+````
 Breakpoint 1, sub_8028250 () at ./asm/asm03_0.s:3953
 3953            ldr r0, [r2,r0]
 r0             0x0                 0
@@ -154,17 +154,17 @@ Breakpoint 1, sub_8028250 () at ./asm/asm03_0.s:3953
 3953            ldr r0, [r2,r0]
 r0             0x228               552
 r4             0x2036614           33777172
-```
+````
 
 So r4 starts at `unk_20365C0` , and keeps incrementing by 12.  Eventually we get this `0x228` index which crashes us.
 
 We do not know what writes to `unk_20365C0`, so let's try to find out with a watchpoint:
 
-```
+````
 watch *0x20365C0
-```
+````
 
-```
+````
 # In battle while viruses are being spawned in CentralArea1
 
 Hardware watchpoint 1: *0x20365C0
@@ -180,7 +180,7 @@ Old value = 17433866
 New value = 17433856
 sub_8027EE8 () at ./asm/asm03_0.s:3434
 3434            add r4, #0xc
-```
+````
 
 `sub_8027E90` moves `r4` into `r2`, but `r4` originates from outside it.
 
@@ -188,21 +188,21 @@ sub_8027EE8 () at ./asm/asm03_0.s:3434
 
 Both of those functions are called by `sub_8027E2C` which saves this to `r4`:
 
-```C
+````C
 mov r0, #0
 bl getLocOfActiveChips_8027E1C // (int a1) -> void*
 mov r4, r0
-```
+````
 
-```C
+````C
 // in ewram.s
 unk_20365C0:: // 0x20365c0
 	.space 160
-```
+````
 
-It's probably 156 bytes, since that's divisible by 12 and yields 13 slots. 
+It's probably 156 bytes, since that's divisible by 12 and yields 13 slots.
 
-```
+````
 # At crash
 (gdb) x/12bx 0x20365C0+0*12
 0x20365c0:      0x00    0xff    0x0a    0x01    0x00    0x00    0x00    0x00
@@ -228,15 +228,15 @@ It's probably 156 bytes, since that's divisible by 12 and yields 13 slots.
 (gdb) x/12bx 0x20365C0+7*12
 0x2036614:      0x8a    0xff    0x0a    0x0a    0x00    0x00    0x00    0x00
 0x203661c:      0x00    0x00    0x00    0x00
-```
+````
 
-Let's find out why there's a `0x8a` in `0x2036614`. 
+Let's find out why there's a `0x8a` in `0x2036614`.
 
-```
+````
 watch *0x2036614
-```
+````
 
-```
+````
 Hardware watchpoint 1: *0x2036undefined reference to614
 
 Old value = 0
@@ -245,13 +245,13 @@ sub_8027E90 () at ./asm/asm03_0.s:3378
 3378            str r0, [r2,#4]
 
 # Then crash
-```
+````
 
 2025-12-25 Wk 52 Thu - 16:34 +03:00
 
 Let's monitor registers `r2` and `r0` here:
 
-```
+````
 	thumb_local_start
 sub_8027E90:
 	push {r6,lr}
@@ -263,9 +263,9 @@ loc_8027E98:
 	str r0, [r2]
 ==>	mov r0, #0 # asm/asm03_0.s:3377
 	str r0, [r2,#4]
-```
+````
 
-```
+````
 (gdb) b asm/asm03_0.s:3377
 (gdb) commands
 
@@ -274,9 +274,9 @@ info reg r2 r0
 x/12bx 0x2036614
 cont
 end 
-```
+````
 
-```
+````
 # At battle start on virus spawn
 
 Breakpoint 1, sub_8027E90 () at ./asm/asm03_0.s:3377
@@ -292,13 +292,13 @@ r2             0x2036614           33777172
 r0             0x806098a           134613386
 0x2036614:      0x8a    0x09    0x06    0x08    0x00    0x00    0x00    0x00
 0x203661c:      0x00    0x00    0x00    0x00
-```
+````
 
 This is where it was written.
 
 Here are all of them:
 
-```
+````
 Breakpoint 1, sub_8027E90 () at ./asm/asm03_0.s:3377
 3377            mov r0, #0
 r2             0x20365c0           33777088
@@ -386,21 +386,23 @@ undefined reference to```
 
 Anyway, these were fetched from here:
 
-```
+````
+
 dword_802A7CC:
-	.word 0x10A050A
-	.word 0x200060A
-	.word 0x301070A
-	.word 0x402080A
-	.word 0xA03090A
-	.word 0x60B000A
-	.word 0x705010A
-	.word byte_806020A
-	.word 0x907030B
-	.word 0xB08040B
-	.word 0x40B01
-	.word 0x5090A0B
-```
+.word 0x10A050A
+.word 0x200060A
+.word 0x301070A
+.word 0x402080A
+.word 0xA03090A
+.word 0x60B000A
+.word 0x705010A
+.word byte_806020A
+.word 0x907030B
+.word 0xB08040B
+.word 0x40B01
+.word 0x5090A0B
+
+````
 
 See that out of place `byte_806020A`? It's a fake positive pointer. Removing `byte_806020A`. There's `loc_8030200+1` which we're also removing close to it.
 
@@ -410,35 +412,40 @@ Now battle no longer crashes, but it lags! And the machine gun tower enemies (`G
 
 lag issue persists even when relocating the shift to 
 
-```
+````
+
 asm21:
-	.include "asm/asm21.s"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-```
+.include "asm/asm21.s"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+
+````
 
 Let's try with shift at
 
-```
+````
+
 dat37:
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-  .incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
-	.include "data/dat37.s"
-```
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.incbin "data/compressed/CompCapcomLogoTilemap_86C3E94.lz77"
+.include "data/dat37.s"
+
+````
 
 Here the lag persists *but* the gunner AI functionality works!
 
 Trying to just send a break when I see lag to see if we stop anywhere interesting.
 
-```
+````
+
 x1 ai_eventuallyRunsAIAttack_801AF44
 x4 main_awaitFrame
 x7 ply_note
@@ -446,7 +453,8 @@ x1 sub_814E260
 x2 sub_814F3A4
 x1 sub_814E528
 x1 sub_3005EBA
-```
+
+````
 
 2025-12-25 Wk 52 Thu - 17:52 +03:00
 
@@ -458,11 +466,13 @@ Spawn [[002 rom.s shift pattern 6f1973]] ^spawn-entry-6f1973
 
 The code state is
 
-```
+````
+
 6d547b86
 harcode byte_806020A and loc_8030200+1 next to it
 apply shift pattern 6f1973 to rom.s
-```
+
+````
 
 ```diff
 # in /home/lan/src/cloned/gh/dism-exe/branches/bn6f@tmp
@@ -483,21 +493,21 @@ diff -u a.diff b.diff
  00002050: d2d2 d2d2 d2d2 d2d2 d2d2 d2d2 d2d2 d2d2  ................
  00002060: d2d2 d2d2 d2d2 d2d2 dad2 dad6 d2d3 d252  ...............R
  00002070: d2d2 d2d2 d2d2 d2d2 d2d2 d2d2 2dd2 d2d2  ............-...
-```
+````
 
 2025-12-25 Wk 52 Thu - 17:55 +03:00
 
-```
+````
 # On battle with Gunner after selecting chips
 Program received signal SIGILL, Illegal instruction.
 0x00000004 in ?? ()
 (gdb) bt
 #0  0x00000004 in ?? ()
-```
+````
 
 2025-12-25 Wk 52 Thu - 18:08 +03:00
 
-```
+````
 
 26              mov r0, r10
 (gdb)
@@ -534,11 +544,11 @@ Program received signal SIGILL, Illegal instruction.
 (gdb)
 Cannot find bounds of current function
 (gdb)
-```
+````
 
 This is the `bx` at `asm/main.s:40`.
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/main.s:40
@@ -548,11 +558,11 @@ This is the `bx` at `asm/main.s:40`.
 info reg r0
 cont
 end 
-```
+````
 
-We don't get much info out of this, it's always `0x800586d` (`cbGameState_80050EC`). 
+We don't get much info out of this, it's always `0x800586d` (`cbGameState_80050EC`).
 
-```
+````
 // This happens many times
 Breakpoint 1, main_ () at ./asm/main.s:40
 40              bx r0
@@ -561,11 +571,11 @@ r0             0x800586d           134240365
 // Then this
 Program received signal SIGILL, Illegal instruction.
 0x00000004 in ?? ()
-```
+````
 
-We can repeat the process for the dispatcher `cbGameState_80050EC`. 
+We can repeat the process for the dispatcher `cbGameState_80050EC`.
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/asm00_1.s:4082
@@ -575,24 +585,24 @@ We can repeat the process for the dispatcher `cbGameState_80050EC`.
 info reg r0
 cont
 end 
-```
+````
 
 It's always at `0x8005ae1` (`sub_8005360`).
 
-```
+````
 Breakpoint 1, cbGameState_80050EC () at ./asm/asm00_1.s:4082
 4082            bx r0
 r0             0x8005ae1           134240993
 
 Program received signal SIGILL, Illegal instruction.
 0x00000004 in ?? ()
-```
+````
 
-So `sub_8005360` will call the battle main, or otherwise await until we need to `EnterMap`. 
+So `sub_8005360` will call the battle main, or otherwise await until we need to `EnterMap`.
 
-```sh
+````sh
 ./replacep.sh "sub_8005360" "HandlesBattleMainUntilEndOfBattleThenTriggersEnterMap"
-```
+````
 
 2025-12-25 Wk 52 Thu - 18:30 +03:00
 
@@ -600,7 +610,7 @@ Okay now we know `HandlesBattleMainUntilEndOfBattleThenTriggersEnterMap` is alwa
 
 `battle_main_8007800` also has a `bx` at `asm/asm00_1.s:8940`, so let's repeat the process there.
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/asm00_1.s:8940
@@ -610,24 +620,24 @@ Okay now we know `HandlesBattleMainUntilEndOfBattleThenTriggersEnterMap` is alwa
 info reg r1
 cont
 end 
-```
+````
 
 Note the issue does not reproduce if you just fight a battle with only metteurs.
 
 In this case `0x80081c5` (`battle_update_8007A44`) is always triggered.
 
-```
+````
 Breakpoint 1, battle_main_8007800 () at ./asm/asm00_1.s:8940
 8940            bx r1
 r1             0x80081c5           134250949
 
 Program received signal SIGILL, Illegal instruction.
 0x00000004 in ?? ()
-```
+````
 
 `battle_update_8007A44` also has a `bx` at `asm/asm00_1.s:9306`. Repeating process.
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/asm00_1.s:9306
@@ -637,22 +647,22 @@ Program received signal SIGILL, Illegal instruction.
 info reg r0
 cont
 end 
-```
+````
 
-```
+````
 Breakpoint 1, battle_update_8007A44 () at ./asm/asm00_1.s:9306
 9306            bx r0
 r0             0x80098d9           134256857
 
 Program received signal SIGILL, Illegal instruction.
 0x00000004 in ?? ()
-```
+````
 
 `0x80098d9` (`sub_8009158`) is always triggered.
 
 This has a `bx r1` at `asm/asm00_1.s:12280`.
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/asm00_1.s:12280
@@ -662,16 +672,16 @@ This has a `bx r1` at `asm/asm00_1.s:12280`.
 info reg r1
 cont
 end 
-```
+````
 
-```
+````
 Breakpoint 1, sub_8009158 () at ./asm/asm00_1.s:12280
 12280           bx r1
 r1             0x8009b0b           134257419
 
 Program received signal SIGILL, Illegal instruction.
 0x00000004 in ?? ()
-```
+````
 
 `0x8009b0b` $\to$ `sub_800938A` which is always triggered.
 
@@ -679,14 +689,14 @@ It has dispatcher `sub_800801C` with a `bx r1` at `asm/asm00_1.s:9961`
 
 Can also confirm via `sha1sum ~/src/cloned/gh/dism-exe/bn6f/bn6f.sav bn6f.sav` that the save file only changes very close or at the crash point.
 
-```
+````
 96181d7c51178c0f6907cbb008488553cdedbf90  /home/lan/src/cloned/gh/dism-exe/bn6f/bn6f.sav
 7bfe68683e5c3e3e27f4cb2b0529c5cf0e26f08b  bn6f.sav
-```
+````
 
 2025-12-25 Wk 52 Thu - 18:55 +03:00
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/asm00_1.s:9961
@@ -696,11 +706,11 @@ Can also confirm via `sha1sum ~/src/cloned/gh/dism-exe/bn6f/bn6f.sav bn6f.sav` t
 info reg r1
 cont
 end 
-```
+````
 
 This one changes.
 
-```
+````
 // Showing unique instances only
 
 // x4
@@ -720,19 +730,19 @@ r1             0x8008853           134252627
 
 Program received signal SIGILL, Illegal instruction.
 0x00000004 in ?? ()
-```
+````
 
 `0x8008b8d` $\to$ `sub_800840C`, `0x80087e5` $\to$ `sub_8008064`, `0x8008853` $\to$ `sub_80080D2`.
 
 `sub_80080D2` has some logic for pausing and unpausing battle.
 
-Now that we know that it's from the second trigger of `sub_80080D2`, let's try to spam `s` after the second break of it, once we're in a battle with a gunner and selected chips. 
+Now that we know that it's from the second trigger of `sub_80080D2`, let's try to spam `s` after the second break of it, once we're in a battle with a gunner and selected chips.
 
-First trigger is right after `BATTLE START!`, 
+First trigger is right after `BATTLE START!`,
 
 Now we just spam `s` to step till we crash:
 
-```
+````
 object_getPanelDataOffset () at ./asm/object.s:2151
 2151            pop {pc}
 (gdb)
@@ -758,17 +768,17 @@ sub_801A186 () at ./asm/asm00_2.s:21440
 ^M
 Program received signal SIGILL, Illegal instruction.
 0x00000004 in ?? ()
-```
+````
 
 And it seems to happen at `sub_801A186`, but nowhere there seems to indicate we should crash.
 
-It's also reproducible (`N=2`). 
+It's also reproducible (`N=2`).
 
 The functions encountered in the `s` mash (reversed, last first):
 
 These are the functions encountered as we mashed `s` from `sub_80080D2` breakpoint 2nd trigger:
 
-```
+````
 sub_8012DFC () at ./asm/asm00_2.s:8899
 sub_8010022 () at ./asm/asm00_2.s:2631
 battle_findPlayer () at ./asm/asm00_2.s:3128
@@ -1059,13 +1069,13 @@ object_getPanelDataOffset
 _object_getPanelDataOffset
 object_getPanelDataOffset
 sub_801A186
-```
+````
 
 Somewhere here, the issue happened. We can see `sub_801A186` is called 7 times before the crash happens.
 
 Sometimes it crashes after 6 times, sometimes 5 times.
 
-```
+````
 Breakpoint 1, sub_801A186 () at ./asm/asm00_2.s:21428
 battle_isTimeStop () at ./asm/asm00_1.s:14377
 battle_getFlags () at ./asm/asm00_1.s:14746
@@ -1122,19 +1132,19 @@ _object_getPanelDataOffset () at ./asm/asm38.s:4208
 object_getPanelDataOffset () at ./asm/object.s:2151
 sub_801A186 () at ./asm/asm00_2.s:21440
 
-```
+````
 
 one consistent thing is that it seems to always crash here:
 
-```
+````
 	strb r1, [r7,#oCollisionData_PoisonPanelTimer]
 	cmp r0, #6
 	bne locret_801A1FA
-```
+````
 
 This bne is at `asm/asm00_2.s:21464` Let's break there and examine some data.
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/asm00_2.s:21464
@@ -1144,9 +1154,9 @@ This bne is at `asm/asm00_2.s:21464` Let's break there and examine some data.
 info reg r0 r1 r7
 cont
 end 
-```
+````
 
-```
+````
 // always
 r0             0x2                 2
 r1             0x0                 0
@@ -1175,21 +1185,21 @@ r7             0x20384f0           33785072
 r7             0x2038598           33785240
 r7             0x2038640           33785408
 
-```
+````
 
 2025-12-25 Wk 52 Thu - 20:02 +03:00
 
 What if we try to disable `sub_801A186`? We reproduce the problem even when `sub_801A186` is disabled!
 
-So now when you mash `S`, you find yourself in `sub_801A36A`. 
+So now when you mash `S`, you find yourself in `sub_801A36A`.
 
 This issue is happening at a different thread or by hardware it seems.
 
-We have some investigations into the save datasystem, though still incomplete. [[000 Exploring bn6f save data]]
+We have some investigations into the save datasystem, though still incomplete. [000 Exploring bn6f save data](../../000%20Exploring%20bn6f%20save%20data/000%20Exploring%20bn6f%20save%20data.md)
 
 There are ISRs at `off_3005CA0`, specifically `sub_3005CDA`  has a `bx r0` at `asm/asm38.s:148`. Let's see what this triggers.
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/asm38.s:148
@@ -1199,24 +1209,24 @@ There are ISRs at `off_3005CA0`, specifically `sub_3005CDA`  has a `bx r0` at `a
 info reg r0
 cont
 end 
-```
+````
 
-```
+````
 Breakpoint 1, sub_3005CDA () at ./asm/asm38.s:148
 148             bx r0
 r0             0x803e5f3           134473203
 
 Program received signal SIGILL, Illegal instruction.
 0x00000004 in ?? ()
-```
+````
 
-Always `0x803e5f3` (`sub_803DE72`). 
+Always `0x803e5f3` (`sub_803DE72`).
 
-This leads us to `sub_81445F8`. 
+This leads us to `sub_81445F8`.
 
 It has a `bx r0` at `asm/libs.s:793`
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/libs.s:793
@@ -1226,22 +1236,22 @@ It has a `bx r0` at `asm/libs.s:793`
 info reg r0
 cont
 end 
-```
+````
 
-```
+````
 Breakpoint 1, sub_81445F8 () at ./asm/libs.s:793
 793             bx r0
 r0             0x803e601           134473217
 
 Program received signal SIGILL, Illegal instruction.
 0x00000004 in ?? ()
-```
+````
 
 Always `0x803e601` (`locret_803DE80`). It does nothing.
 
 Let's try to s mash from `sub_81445F8` after encountering the gunner and selecting chips.
 
-```
+````
 loc_3005C6C () at ./asm/asm38.s:106
 106             ldmfd sp!, {r0-r3,lr}
 (gdb)
@@ -1255,15 +1265,15 @@ loc_3005C6C () at ./asm/asm38.s:107
 110             bx lr
 (gdb)
 0x00000194 in ?? ()
-```
+````
 
 It breaks here, but this crash seems to be because we're staying in the ISR too long, it's before the crash we're interested in, and the save was not corrupted yet.
 
-We know also that `sub_3005D24` is always being called which is responsible for some DMA. 
+We know also that `sub_3005D24` is always being called which is responsible for some DMA.
 
 it also does a `CopyWords` indirectly at `asm/asm38.s:211`. We can examine the parameters.
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/asm38.s:211
@@ -1273,13 +1283,13 @@ it also does a `CopyWords` indirectly at `asm/asm38.s:211`. We can examine the p
 info reg r0 r1 r2
 cont
 end 
-```
+````
 
 Well seems we never get to that part.
 
-Let's try `asm/asm38.s:190` which is right before a write to `DMA0SourceAddress`. 
+Let's try `asm/asm38.s:190` which is right before a write to `DMA0SourceAddress`.
 
-```
+````
 # Pause at gunner battle after selecting chips, force break, and enter these:
 
 (gdb) b asm/asm38.s:190
@@ -1289,7 +1299,7 @@ Let's try `asm/asm38.s:190` which is right before a write to `DMA0SourceAddress`
 info reg r0 r1 r2
 cont
 end 
-```
+````
 
 That also is never reached.
 
@@ -1297,7 +1307,7 @@ That also is never reached.
 
 Hmm.
 
-```
+````
 	.equ DMA0SourceAddress, 0x40000B0
 	.equ DMA0DestinationAddress, 0x40000B4
 	.equ DMA1SourceAddress, 0x40000BC
@@ -1309,11 +1319,11 @@ Hmm.
 	
 	.equ DMA1Control, 0x40000C6
 	.equ DMA2Control, 0x40000D2
-```
+````
 
 Let's try to watch on some of these for writes.
 
-```
+````
 watch *0x40000B0
 watch *0x40000B4
 watch *0x40000BC
@@ -1322,17 +1332,17 @@ watch *0x40000C8
 watch *0x40000CC
 watch *0x40000D4
 watch *0x40000D8
-```
+````
 
 Some trigger in the beginning of the game:
 
-```
+````
 sub_814ECC8 () at ./asm/libs.s:22749
 sub_814ECC8 () at ./asm/libs.s:22752
 sub_814ECC8 () at ./asm/libs.s:22757
 sub_814ECC8 () at ./asm/libs.s:22760
 STWI_init_all () at ./asm/libs.s:17421
-```
+````
 
 But none trigger around crash and save corruption time.
 
@@ -1342,11 +1352,11 @@ Breaking at `sub_801A186` gets us right to the point where `BATTLE START` is fad
 
 Now we can find out how many times `sub_3005CDA` triggers from this point.
 
-```
+````
 x1 sub_801A186 breakpoint is triggered: 6 times
 x2 sub_3005CDA breakpoint is triggered: 1 times
 x1 sub_803DE72 breakpoint is triggered: 1 times
-```
+````
 
 I still can't step through `sub_3005CDA` without running into another crash that's unrelated to the sav corrupting one.
 
@@ -1362,11 +1372,10 @@ If we set `sub_80080D2` to just `UnpauseBattle` and then return, the save corrup
 
 2025-12-26 Wk 52 Fri - 12:52 +03:00
 
-We got mgba sort of working in [[000 Investigate mgba sav file format loading]], although there's still a bit of an issue with jagged up/down controls.
+We got mgba sort of working in [000 Investigate mgba sav file format loading](../../000%20Exploring%20bn6f%20save%20data/investigations/000%20Investigate%20mgba%20sav%20file%20format%20loading.md), although there's still a bit of an issue with jagged up/down controls.
 
-Spawn [[006 Attempt to modify mgba to get information on save corruption gunner issue]] ^spawn-invst-cd3046
+Spawn [006 Attempt to modify mgba to get information on save corruption gunner issue](006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md) ^spawn-invst-cd3046
 
 2025-12-26 Wk 52 Fri - 13:16 +03:00
 
 Also note that if you wait too long in the logo screen with sound, it starts screeching. The music playing gets weird too.
-

@@ -2,11 +2,11 @@
 context_type: entry
 ---
 
-Parent: [[lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/000 Provide a mod replacement for start screen]]
+Parent: [lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/000 Provide a mod replacement for start screen](../000%20Provide%20a%20mod%20replacement%20for%20start%20screen.md)
 
-Spawned by: [[lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/task/002 Impl struct layout parsing from bn6f inc and parse gdb memory xw log]]
+Spawned by: [lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/task/002 Impl struct layout parsing from bn6f inc and parse gdb memory xw log](../task/002%20Impl%20struct%20layout%20parsing%20from%20bn6f%20inc%20and%20parse%20gdb%20memory%20xw%20log.md)
 
-Spawned in: [[lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/task/002 Impl struct layout parsing from bn6f inc and parse gdb memory xw log#^spawn-entry-a09d3b|^spawn-entry-a09d3b]]
+Spawned in: [^spawn-entry-a09d3b](../task/002%20Impl%20struct%20layout%20parsing%20from%20bn6f%20inc%20and%20parse%20gdb%20memory%20xw%20log.md#spawn-entry-a09d3b)
 
 # Journal
 
@@ -44,9 +44,9 @@ Amend `# Contracts` to `# Panics`. This is a convention we already see in the ru
 
 For example, I have a function `exhaustive_scan` in `src/util/regex.rs`. It describes a `# Contract` that if a provided scanner outputs an advance that exceeds the input buffer, it will panic.
 
-We can test that this claim holds up: 
+We can test that this claim holds up:
 
-```rust
+````rust
 #[cfg(test)]
 mod tests {
 	mod for_fn_exhaustive_scan {
@@ -58,13 +58,13 @@ mod tests {
 		}
 	}
 }
-```
+````
 
 Notice the claim is a full sentence that describes a property of interest.
 
 We also have `sv_{service}` for testing functionality that is not reducible to any single function. For example a module may offer an http interface and an https interface, and then there are different claims we want to test for `sv_http` and `sv_https`, regardless of how functions are used or composed.
 
-If we are testing a type associated function, we can also use further module `for_ty_{type}` then `for_fn_{method}`. If it is for a specific trait impl, `for_ty_{type} -> for_impl_{trait}` and just 
+If we are testing a type associated function, we can also use further module `for_ty_{type}` then `for_fn_{method}`. If it is for a specific trait impl, `for_ty_{type} -> for_impl_{trait}` and just
 specific claim tests for the trait as a whole.
 
 --/--/ 2026-08-08 Wk 32 Sat - 22:13 +03:00
@@ -79,15 +79,15 @@ A lot of the time we want to provide some basic testing. So you can have a gener
 
 Apparently both of these are valid:
 
-```inc
+````inc
 # in /home/lan/src/cloned/cb/lan22h/bn6f-modding/bn6f/include/structs/GameState.incfile
 .macro game_state_struct, label=oGameState, struct_entry=label_struct_entry, set_struct_start_address=set_struct_start_address
 .macro PETNavi field:req // type: enum PETNavi
-```
+````
 
 You can include `,` after the macro name or not.
 
-Spawn [[000 How might we go about caching expensive regex compilations in rust?]] ^spawn-invst-a5dbfd
+Spawn [000 How might we go about caching expensive regex compilations in rust?](../investigation/000%20How%20might%20we%20go%20about%20caching%20expensive%20regex%20compilations%20in%20rust%3F.md) ^spawn-invst-a5dbfd
 
 2026-08-08 Wk 32 Sat - 15:49 +03:00
 
@@ -99,20 +99,19 @@ How does `strum::IntoEnumIterator` handle enum variants data?
 
 Let's create a new repo to be able to answer these sort of questions with example code: `lan-rs-repro`, similar to the one we had in https://github.com/LanHikari22/rs_repro. Though let's make this different. Instead of compiler flags or many bins, make it a multi-crate repo, and have it be indexed by kind, and source. For example:
 
-- An example for project  https://github.com/Peternator7/strum: `git_root/examples/gh/Peternator7/strum/example_crate_1/`
+* An example for project  https://github.com/Peternator7/strum: `git_root/examples/gh/Peternator7/strum/example_crate_1/`
 
 We just have to make the folder and then go into it and do `cargo init`. Now all the complexity should be out of the crate build system, and we can provide example usage for any project. We can use examples we write there as experiments that guide how we use them using minimal examples.
 
-I wanted to also put `repro` and `issues` into this like before, but let's make this one more focused. Just `rust-examples` instead of `lan-rs-repro`, and drop the `git_root/examples` part. Just `rust-examples` to be consistent with other repos I have like `dotfiles` which don't have to be `{user}-dotfiles`. 
+I wanted to also put `repro` and `issues` into this like before, but let's make this one more focused. Just `rust-examples` instead of `lan-rs-repro`, and drop the `git_root/examples` part. Just `rust-examples` to be consistent with other repos I have like `dotfiles` which don't have to be `{user}-dotfiles`.
 
 Here is our executable proof: `/home/lan/src/cloned/cb/lan22h-experiments/rs-examples/gh/Peternator7/strum/into_enum_uses_variants_data_default/src/bad/enum_iter_requires_all_variants_data_to_impl_default.rs`
 
 It uses `Default` to deal with variant data when enumerating. If that bad file is included in `bad/mod.rs` we will get a corresponding compiler error to impl `Default`.
 
-```sh
+````sh
 # in /home/lan/src/cloned/cb/lan22h-experiments/rs-examples
 git commit # out { [main 1e82770] first! }
-```
+````
 
 https://codeberg.org/lan22h-experiments/rs-examples/src/branch/main/gh/Peternator7/strum/into_enum_uses_variants_data_default/src/bad/enum_iter_requires_all_variants_data_to_impl_default.rs
-

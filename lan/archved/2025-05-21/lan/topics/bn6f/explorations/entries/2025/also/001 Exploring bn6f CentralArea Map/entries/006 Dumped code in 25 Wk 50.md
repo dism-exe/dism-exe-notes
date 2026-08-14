@@ -1,17 +1,16 @@
 ---
-parent: "[[001 Exploring bn6f CentralArea Map]]"
-spawned_by: "[[005 Reminders noted during bn6f CentralArea Map Exploration]]"
+parent: '[[001 Exploring bn6f CentralArea Map]]'
+spawned_by: '[[005 Reminders noted during bn6f CentralArea Map Exploration]]'
 context_type: entry
 ---
 
-Parent: [[001 Exploring bn6f CentralArea Map]]
+Parent: [001 Exploring bn6f CentralArea Map](../001%20Exploring%20bn6f%20CentralArea%20Map.md)
 
-Spawned by: [[005 Reminders noted during bn6f CentralArea Map Exploration]]
+Spawned by: [005 Reminders noted during bn6f CentralArea Map Exploration](005%20Reminders%20noted%20during%20bn6f%20CentralArea%20Map%20Exploration.md)
 
-Spawned in: [[005 Reminders noted during bn6f CentralArea Map Exploration#^spawn-entry-014d1f|^spawn-entry-014d1f]]
+Spawned in: [^spawn-entry-014d1f](005%20Reminders%20noted%20during%20bn6f%20CentralArea%20Map%20Exploration.md#spawn-entry-014d1f)
 
 # 1 Journal
-
 
 2025-12-13 Wk 50 Sat - 03:04 +03:00
 
@@ -19,7 +18,7 @@ There's also undumped code in: ^undumped-code-list-1
 
 Done (dumped):
 
-```
+````
 # lots of code in dat21.s to dump
 # Instances through `cs_call_native_with_return_value`
 # through ms_call_native_function
@@ -127,4 +126,4 @@ unk_80950B8
 unk_80950C8
 unk_80950D4
 
-```
+````

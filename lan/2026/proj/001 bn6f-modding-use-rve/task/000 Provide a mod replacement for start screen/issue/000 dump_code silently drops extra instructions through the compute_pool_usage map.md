@@ -3,17 +3,17 @@ context_type: issue
 status: done
 ---
 
-Parent: [[lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/000 Provide a mod replacement for start screen]]
+Parent: [lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/000 Provide a mod replacement for start screen](../000%20Provide%20a%20mod%20replacement%20for%20start%20screen.md)
 
-Spawned by: [[lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/task/000 Replace Start Screen module with a module that reports via chatbox unimplemented in asm]]
+Spawned by: [lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/task/000 Replace Start Screen module with a module that reports via chatbox unimplemented in asm](../task/000%20Replace%20Start%20Screen%20module%20with%20a%20module%20that%20reports%20via%20chatbox%20unimplemented%20in%20asm.md)
 
-Spawned in: [[lan/2026/proj/001 bn6f-modding-use-rve/task/000 Provide a mod replacement for start screen/task/000 Replace Start Screen module with a module that reports via chatbox unimplemented in asm#^spawn-issue-a29dcd|^spawn-issue-a29dcd]]
+Spawned in: [^spawn-issue-a29dcd](../task/000%20Replace%20Start%20Screen%20module%20with%20a%20module%20that%20reports%20via%20chatbox%20unimplemented%20in%20asm.md#spawn-issue-a29dcd)
 
 # Journal
 
 2026-07-31 Wk 31 Fri - 09:27 +03:00
 
-```sh
+````sh
 source ~/.venv/venv_main/bin/activate # must use with source
 
 # in venv_main > /home/lan/src/cloned/cb/lan22h/branches/bn6f-modding@use-rve/bn6f
@@ -45,19 +45,18 @@ main_:
         .pool
         ldr r0, off_8000344 // =copyTo_iObjectAttr3001D70_3006814
 \tthumb_func_end main_
-```
+````
 
+Disabling
 
-Disabling 
-
-```
+````
 # in ~/src/cloned/gh/dism-exe/bn6f/tools/misc_scripts/dump_code/dump_code.sh
 python3 $SCRIPT_PATH/dump_code.py compute_pool_usage $CONST_SYM_FILE $CONST_INPUT_PROG $start_addr_hex |
-```
+````
 
 prevents this issue:
 
-```
+````
 \tthumb_local_start
 main_:
         bl main_initToolkitAndOtherSubsystems
@@ -68,31 +67,31 @@ main_:
         b loc_80002cc
         .balign 4, 0
 \tthumb_func_end main_
-```
+````
 
 2026-07-31 Wk 31 Fri - 10:08 +03:00
 
 It will happen due to faulty assumption about the start of pool:
 
-```python
+````python
 # in tools/misc_scripts/dump_code/dump_code.py > fn AppComputePoolUsage::app_compute_pool_usage
 elif cur_line_inst_idx > least_pool_location:
 	# pool values do not need to be printed
 	continue
-```
+````
 
 Further, this excludes functions with pool in the middle of their body separated by a branch. We even considered middle of function pool case:
 
-```python
+````python
 # in tools/misc_scripts/dump_code/dump_code.py > fn AppComputePoolUsage::app_compute_pool_usage
 elif cur_line_inst_idx > most_pool_location + 2:
 	# This can happen with functions that have pool in the middle of their body.
 	print(line)
-```
+````
 
 But in principle it is possible to have multiple pools all around the function.
 
-```python
+````python
 # in tools/misc_scripts/dump_code/dump_code.py > fn AppComputePoolUsage::app_compute_pool_usage {
 	last_line_inst_idx = get_last_line_inst_idx(inp)
 	file_debug_log(f'(last_line_inst_idx {hex(last_line_inst_idx)})');
@@ -104,11 +103,11 @@ export RAW_DUMP=0
 
 # in debug.log
 (last_line_inst_idx 0x86)
-```
+````
 
 The last line being 0x86 matches the raw dump.
 
-```python
+````python
 # in tools/misc_scripts/dump_code/dump_code.py > fn AppComputePoolUsage::app_compute_pool_usage {
 	line_to_pool32_loc_and_islocal_map = cls.get_line_to_pool32_loc_and_islocal_map(inp, last_line_inst_idx)
 	file_debug_log(f'(line_to_pool32_loc_and_islocal_map {line_to_pool32_loc_and_islocal_map})');
@@ -127,23 +126,23 @@ export RAW_DUMP=0
 (line_to_pool32_loc_and_islocal_map {'  52:\t4802      \tldr\tr0, [pc, #8]\t; (0x5c)': (92, True), '  7a:\t4803      \tldr\tr0, [pc, #12]\t; (0x88)': (136, False)})
 (least_pool_location 92) (is_local True
 (most_pool_location 136) (is_local False
-```
+````
 
-```sh
+````sh
 python3 -c "print(hex(136), hex(92))" # out { 0x88 0x5c }
-```
+````
 
 So least pool location is interpreted here:
 
-```
+````
   5a:   0000            movs    r0, r0
   5c:   e3f1            b.n     0x842
   5e:   087f            lsrs    r7, r7, #1
-```
+````
 
 We definitely should not just ignore everything after the least, this means we're still not abiding by the fact that pool can occur in the middle. What we need is to identify all pool lines, ~~not regions~~ (we do use contiguous regions but we need to identify each line to form them first) nor a heuristic they're at the end, and only filter those out from printing, replaced by `.pool`.
 
-```python
+````python
 # in tools/misc_scripts/dump_code/dump_code.py > fn AppComputePoolUsage::app_compute_pool_usage {
 	line_to_pool32_loc_and_islocal_map = cls.get_line_to_pool32_loc_and_islocal_map(inp, last_line_inst_idx)
 	file_debug_log(f'(line_to_pool32_loc_and_islocal_map {line_to_pool32_loc_and_islocal_map})')
@@ -155,11 +154,11 @@ export RAW_DUMP=0
 
 # in debug.log
 (line_to_pool32_loc_and_islocal_map {'  52:\t4802      \tldr\tr0, [pc, #8]\t; (0x5c)': (92, True), '  7a:\t4803      \tldr\tr0, [pc, #12]\t; (0x88)': (136, False)})
-```
+````
 
 We can use this to get a list of all pool locations, then add `.pool` at the start of each contiguous region, otherwise add 0 padding or skip
 
-```python
+````python
 # in tools/misc_scripts/dump_code/dump_code.py > fn AppComputePoolUsage::app_compute_pool_usage {
 	pool32_locs = (
 		line_to_pool32_loc_and_islocal_map
@@ -177,9 +176,9 @@ export RAW_DUMP=0
 
 # in debug.log
 (pool32_locs [92, 136])
-```
+````
 
-```python
+````python
 # in tools/misc_scripts/dump_code/dump_code.py > fn AppComputePoolUsage::app_compute_pool_usage {
 	grouped_pool32_locs = cls.get_pool32_locs_contiguous_groups(pool32_locs)
 	file_debug_log(f'(grouped_pool32_locs {grouped_pool32_locs})')
@@ -191,9 +190,9 @@ export RAW_DUMP=0
 
 # in debug.log
 (grouped_pool32_locs [[92], [136]])
-```
+````
 
-```python
+````python
 # in tools/misc_scripts/dump_code/dump_code.py > fn AppComputePoolUsage::app_compute_pool_usage {
 	grouped_pool32_least_locs = (
 		grouped_pool32_locs
@@ -210,7 +209,7 @@ export RAW_DUMP=0
 
 # in debug.log
 (grouped_pool32_least_locs [92, 136])
-```
+````
 
 For this case, the least locations just the same as the locations themselves. These should be where `.pool` is.
 
@@ -218,7 +217,7 @@ The last pool is at `0x88`, and yet we stop the dump at `0x86`, need to adjust t
 
 Also the reason there is a `.pool` in the middle there is me!
 
-```asm
+````asm
 # in asm/main.s > fn main_
 	.ifdef USE_MOD
 		  // hook to modding.s
@@ -228,11 +227,11 @@ Also the reason there is a `.pool` in the middle there is me!
 		  b main_endHook
 		  .pool
 		main_endHook:
-```
+````
 
 2026-08-01 Wk 31 Sat - 09:06 +03:00
 
-```
+````
         b loc_800031c
         .pool
         lsr r7, r7, #1
@@ -247,11 +246,11 @@ loc_800031c:
         lsl r4, r1, #0xd
         lsr r0, r0, #0x20
 \tthumb_func_end main_
-```
+````
 
-The data at the end `.pool` remains to be handled, but this has resolved the function body dropping. 
+The data at the end `.pool` remains to be handled, but this has resolved the function body dropping.
 
-```diff
+````diff
 # in tools/misc_scripts/dump_code/dump_code.py > fn AppComputePoolUsage::app_compute_pool_usage
 	within_pool_region_checks = (
 		grouped_pool32_locs
@@ -260,11 +259,11 @@ The data at the end `.pool` remains to be handled, but this has resolved the fun
 +			| pipe.OfIter[List[int]].map(lambda locs: cur_line_inst_idx >= locs[0] and cur_line_inst_idx < locs[-1] + 4)
 			| pipe.OfIter[bool].to_list()
 	)
-```
+````
 
 We should account for the fact that each pool location is a 32-bit region (4 bytes), and so we are still within until last one + 4. This fixes the first instance but not the second:
 
-```
+````
         b loc_800031c
         .pool
 loc_800031c:
@@ -275,26 +274,26 @@ loc_800031c:
         .pool
         lsl r4, r1, #0xd
         lsr r0, r0, #0x20
-```
+````
 
 Also need to make sure the pool contiguous groups are sorted.
 
 We use more than just one pool. It should show up. Actually because of `USE_MOD`, we're no longer using `main_subsystemJumpTable`, at least not here. It is done in the hook. So for this test, we should end with `off_8000348`. And for that it works as expected:
 
-```
+````
         b loc_80002cc
         .pool
 \tthumb_func_end main_
-```
+````
 
 2026-08-01 Wk 31 Sat - 09:47 +03:00
 
-```
+````
 # in /home/lan/src/cloned/gh/dism-exe/bn6f
 git commit
 
 # out
 [master 85203097] dump_code: fix compute_pool_usage not accounting for multiple pool regions
-```
+````
 
 OK

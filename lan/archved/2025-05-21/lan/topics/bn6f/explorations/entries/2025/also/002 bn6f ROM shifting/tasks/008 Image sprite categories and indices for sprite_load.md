@@ -1,21 +1,21 @@
 ---
-parent: "[[002 bn6f ROM shifting]]"
-spawned_by: "[[006 Attempt to modify mgba to get information on save corruption gunner issue]]"
+parent: '[[002 bn6f ROM shifting]]'
+spawned_by: '[[006 Attempt to modify mgba to get information on save corruption gunner issue]]'
 context_type: task
 status: todo
 ---
 
-Parent: [[002 bn6f ROM shifting]]
+Parent: [002 bn6f ROM shifting](../002%20bn6f%20ROM%20shifting.md)
 
-Spawned by: [[006 Attempt to modify mgba to get information on save corruption gunner issue]]
+Spawned by: [006 Attempt to modify mgba to get information on save corruption gunner issue](../investigations/006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md)
 
-Spawned in: [[006 Attempt to modify mgba to get information on save corruption gunner issue#^spawn-task-6aabf7|^spawn-task-6aabf7]]
+Spawned in: [^spawn-task-6aabf7](../investigations/006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md#spawn-task-6aabf7)
 
 # 1 Journal
 
 2026-01-04 Wk 1 Sun - 14:22 +03:00
 
-Result will put in `constants/enums/sprite_categories.inc`. 
+Result will put in `constants/enums/sprite_categories.inc`.
 
 For assistance with naming the sprites let's use [TREZ mmbn6 wiki](https://www.therockmanexezone.com/wiki/Mega_Man_Battle_Network_6).
 

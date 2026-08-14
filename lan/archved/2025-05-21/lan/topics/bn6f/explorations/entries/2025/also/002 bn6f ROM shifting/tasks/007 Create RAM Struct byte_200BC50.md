@@ -1,27 +1,27 @@
 ---
-parent: "[[002 bn6f ROM shifting]]"
-spawned_by: "[[006 Attempt to modify mgba to get information on save corruption gunner issue]]"
+parent: '[[002 bn6f ROM shifting]]'
+spawned_by: '[[006 Attempt to modify mgba to get information on save corruption gunner issue]]'
 context_type: task
 status: todo
 ---
 
-Parent: [[002 bn6f ROM shifting]]
+Parent: [002 bn6f ROM shifting](../002%20bn6f%20ROM%20shifting.md)
 
-Spawned by: [[006 Attempt to modify mgba to get information on save corruption gunner issue]]
+Spawned by: [006 Attempt to modify mgba to get information on save corruption gunner issue](../investigations/006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md)
 
-Spawned in: [[006 Attempt to modify mgba to get information on save corruption gunner issue#^spawn-task-dc2d18|^spawn-task-dc2d18]]
+Spawned in: [^spawn-task-dc2d18](../investigations/006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md#spawn-task-dc2d18)
 
 # 1 Journal
 
 2026-01-03 Wk 1 Sat - 16:20 +03:00
 
-Similar process to [[005 Create RAM struct dword_20364C0]]
+Similar process to [005 Create RAM struct dword_20364C0](005%20Create%20RAM%20struct%20dword_20364C0.md)
 
 2026-01-03 Wk 1 Sat - 16:27 +03:00
 
 Hmm, didn't seem to find a zero fill for this, but I removed some ewram labels that were unused (only calculations from this)
 
-```C
+````C
 // in ewram.s
 byte_200BC50:: // 0x200bc50
 	.space 1
@@ -37,13 +37,13 @@ byte_200BC50:: // 0x200bc50
 	.space 4
 byte_200BC60:: // 0x200bc60
 	.space 1
-```
+````
 
-This gives us a size of `0x10`. 
+This gives us a size of `0x10`.
 
 2026-01-03 Wk 1 Sat - 16:29 +03:00
 
-```C
+````C
 # in include/structs/S200BC50.inc
 //! type: struct S200BC50
 
@@ -59,24 +59,24 @@ This gives us a size of `0x10`.
   .endm
 
   def_struct_offsets s_200BC50_struct, oS200BC50
-```
+````
 
 2026-01-03 Wk 1 Sat - 16:31 +03:00
 
-```C
+````C
 # in include/macros/ewram_structs.inc
 .include "structs/S200BC50.inc"
-```
+````
 
-```sh
+````sh
 ./replacep.sh "byte_200BC50" "eS200BC50"
-```
+````
 
-```diff
+````diff
 // in ewram.s
 eS200BC50:: // 0x200bc50
 -	.space 0x10
 +	s_200BC50_struct eS200BC50
-```
+````
 
-Spawn [[005 Checking fields of S200BC50]] ^spawn-entry-7c2ff5
+Spawn [005 Checking fields of S200BC50](../entries/005%20Checking%20fields%20of%20S200BC50.md) ^spawn-entry-7c2ff5

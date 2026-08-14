@@ -1,6 +1,7 @@
 ---
 status: todo
 ---
+
 # Objective
 
 Part of the issue with ROM shift-testing is that I have not codified exactly how to discover *all* pointers in the ROM. This cluster task seeks to rectify that.

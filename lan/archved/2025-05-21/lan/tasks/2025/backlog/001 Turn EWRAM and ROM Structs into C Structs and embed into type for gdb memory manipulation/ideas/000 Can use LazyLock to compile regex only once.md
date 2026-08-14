@@ -1,20 +1,20 @@
 ---
-parent: "[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]"
-spawned_by: "[[009 Impl Lexon types for whole thumb instructions]]"
+parent: '[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]'
+spawned_by: '[[009 Impl Lexon types for whole thumb instructions]]'
 context_type: idea
 ---
 
-Parent: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]
+Parent: [001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation](../001%20Turn%20EWRAM%20and%20ROM%20Structs%20into%20C%20Structs%20and%20embed%20into%20type%20for%20gdb%20memory%20manipulation.md)
 
-Spawned by: [[009 Impl Lexon types for whole thumb instructions]]
+Spawned by: [009 Impl Lexon types for whole thumb instructions](../tasks/009%20Impl%20Lexon%20types%20for%20whole%20thumb%20instructions.md)
 
-Spawned in: [[009 Impl Lexon types for whole thumb instructions#^spawn-idea-5ec335|^spawn-idea-5ec335]]
+Spawned in: [^spawn-idea-5ec335](../tasks/009%20Impl%20Lexon%20types%20for%20whole%20thumb%20instructions.md#spawn-idea-5ec335)
 
 # 1 Journal
 
 Found [here](https://github.com/rust-lang/regex?tab=readme-ov-file#usage-avoid-compiling-the-same-regex-in-a-loop):
 
-```rust
+````rust
 use std::sync::LazyLock;
 
 use regex::Regex;
@@ -28,7 +28,7 @@ fn main() {
     assert!(some_helper_function("abc"));
     assert!(!some_helper_function("ac"));
 }
-```
+````
 
 I compile once per file, but with this, it would become per process and I won't have to change much else for the lexer.
 

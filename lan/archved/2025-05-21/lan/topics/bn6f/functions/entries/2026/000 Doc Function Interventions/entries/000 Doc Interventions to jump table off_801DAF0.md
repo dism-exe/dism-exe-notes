@@ -1,14 +1,14 @@
 ---
-parent: "[[000 Doc Function Interventions]]"
-spawned_by: "[[000 Doc Function Interventions]]"
+parent: '[[000 Doc Function Interventions]]'
+spawned_by: '[[000 Doc Function Interventions]]'
 context_type: entry
 ---
 
-Parent: [[000 Doc Function Interventions]]
+Parent: [000 Doc Function Interventions](../000%20Doc%20Function%20Interventions.md)
 
-Spawned by: [[000 Doc Function Interventions]]
+Spawned by: [000 Doc Function Interventions](../000%20Doc%20Function%20Interventions.md)
 
-Spawned in: [[000 Doc Function Interventions#^spawn-entry-f12249|^spawn-entry-f12249]]
+Spawned in: [^spawn-entry-f12249](../000%20Doc%20Function%20Interventions.md#spawn-entry-f12249)
 
 # 1 Journal
 
@@ -16,7 +16,7 @@ Spawned in: [[000 Doc Function Interventions#^spawn-entry-f12249|^spawn-entry-f1
 
 On Breaking:
 
-```sh
+````sh
 #!/bin/bash
 mgba bn6f.elf -g &
 gdb-multiarch bn6f.elf -ex "target remote localhost:2345" \
@@ -44,9 +44,9 @@ gdb-multiarch bn6f.elf -ex "target remote localhost:2345" \
  -ex "b sub_801EC2C" \
  -ex "b sub_801EC84" \
  -ex "b sub_801E060"
-```
+````
 
-```C
+````C
 off_801DAF0:
 	// 0x00 (0x00)
 	.word sub_801DB54+1
@@ -112,21 +112,21 @@ off_801DAF0:
 	.word sub_801EC84+1
 	// 0x5C (0x17)
 	.word sub_801E060+1
-```
+````
 
 2026-01-09 Wk 2 Fri - 18:46 +03:00
 
 On Disabling:
 
-```C
+````C
 // Example:
 
 // 0x3C (0x0F)
 //.word sub_801E73C+1
 .word nullsub_38+1
-```
+````
 
-```C
+````C
 off_801DAF0:
 	// 0x00 (0x00)
 	.word sub_801DB54+1
@@ -178,5 +178,4 @@ off_801DAF0:
 	.word sub_801EC84+1
 	// 0x5C (0x17)
 	.word sub_801E060+1
-```
-
+````

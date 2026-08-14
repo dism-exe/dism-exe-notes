@@ -1,23 +1,23 @@
 ---
-parent: "[[002 bn6f ROM shifting]]"
-spawned_by: "[[005 Create RAM struct dword_20364C0]]"
+parent: '[[002 bn6f ROM shifting]]'
+spawned_by: '[[005 Create RAM struct dword_20364C0]]'
 context_type: task
 status: todo
 ---
 
-Parent: [[002 bn6f ROM shifting]]
+Parent: [002 bn6f ROM shifting](../002%20bn6f%20ROM%20shifting.md)
 
-Spawned by: [[005 Create RAM struct dword_20364C0]]
+Spawned by: [005 Create RAM struct dword_20364C0](005%20Create%20RAM%20struct%20dword_20364C0.md)
 
-Spawned in: [[005 Create RAM struct dword_20364C0#^spawn-task-437477|^spawn-task-437477]]
+Spawned in: [^spawn-task-437477](005%20Create%20RAM%20struct%20dword_20364C0.md#spawn-task-437477)
 
 # 1 Journal
 
 2025-12-30 Wk 1 Tue - 14:38 +03:00
 
-Other temporary script we are swapping: [[003 temp python script for diffing only changes after val=]]
+Other temporary script we are swapping: [003 temp python script for diffing only changes after val=](../entries/003%20temp%20python%20script%20for%20diffing%20only%20changes%20after%20val=.md)
 
-```sh
+````sh
 # Example usage:
 
 cat a.log | sort -u > a1.log
@@ -27,9 +27,9 @@ cat a1.log | python3 ~/src/cloned/gh/dism-exe/bn6f/tools/misc_scripts/dump_code/
 cat b1.log | grep 'GBAStore' | grep 'addr=eS20364C0' | grep -v 'ZeroFillByByte' | cut -d',' -f-2 | rev | sort -u | rev | python3 ~/src/cloned/gh/dism-exe/bn6f/tools/misc_scripts/dump_code/a.py 'transform_gbastoreload_logs_to_struct_fields' | sort -u
 # To get loads
 cat b1.log | grep 'GBALoad' | grep 'addr=eS20364C0' | grep -v 'ZeroFillByByte' | cut -d',' -f-2 | rev | sort -u | rev | python3 ~/src/cloned/gh/dism-exe/bn6f/tools/misc_scripts/dump_code/a.py 'transform_gbastoreload_logs_to_struct_fields' | sort -u
-```
+````
 
-```python
+````python
 import sys
 from typing import Dict, List, Tuple
 
@@ -75,4 +75,4 @@ if __name__ == '__main__':
         transform_gbastoreload_logs_to_struct_fields(inp)
     else:
         raise Exception("Unknown filter")
-```
+````

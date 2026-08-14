@@ -1,15 +1,15 @@
 ---
-parent: "[[002 bn6f ROM shifting]]"
-spawned_by: "[[006 Attempt to modify mgba to get information on save corruption gunner issue]]"
+parent: '[[002 bn6f ROM shifting]]'
+spawned_by: '[[006 Attempt to modify mgba to get information on save corruption gunner issue]]'
 context_type: investigation
 status: todo
 ---
 
-Parent: [[002 bn6f ROM shifting]]
+Parent: [002 bn6f ROM shifting](../002%20bn6f%20ROM%20shifting.md)
 
-Spawned by: [[006 Attempt to modify mgba to get information on save corruption gunner issue]]
+Spawned by: [006 Attempt to modify mgba to get information on save corruption gunner issue](006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md)
 
-Spawned in: [[006 Attempt to modify mgba to get information on save corruption gunner issue#^spawn-invst-4ccb51|^spawn-invst-4ccb51]]
+Spawned in: [^spawn-invst-4ccb51](006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md#spawn-invst-4ccb51)
 
 # 1 Journal
 
@@ -17,36 +17,36 @@ Spawned in: [[006 Attempt to modify mgba to get information on save corruption g
 
 These relate through `m4a_SongNumStart`, we need to understand the data structures of it.
 
-`unk_8158519` seems wrong, as there are pointers in `sound_MusicTable` that would be invalid if were to be valid. But it is referenced in `off_81CA450`, which we do not know how it is referenced. 
+`unk_8158519` seems wrong, as there are pointers in `sound_MusicTable` that would be invalid if were to be valid. But it is referenced in `off_81CA450`, which we do not know how it is referenced.
 
-`byte_8158795` also seems wrong, as it cuts `sound_MusicTable` which we know now is an array of `(* ?, u32)`.  `byte_8158809` also cuts it and should be removed. Also `byte_815881D, byte_8158DFD, byte_8159265`, 
+`byte_8158795` also seems wrong, as it cuts `sound_MusicTable` which we know now is an array of `(* ?, u32)`.  `byte_8158809` also cuts it and should be removed. Also `byte_815881D, byte_8158DFD, byte_8159265`,
 
 2026-01-11 Wk 2 Sun - 21:18 +03:00
 
 To number each tuple `(*const ?, u32)` in the array, with content of `a` being one tuple per line.
 
-```
+````
 cat a | python3 tools/misc_scripts/dump_code/misc_filters.py "add_index_comments_for_each_line"
-```
+````
 
-```C
+````C
 // 0x208 (0x82)
 .word 0x081B8724, 0x00070007
-```
+````
 
 We find one uncut pointer.
 
-```sh
+````sh
 # in /home/lan/src/cloned/gh/LanHikari22/bn_repo_editor
 cargo run --bin expt000_read_symbol_data 81B8724 -M "unk_81B8724"
-```
+````
 
 2026-01-11 Wk 2 Sun - 21:23 +03:00
 
-```C
+````C
 // 0x764 (0x1D9)
 .word dword_81BD0A8, 0x000B000B
-```
+````
 
 (Had to correct that offset `0x764` to `0xEC8`, because the record size is 8 bytes, not 4 bytes.)
 
@@ -58,7 +58,7 @@ I will call the struct that `sound_MusicTable` references `RomStructLike1B820C`,
 
 2026-01-11 Wk 2 Sun - 22:36 +03:00
 
-```
+````
 byte_2010510:: // 0x2010510
 	.space 64
 byte_2010550:: // 0x2010550
@@ -73,7 +73,7 @@ byte_2010610:: // 0x2010610
 	.space 64
 byte_2010650:: // 0x2010650
 	.space 64
-```
+````
 
 `byte_20105D0` and `off_2010608` seem suspicious here, these should be `.space 64` like the previous ones, all seem to be linked via `sound_814F104`'s first argument.
 

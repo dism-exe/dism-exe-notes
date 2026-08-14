@@ -1,15 +1,15 @@
 ---
-parent: "[[002 bn6f ROM shifting]]"
-spawned_by: "[[006 Attempt to modify mgba to get information on save corruption gunner issue]]"
+parent: '[[002 bn6f ROM shifting]]'
+spawned_by: '[[006 Attempt to modify mgba to get information on save corruption gunner issue]]'
 context_type: task
 status: done
 ---
 
-Parent: [[002 bn6f ROM shifting]]
+Parent: [002 bn6f ROM shifting](../002%20bn6f%20ROM%20shifting.md)
 
-Spawned by: [[006 Attempt to modify mgba to get information on save corruption gunner issue]]
+Spawned by: [006 Attempt to modify mgba to get information on save corruption gunner issue](../investigations/006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md)
 
-Spawned in: [[006 Attempt to modify mgba to get information on save corruption gunner issue#^spawn-task-30bc6f|^spawn-task-30bc6f]]
+Spawned in: [^spawn-task-30bc6f](../investigations/006%20Attempt%20to%20modify%20mgba%20to%20get%20information%20on%20save%20corruption%20gunner%20issue.md#spawn-task-30bc6f)
 
 # 1 Journal
 
@@ -17,22 +17,22 @@ Spawned in: [[006 Attempt to modify mgba to get information on save corruption g
 
 We need to deal with massive data processing things like
 
-```
+````
 cat a | python3 ~/src/cloned/gh/dism-exe/bn6f/tools/misc_scripts/dump_code/dump_code.py ea_to_sym_filter bn6f.sym --shift -2 > b.log
-```
+````
 
 So far we get readings like
 
-```
+````
 read_lines: 100.97026824951172ms
 process_line: 10.37287712097168ms
 process_line: 6.156444549560547ms
 process_line: 6.182193756103516ms
 process_line: 6.120920181274414ms
 process_line: 6.153345108032227ms
-```
+````
 
-```python
+````python
     import time
     time_file = open('time.log', 'w')
 
@@ -42,11 +42,11 @@ process_line: 6.153345108032227ms
         diff_ms = (end - start) * 1000
 
         time_file.write(f"{prefix}: {diff_ms}ms\n")
-```
+````
 
 Let's see if this improves it:
 
-```python
+````python
 // in fn app_ea_to_sym_filter
 // in fn process_line
 # if '_' + ea_token in mut_out:
@@ -57,53 +57,53 @@ Let's see if this improves it:
 #     mut_out = mut_out.replace(ea_token, sym)
 
 mut_out = mut_out.replace(ea_token, sym, 1)
-```
+````
 
 On recommandation of this [stackexchange answer](https://unix.stackexchange.com/a/202889),
 
-```sh
+````sh
 sudo apt-get install datamash
-```
+````
 
-```sh
+````sh
 cat time.log | grep 'process_line' | head -n100 | sed 's/process_line: //g' | sed 's/ms//g' | datamash count 1 mean 1 sstdev 1 --header-out
 
 # out
 count(field-1)  mean(field-1)   sstdev(field-1)
 100     7.3831343650818 2.0574766401328
-```
+````
 
 After the change:
 
-```sh
+````sh
 cat time.log | grep 'process_line' | head -n10000 | sed 's/process_line: //g' | sed 's/ms//g' | datamash count 1 mean 1 sstdev 1 --header-out
 
 # out
 count(field-1)  mean(field-1)   sstdev(field-1)
 10000   7.4661389827728 3.4437274869463
-```
+````
 
 Before the change:
 
-```sh
+````sh
 cat time.log | grep 'process_line' | head -n10000 | sed 's/process_line: //g' | sed 's/ms//g' | datamash count 1 mean 1 sstdev 1 --header-out
 
 # out
 count(field-1)  mean(field-1)   sstdev(field-1)
 10000   8.0602656841278 3.7636151404117
-```
+````
 
 So it seems to help.
 
 There is fluctuation however across test runs. So here's measuring this again for after the change:
 
-```sh
+````sh
 cat time.log | grep 'process_line' | head -n10000 | sed 's/process_line: //g' | sed 's/ms//g' | datamash count 1 mean 1 sstdev 1 --header-out
 
 # out
 count(field-1)  mean(field-1)   sstdev(field-1)
 10000   7.7809272527695 3.8850247886344
-```
+````
 
 2025-12-27 Wk 52 Sat - 12:22 +03:00
 
@@ -111,29 +111,29 @@ Ok so this is our baseline. The next change is to avoid parsing int twice, so `g
 
 This is after the change:
 
-```sh
+````sh
 cat time.log | grep 'process_line' | head -n10000 | sed 's/process_line: //g' | sed 's/ms//g' | datamash count 1 mean 1 sstdev 1 --header-out
 
 # out
 count(field-1)  mean(field-1)   sstdev(field-1)
 10000   7.5600828886032 3.8234654181861
-```
+````
 
 It's unclear if it's a positive, but also these values seem to fluctuate a lot. For example here's at `N=30000`:
 
-```sh
+````sh
 cat time.log | grep 'process_line' | head -n30000 | sed 's/process_line: //g' | sed 's/ms//g' | datamash count 1 mean 1 sstdev 1 --header-out
 
 # out
 count(field-1)  mean(field-1)   sstdev(field-1)
 30000   7.2689646402995 3.696372371203
-```
+````
 
 2025-12-27 Wk 52 Sat - 12:33 +03:00
 
 Let's do a component timing analysis on `process_line`,
 
-```python
+````python
 def process_line(line: str):
 	start = time.time()
 	ea_tokens_and_parsed = get_ea_tokens_and_parsed(line)
@@ -154,9 +154,9 @@ def process_line(line: str):
 	print(mut_out)
 	capture_time(start1, time_file, 'C4')
 	capture_time(start, time_file, 'Full')
-```
+````
 
-```sh
+````sh
 cat time.log | grep 'C1' | head -n30000 | sed 's/C1: //g' | sed 's/ms//g' | datamash count 1 mean 1 sstdev 1 --header-out
 
 # out
@@ -191,11 +191,11 @@ cat time.log | grep 'Full' | head -n30000 | sed 's/Full: //g' | sed 's/ms//g' | 
 count(field-1)  mean(field-1)   sstdev(field-1)
 30000   0.0086308876673381      0.0082820761099196
 # /out
-```
+````
 
 We did not measure it right. Let's be careful with these variable names `start`.
 
-```python
+````python
 def process_line(line: str):
 	start0 = time.time()
 	ea_tokens_and_parsed = get_ea_tokens_and_parsed(line)
@@ -216,9 +216,9 @@ def process_line(line: str):
 	print(mut_out)
 	capture_time(start2, time_file, 'C4')
 	capture_time(start0, time_file, 'Full')
-```
+````
 
-```
+````
 process_line: 6.332159042358398ms
 C1: 0.017404556274414062ms
 C2: 3.072023391723633ms
@@ -229,11 +229,11 @@ C2: 3.059864044189453ms
 C3: 0.000476837158203125ms
 C4: 0.003337860107421875ms
 Full: 6.171941757202148ms
-```
+````
 
-We can also see that the portions happen with different frequency.  
+We can also see that the portions happen with different frequency.
 
-```sh
+````sh
 cat time.log | grep 'C1' | head -n30000 | sed 's/C1: //g' | sed 's/ms//g' | datamash count 1 mean 1 sstdev 1 --header-out
 
 # out
@@ -268,7 +268,7 @@ cat time.log | grep 'Full' | head -n30000 | sed 's/Full: //g' | sed 's/ms//g' | 
 count(field-1)  mean(field-1)   sstdev(field-1)
 30000   7.6080896298091 3.6907804714956
 # /out
-```
+````
 
 so `C2` often repeats twice, and is the bulk of time being spent. Let's investigate it.
 
@@ -280,24 +280,24 @@ One issue is that I've implemented `ea_to_maximum_ea_before_using_syms` as `O(N)
 
 It's extremely faster once we populate the whole space and make retrieval `O(1)`, though I still have to test correctness.
 
-```sh
+````sh
 cat time.log | grep 'process_line' | head -n1000000 | sed 's/process_line: //g' | sed 's/ms//g' | datamash count 1 mean 1 sstdev 1 --header-out
 
 # out
 count(field-1)  mean(field-1)   sstdev(field-1)
 367647  0.014232711818555       0.0039744587114831
-```
+````
 
 We're recovering
 
-```python
+````python
 if '_' + ea_token in mut_out:
     mut_out = mut_out.replace('_' + ea_token, '<<<PLACEHOLDER>>>')
     mut_out = mut_out.replace(ea_token, sym)
     mut_out = mut_out.replace('<<<PLACEHOLDER>>>', '_' + ea_token)
 else:
     mut_out = mut_out.replace(ea_token, sym)
-```
+````
 
 It's more likely to be correct, and it didn't have a big impact on the timing.
 

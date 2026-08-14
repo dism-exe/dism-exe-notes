@@ -14,4 +14,4 @@ To view the notes in the browser, go to the [webview branch](https://github.com/
 
 A now page describes what the contributor is currently focused on primarily, but can also link to other notes written by the contributor.
 
-- [lan/now.md](https://github.com/dism-exe/dism-exe-notes/blob/webview/lan/now.md)
+* [lan/now.md](https://github.com/dism-exe/dism-exe-notes/blob/webview/lan/now.md)
