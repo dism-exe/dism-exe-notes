@@ -2,7 +2,7 @@
 parent: "[[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]"
 spawned_by: "[[008 Get rs_repro regex string tester to work]]"
 context_type: howto
-status: todo
+status: pend
 ---
 
 Parent: [[001 Turn EWRAM and ROM Structs into C Structs and embed into type for gdb memory manipulation]]

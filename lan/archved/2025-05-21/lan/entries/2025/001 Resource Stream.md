@@ -25,4 +25,6 @@
 
 [TREZ Tools](https://www.therockmanexezone.com/downloads/tools/)
 
-2026-01-07 Wk 2 Wed - 20:48 +03:00
+2026-08-11 Wk 33 Tue - 03:17 +03:00
+
+https://problemkaputt.de/pandocs.htm `GBZ80 Specifications`

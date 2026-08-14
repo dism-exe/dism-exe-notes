@@ -7,6 +7,13 @@ Investigations are close-ended questions to be resolved, while explorations are 
 
 - [[001 Exploration for Rust Bn6f Cloning Getting Started 0]]
 
+**Task Inbox**
+
+- [ ] [[000 Replace Start Screen module with a module that reports via chatbox unimplemented in asm]]
+- [ ] [[002 Impl struct layout parsing from bn6f inc and parse gdb memory xw log]]
+
+- [ ] [[000 Create a tool that attempts to discover all pointers for a bn6f ROM]]
+
 # See also
 
 - [[now]]
