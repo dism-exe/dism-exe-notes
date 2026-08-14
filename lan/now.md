@@ -1,6 +1,45 @@
+`----------------------------------------------------------------------------80`
 
-Working on this from time and then. Currently exploring a rust clone of the disassembly, just to have an executable high-level representation available. It could be interesting to explore how to make it more trustworthy as a representation of the disassembly through various tests, but it does not have an strong OK signal like ROM checksum match.
+# Contributor
 
-On the disassembly side, ROM shifting testing and more dumping of mapscripts.
+Hi! Mohammed here, or also Lan online. You can find my repositories here: 
 
-See my [[001 Inbox]] for currently active items.
+- https://codeberg.org/lan22h
+- https://github.com/LanHikari22
+
+Here is my general [now.md](https://codeberg.org/deltatraced/deltatraced/src/branch/webview/now.md).
+
+# See also
+
+- Content that used to be here: [[004 Working on Log]]
+- See my [[001 Inbox]] for currently active items.
+
+# Working On
+
+## Tooling for examining RAM Structs more easily
+
+Writing tools that can read gdb dumps and interpret it according to structs
+defined already in the disassembly project.
+
+Also since I have patched mgba to get live memory write/reads, I plan to
+implement live struct viewing of the project as we play the game.
+
+## use-rve mod
+
+This mod implements project-specific USE flags that enable/disable features in
+the game. It also allows to replace bn6f component for modded components
+which can provide more features.
+
+Currently working on creating a redirect of the start screen module at the end of
+ROM.
+
+A redirect is just a new module that simply calls original bn6f code at the
+module API boundary. This can be a good reference for when we clone the module.
+
+A clone is flexible, it can be a direct copy of the source code in a new place,
+it could be a direct copy + USE flags for user-configurable changes,
+and it could even be a total rewrite in a new language that respects the same
+invariants the original module has to so the game does not crash.
+
+
+`----------------------------------------------------------------------------80`
